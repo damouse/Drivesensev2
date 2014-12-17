@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="Account">
+
+        <CheckBoxPreference
+            android:key="logInTrigger"
+            android:enabled="true"
+            android:title="Log In"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Recording">
+
+        <CheckBoxPreference
+            android:key="manualRecording"
+            android:title="Manual Recording"
+            android:summary="Record only when button pressed" />
+
+        <CheckBoxPreference
+            android:key="backgroundRecording"
+            android:title="Automatic Recording"
+            android:summary="Record when powered and trip is detected" />
+
+        <!-- The visual style of a child is defined by this styled theme attribute. -->
+        <CheckBoxPreference
+            android:key="backgroundRecordingPower"
+            android:title="Unpowered Automatic Recording"
+            android:summary="Record when trip detected regardless of power" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Uploading">
+
+        <CheckBoxPreference
+            android:key="autoUpload"
+            android:title="Automatic Uploading"
+            android:summary="Upload trips to knowmydrive.com if logged in" />
+
+        <!-- The visual style of a child is defined by this styled theme attribute. -->
+        <CheckBoxPreference
+            android:key="autoUploadWifi"
+            android:dependency="autoUpload"
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="WiFi Upload"
+            android:summary="Upload only over WiFi" />
+
+        <CheckBoxPreference
+            android:key="autoDelete"
+            android:dependency="autoUpload"
+            android:layout="?android:attr/preferenceLayoutChild"
+            android:title="Automatic Delete"
+            android:summary="Automatically delete trips after uploading" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
