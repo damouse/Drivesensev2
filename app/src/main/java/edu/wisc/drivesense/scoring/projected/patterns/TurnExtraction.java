@@ -26,6 +26,14 @@ public class TurnExtraction {
     private static int kXIndex = 0;
     private static double kAccelerometerPercent = 0.5;
 
+    /*
+    private static double kTurnThreshold = 0.08;
+    private static int kSlidingWindowSize = 20;
+    private static int kZIndex = 2;
+    private static double kPercent = 0.7;
+    
+    */
+
     private static boolean isTurn(List<Reading> gyroscope, DrivingPattern pattern) {
 
         if (pattern.end - pattern.start < 2000) return false;
@@ -46,8 +54,8 @@ public class TurnExtraction {
         return false;
     }
 
-    public static List<DrivingPattern> extractTurns(List<Reading> gyroscope) {
-        List<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
+    public static ArrayList<DrivingPattern> extractTurns(List<Reading> gyroscope) {
+        ArrayList<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
         int sz = gyroscope.size();
         int counter = 0;
         boolean inTurn = false;
@@ -104,8 +112,8 @@ public class TurnExtraction {
      * @param accelerometer
      * @return the extracted patterns
      */
-    public static List<DrivingPattern> extractTurnsByAccelerometer(List<Reading> accelerometer) {
-        List<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
+    public static ArrayList<DrivingPattern> extractTurnsByAccelerometer(List<Reading> accelerometer) {
+        ArrayList<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
         int sz = accelerometer.size();
         int counter = 0;
         boolean inTurn = false;

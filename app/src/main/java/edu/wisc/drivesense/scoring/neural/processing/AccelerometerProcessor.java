@@ -30,13 +30,13 @@ public class AccelerometerProcessor {
 
     /* Preprocessing */
 
-    /**
-     * Subtract gravity from acceleration. Returns null if the lastReading values have not been set yet.
-     *
-     * @return
-     */
-    public Reading getLinearAcceleration() {
-        if (lastAcceleration == null || lastGravity == null)
+        /**
+         * Subtract gravity from acceleration. Returns null if the lastReading values have not been set yet.
+         * YOU ARE DOING THIS TWICE! buggity bugitty bug.
+         * @return
+         */
+            public Reading getLinearAcceleration() {
+            if (lastAcceleration == null || lastGravity == null)
             return null;
 
         double[] gravity = lastGravity.values;

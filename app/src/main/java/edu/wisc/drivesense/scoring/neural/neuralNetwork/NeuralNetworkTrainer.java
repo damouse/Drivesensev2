@@ -71,13 +71,12 @@ public class NeuralNetworkTrainer {
     /**
      * Sets the training set with the passed array
      */
-    public void addTrainingData(TimestampQueue dataSet) {
-        for (TimestampSortable set : dataSet) {
+    public void addTrainingData(TimestampQueue<DataSetInput> dataSet) {
+        for (DataSetInput set : dataSet) {
             if (set == null)
                 log("ERROR- NULL SET");
             else {
-                DataSetInput input = (DataSetInput) set;
-                trainingSet.add(input.convertNetworkTrainingInput());
+                trainingSet.add(set.convertNetworkTrainingInput());
             }
         }
     }

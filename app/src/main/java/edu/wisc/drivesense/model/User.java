@@ -55,11 +55,6 @@ public class User extends SugarRecord<User> {
         return sb.toString();
     }
 
-    public List<Trip> getTrips() {
-        return Trip.find(Trip.class, "user = ?", "" + getId());
-    }
-
-
     public void setLoggedIn(String authToken) {
         authenticationToken = authToken;
         loggedIn = true;

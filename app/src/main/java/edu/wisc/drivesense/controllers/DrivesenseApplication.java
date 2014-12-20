@@ -1,7 +1,6 @@
-package edu.wisc.drivesense.activities;
+package edu.wisc.drivesense.controllers;
 
 import android.app.Application;
-import android.os.Bundle;
 
 public class DrivesenseApplication extends Application {
 	@Override

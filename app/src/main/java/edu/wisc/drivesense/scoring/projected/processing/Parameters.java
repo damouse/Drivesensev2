@@ -19,6 +19,7 @@ public class Parameters {
      * usually from .1 to .7
      * */
     public static final double kExponentialMovingAverageAlpha = 0.15;
+    //public static final double kExponentialMovingAverageAlpha = 0.1;
 	
 	/*=============Acceleration Constant Deceleration====================*/
 

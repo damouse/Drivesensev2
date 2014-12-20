@@ -23,6 +23,7 @@ import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
  */
 public class SensorMonitor implements LocationListener, SensorEventListener, GpsStatus.Listener {
     private static final String TAG = "SensorMonitor";
+    private final boolean EXTRACT_ROTATION = true;
 
     //A debugging module that feeds fake sensor data to this class. Used for testing and demo purposes
     public SensorSimulator simulator;
@@ -33,8 +34,6 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     private Sensor gyroscope;
     private Sensor compass;
     private LocationManager locationManager;
-
-    private long lastAccelReadingTime = 0;
 
 
     /* Boilerplate*/
@@ -74,7 +73,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     public void stopCollecting() {
         stopCollectingGPS();
         sensorManager.unregisterListener(this);
-        lastAccelReadingTime = 0;
+
     }
 
     public void stopCollectingGPS() {

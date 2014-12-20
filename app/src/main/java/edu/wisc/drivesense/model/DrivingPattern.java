@@ -3,11 +3,13 @@ package edu.wisc.drivesense.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
+
 
 /**
  * Used internally, not uploaded or saved!
  */
-public class DrivingPattern {
+public class DrivingPattern extends TimestampSortable{
     public MappableEvent.Type type;
 
     public long start = -1;
@@ -21,8 +23,8 @@ public class DrivingPattern {
     public DrivingPattern() { }
 
     //merge overlapping intervals into one interval. Score of the merged interval will be average of scores of the overlapping intervals
-    public static List<DrivingPattern> reduceOverlapIntervals(List<DrivingPattern> intervals) {
-        List<DrivingPattern> res = new ArrayList<DrivingPattern>();
+    public static ArrayList<DrivingPattern> reduceOverlapIntervals(ArrayList<DrivingPattern> intervals) {
+        ArrayList<DrivingPattern> res = new ArrayList<DrivingPattern>();
         int sz = intervals.size();
         if (0 == sz) return intervals;
 
@@ -57,6 +59,7 @@ public class DrivingPattern {
         sb.append("\tscore:").append(score).append("\n");
         return sb.toString();
     }
+    public long getTime() { return start; }
 
 //    public void setTimeInterval(long s, long e) {
 //        start = s;

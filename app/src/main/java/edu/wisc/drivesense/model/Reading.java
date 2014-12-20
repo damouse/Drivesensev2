@@ -26,7 +26,8 @@ public class Reading extends TimestampSortable {
         GRAVITY,
         MAGNETIC,
         LABEL,
-        GPS
+        GPS,
+        ROTATION_MATRIX
     }
 
 
@@ -42,6 +43,12 @@ public class Reading extends TimestampSortable {
     /* Consctructors */
     public Reading(double[] values, long timestamp, Type type) {
         setValues(values);
+        this.timestamp = timestamp;
+        this.type = type;
+    }
+
+    public Reading(float[] values, long timestamp, Type type) {
+        setFloatValues(values);
         this.timestamp = timestamp;
         this.type = type;
     }
@@ -77,6 +84,13 @@ public class Reading extends TimestampSortable {
         values[1] = Double.parseDouble(data[2]);
         values[2] = Double.parseDouble(data[3]);
 
+        //TODO: Remove this by fixing the data. Looks like coords were saved in reverse
+        if (type == Type.GPS) {
+            double temp = values[1];
+            values[1] = values[2];
+            values[2] = temp;
+        }
+
         dimension = 3;
 
         this.type = type;
@@ -86,12 +100,17 @@ public class Reading extends TimestampSortable {
     /* Accessors */
     public void setValues(double[] newValues) {
         dimension = newValues.length;
+        values = newValues.clone();
+    }
+
+    public void setFloatValues(float[] newValues) {
+        dimension = newValues.length;
         values = new double[dimension];
 
         for (int i = 0; i < values.length; i++)
             values[i] = newValues[i];
     }
-	
+
 	//Converts to floats for processing by getRotationMatrix
 	public float[] getFloatValues() {
         float[] ret = new float[dimension];

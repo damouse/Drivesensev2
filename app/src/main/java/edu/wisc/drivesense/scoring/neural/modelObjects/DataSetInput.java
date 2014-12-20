@@ -5,6 +5,8 @@ import org.encog.ml.data.MLDataPair;
 import org.encog.ml.data.basic.BasicMLData;
 import org.encog.ml.data.basic.BasicMLDataPair;
 
+import edu.wisc.drivesense.model.Reading;
+
 /**
  * Created by Damouse on 12/9/2014.
  *
@@ -13,11 +15,11 @@ public class DataSetInput extends TimestampSortable {
     public long timestamp;
 
     /* Raw sensor values extracted from DataReceiver Queues */
-    public TimestampQueue acceleration;
-    public TimestampQueue gyroscope;
-    public TimestampQueue gravity;
-    public TimestampQueue magnet;
-    public TimestampQueue gps;
+    public TimestampQueue<Reading> acceleration;
+    public TimestampQueue<Reading> gyroscope;
+    public TimestampQueue<Reading> gravity;
+    public TimestampQueue<Reading> magnet;
+    public TimestampQueue<Reading> gps;
 
     /* Inputs after pre-processing
     * Preprocessing will affect all sensor values but will also create new, intermediate

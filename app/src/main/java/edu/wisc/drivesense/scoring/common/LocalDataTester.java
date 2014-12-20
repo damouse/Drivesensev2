@@ -12,15 +12,14 @@ import java.util.Iterator;
 import java.util.List;
 
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.TripRecorder;
 import edu.wisc.drivesense.model.Reading;
 
 import edu.wisc.drivesense.model.ReadingHolder;
-import edu.wisc.drivesense.scoring.DrivingAnalyst;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
 import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.dequeueBeforeTimestamp;
 
 /**
@@ -31,12 +30,12 @@ import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.dequeueBeforeTi
 public class LocalDataTester {
     static boolean lock = false;
 
-    private DrivingAnalyst analyst;
+    private TripRecorder recorder;
     private Context context;
 
-    public LocalDataTester(DrivingAnalyst analyst, Context context) {
+    public LocalDataTester(TripRecorder analyst, Context context) {
         this.context = context;
-        this.analyst = analyst;
+        this.recorder = analyst;
     }
 
     /**
@@ -53,7 +52,7 @@ public class LocalDataTester {
         for (int i = 0; i < iterations; i++) {
             List<ReadingHolder> holders = ReadingHolder.findWithQuery(ReadingHolder.class, "SELECT * FROM READING_HOLDER LIMIT ?", "" + limit);
             for (ReadingHolder holder: holders)
-                analyst.newReading(holder.getReading());
+                recorder.newReading(holder.getReading());
 
             Log.d("Loader", "Iteration: " + i);
         }
@@ -64,7 +63,6 @@ public class LocalDataTester {
         readFile("gyro.txt", context, Reading.Type.GYROSCOPE);
         readFile("gravity.txt", context, Reading.Type.GRAVITY);
         readFile("gps.txt", context, Reading.Type.GPS);
-        readFile("labels.txt", context, Reading.Type.LABEL);
         readFile("acceleration.txt", context, Reading.Type.ACCELERATION);
     }
 
@@ -73,7 +71,6 @@ public class LocalDataTester {
         readAndLoad("gyro.txt", context, Reading.Type.GYROSCOPE);
         readAndLoad("gravity.txt", context, Reading.Type.GRAVITY);
         readAndLoad("gps.txt", context, Reading.Type.GPS);
-        readAndLoad("labels.txt", context, Reading.Type.LABEL);
         readAndLoad("acceleration.txt", context, Reading.Type.ACCELERATION);
     }
 
@@ -125,7 +122,7 @@ public class LocalDataTester {
 
     private void readAndLoad(String name, Context context, Reading.Type type) {
         Log.d("LocalReader", "Starting load for " + name);
-        long maxTime = 100000;
+        long maxTime = 200000;
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
@@ -140,7 +137,7 @@ public class LocalDataTester {
 
                 //exclude duplicates
                 if (lastReading != null && reading.timestamp != lastReading.timestamp)
-                    analyst.newReading(reading);
+                    recorder.newReading(reading);
 
                 lastReading = reading;
                 line = reader.readLine();

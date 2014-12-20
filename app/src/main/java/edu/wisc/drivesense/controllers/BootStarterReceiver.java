@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.activities;
+package edu.wisc.drivesense.controllers;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

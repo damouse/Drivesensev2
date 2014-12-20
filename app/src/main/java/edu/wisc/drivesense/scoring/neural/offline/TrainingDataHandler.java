@@ -53,10 +53,11 @@ public class TrainingDataHandler {
      * is a list of inputs ready for consumption by the NN. Assumes the training set is already trimmed
      */
     public static TimestampQueue generateInputSeries(DataReceiver receiver, TrainingSet trainingSet) {
-        ArrayList<TimestampQueue> allLists = TimestampQueue.queueListCopy(trainingSet.getAllQueues());
-        TimestampQueue labels = new TimestampQueue(trainingSet.labels);
-        TimestampQueue periodizedData = new TimestampQueue();
-        TimestampQueue periodizedReadings = new TimestampQueue();
+//        ArrayList<TimestampQueue> allLists = TimestampQueue.queueListCopy(trainingSet.getAllQueues());
+        ArrayList<TimestampQueue> allLists = trainingSet.getAllQueues();
+        TimestampQueue<Reading> labels = new TimestampQueue<Reading>(trainingSet.labels);
+        TimestampQueue<DataSetInput> periodizedData = new TimestampQueue<DataSetInput>();
+        TimestampQueue<Reading> periodizedReadings = new TimestampQueue<Reading>();
 
         //the first and last timestamp in data where each series has values
         long timestampRange[] = completeTimestampRangeInDataSet(allLists);

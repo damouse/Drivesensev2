@@ -25,72 +25,29 @@ import edu.wisc.drivesense.server.DrivesensePreferences;
 public class SugarDatabse {
     private static final String TAG = "Sugar";
 
-    /**
-     * If no users exist, create a demo user.
-     * Else, check preferences for a saved user and load him
-     */
-    public static User getActiveUser() {
-        List<User> users = User.find(User.class, "logged_in = ?", "true");
-
-
-        if (users.size() == 1)
-            return users.get(0);
-
-        //no logged in users
-        if (users.size() == 0) {
-            return getDemoUser();
-        }
-        else {
-            Log.e(TAG, "HCF-- MULTIPLE LOGGED IN USERS");
-            for (User user: users)
-                user.logOut();
-            return getDemoUser();
-        }
-    }
-
     public static void deleteTrips(Trip... trips) {
         new DeleteAsyncTask().execute(trips);
     }
 
     public static void clearDatabase() {
-        List<Trip> all = Trip.listAll(Trip.class);
-        new DeleteAsyncTask().execute();
+        Log.i(TAG, "Cleared database contents");
+        Trip.deleteAll(Trip.class);
+        User.deleteAll(User.class);
+        MappableEvent.deleteAll(MappableEvent.class);
     }
 
-    public static void scoreTrip(final Trip trip) {
-        //Score the trip, try an upload
-//        new ScoreTripAsyncTask() {
+//    public static void scoreTrip(final Trip trip) {
+//        //Score the trip, try an upload
+//        new ScoreAsyncTask() {
 //            protected void onPostExecute(boolean scoredSuccessfully) {
-//                if (!scoredSuccessfully)
-//                    deleteTrips(trip);
-//                else
-//                    uploadTrip(trip);
+//                Log.e(TAG, "Finished scoring trip " + trip.name);
+////                if (!scoredSuccessfully)
+////                    deleteTrips(trip);
+////                else
+////                    uploadTrip(trip);
 //            }
 //        }.execute(trip);
-    }
-
-    /**
-     * Get or create and return the demo user
-     * @return
-     */
-    private static User getDemoUser() {
-//        User.
-        List<User> demo = User.find(User.class, "user_id = ?", "-7");
-
-        if (demo.size() == 1)
-            return demo.get(0);
-
-        //TODO: fix this. Merge all of their trips and delete all but one
-        if (demo.size() > 1) {
-            Log.e(TAG, "HCF-- multiple demo users!");
-            throw new NullPointerException();
-        }
-
-        User newDemo = new User();
-        newDemo.userId = -7;
-        newDemo.save();
-        return newDemo;
-    }
+//    }
 
 
     /* Old Code */
@@ -134,3 +91,16 @@ class DeleteAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
         return true;
     }
 }
+
+//class ScoreAsyncTask extends AsyncTask<Trip, Integer, Boolean> {
+//    @Override
+//    protected Boolean doInBackground(Trip... params) {
+//        Trip trip = params[0];
+//
+//        //a score for each type
+//        int scores[] = new int[4];
+//
+//        Log.i("Sugar", "Finished deleting " + params.length + " trips");
+//        return true;
+//    }
+//}

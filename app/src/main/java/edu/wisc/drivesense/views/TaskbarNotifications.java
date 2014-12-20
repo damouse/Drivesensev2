@@ -8,10 +8,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
-import android.util.Log;
 
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.activities.MainActivity;
+import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 
 /**

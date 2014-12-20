@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.activities;
+package edu.wisc.drivesense.controllers;
 
 import android.app.Activity;
 import android.app.AlertDialog;

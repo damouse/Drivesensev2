@@ -11,7 +11,7 @@ import com.orm.SugarRecord;
  *
  * Created from GPS coordinates or nothing.
  */
-public class MappableEvent extends SugarRecord<User> {
+public class MappableEvent extends SugarRecord<MappableEvent> {
     public static enum Type {
         ACCELERATION,
         BRAKE,
@@ -27,13 +27,23 @@ public class MappableEvent extends SugarRecord<User> {
     public long timestamp;
 
     @Expose
+    @SerializedName("time_stamp_end")
+    public long timestampEnd;
+
+    @Expose
     public double latitude;
 
     @Expose
     public double longitude;
 
     @Expose
-    public float speed;
+    public double latitude_end;
+
+    @Expose
+    public double longitude_end;
+
+    @Expose
+    public double speed;
 
     @Expose
     public Type type;
@@ -53,32 +63,41 @@ public class MappableEvent extends SugarRecord<User> {
         score = 0;
     }
 
-//    public MappableEvent(Location loc) {
-//        this();
-//        latitude = loc.getLatitude();
-//        longitude = loc.getLongitude();
-//        timestamp = new Date();
-//
-//        //2.2369 mph for 1 m/s
-//        speed = loc.getSpeed() * 2.23694f;
-//    }
+    public MappableEvent(Reading gps) {
+        this();
 
-//    public MappableEvent(Reading reading) {
-//        this();
-//
-//        latitude = reading.values[1];
-//        longitude = reading.values[2];
-//        speed = (float) reading.values[0] * 2.23694f;
-//
-//        timestamp = reading.timestamp;
-//    }
+        if (gps.type != Reading.Type.GPS)
+            throw new NullPointerException();
+
+        timestamp = gps.timestamp;
+
+        speed = gps.values[0];
+        latitude = gps.values[1];
+        longitude = gps.values[2];
+
+        type = Type.GPS;
+    }
+
+    public MappableEvent(Reading gps_start, Reading gps_end, DrivingPattern pattern) {
+        this(gps_start);
+
+        latitude_end = gps_end.values[1];
+        longitude_end = gps_end.values[1];
+
+        timestamp = pattern.start;
+        timestampEnd = pattern.end;
+        type = pattern.type;
+        score = pattern.score;
+    }
 
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
         sb.append(" date: " + timestamp);
+        sb.append(" type: " + type);
         sb.append(" lat: " + latitude);
         sb.append(" long: " + longitude);
+        sb.append(" score: " + score);
 
         return sb.toString();
     }

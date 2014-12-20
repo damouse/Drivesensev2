@@ -16,22 +16,20 @@ import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
  */
 public class Output {
     /* Conversion methods */
-    public static String readingsToString(TimestampQueue readings) {
+    public static String readingsToString(TimestampQueue<Reading> readings) {
         StringBuilder sb = new StringBuilder();
 
-        for (TimestampSortable element : readings) {
-            Reading reading = (Reading) element;
+        for (Reading reading : readings)
             sb.append(readingToString(reading) + "\n");
-        }
+
 
         return sb.toString();
     }
 
-    public static String dataInputsToString(TimestampQueue series, String... keys) {
+    public static String dataInputsToString(TimestampQueue<DataSetInput> series, String... keys) {
         TabbingStringBuilding sb = new TabbingStringBuilding();
 
-        for (TimestampSortable element : series) {
-            DataSetInput set = (DataSetInput) element;
+        for (DataSetInput set : series) {
             sb.append(set.timestamp);
 
             for (int i = 0; i < keys.length; i++) {

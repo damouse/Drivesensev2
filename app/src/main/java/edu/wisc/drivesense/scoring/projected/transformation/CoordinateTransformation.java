@@ -113,6 +113,7 @@ public class CoordinateTransformation {
                 index++;
             }
         }
+
         //including the last case
         if (index != stopSz) {
             DrivingPattern last = stoppingReadings.get(stopSz - 1);

@@ -52,7 +52,7 @@ public class Arrays {
      * Given time-ordered data series, return a flat double array where each value
      * is an average over all the values in the series at that index.
      */
-    public static double[] averageSeries(TimestampQueue series) {
+    public static double[] averageSeries(TimestampQueue<? extends TimestampSortable> series) {
         if (series.size() == 0) {
             log("Series has no values. Returning 0 values");
             double ret[] = {0.0, 0.0, 0.0};

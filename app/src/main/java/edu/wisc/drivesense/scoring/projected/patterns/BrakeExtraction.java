@@ -15,11 +15,20 @@ public class BrakeExtraction {
     private static double decelerationThreshold_ = -0.1;
     private static double percent_ = 0.7;
 
+/* New pulled code
+    private static int wnd_ = 10;
+    private static double accelerationThreshold_ = 0.4;
+    private static long duration_ = 4000;
+    private static long brake_duration_ = 3000;
+    
+    private static double decelerationThreshold_ = -1.0;
+    private static double percent_ = 0.7;
+*/
 
-    public static List<DrivingPattern> extractBrakeIntervals(List<Reading> accelerometer) {
+    public static ArrayList<DrivingPattern> extractBrakeIntervals(List<Reading> accelerometer) {
 
         int countDeceleration = 0;
-        List<DrivingPattern> decelerations = new ArrayList<DrivingPattern>();
+        ArrayList<DrivingPattern> decelerations = new ArrayList<DrivingPattern>();
         boolean in_deceleration = false;
 
         DrivingPattern interDec = null;
@@ -81,8 +90,8 @@ public class BrakeExtraction {
     }
 
 
-    public static List<DrivingPattern> extractAccelerationIntervals(List<Reading> accelerometer) {
-        List<DrivingPattern> intervals = new ArrayList<DrivingPattern>();
+    public static ArrayList<DrivingPattern> extractAccelerationIntervals(List<Reading> accelerometer) {
+        ArrayList<DrivingPattern> intervals = new ArrayList<DrivingPattern>();
         int countAcceleration = 0;
         boolean in_acceleration = false;
         DrivingPattern interAcc = null;

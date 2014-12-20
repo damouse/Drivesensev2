@@ -17,7 +17,8 @@ import android.widget.LinearLayout;
  *
  *
  */
-public class ViewAnimator implements ValueAnimator.AnimatorUpdateListener {
+public
+class ViewAnimator implements ValueAnimator.AnimatorUpdateListener {
     private final String TAG = "ViewAnimator";
 
     private LinearLayout layoutView;
@@ -116,3 +117,4 @@ public class ViewAnimator implements ValueAnimator.AnimatorUpdateListener {
         mover.start();
     }
 }
+

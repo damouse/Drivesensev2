@@ -13,11 +13,15 @@ import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.Bengal;
+import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.utilities.SensorSimulator;
 
@@ -55,27 +59,32 @@ import android.widget.Toast;
  */
 public class PinMapFragment extends Fragment implements LocationListener, ConnectionCallbacks {
 	private static final String TAG = "PinMapFragment";
-	
+
+    private Bengal delegate;
+
 	private GoogleMap map;
-	
-	private List<TripMapInformation> displayTrips;
+
+    private BitmapLoader bitmapLoader;
+
+    private List<TripMapInformation> tripsCache;
+
+    private boolean showRequested = false;
+
 	private TripMapInformation recordingTrip;
 	
 	private boolean displaying;
-    private boolean dropOddCoordinates;
+
 	
 	private LocationClient client;
 
-    private SensorSimulator simulator;
 	
 	
-/* Boilerplate */
+    /* Boilerplate */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(R.layout.map_fragment, container, false);
 	 
 		initMap();
-        displayTrips = new ArrayList<TripMapInformation>();
 
 		return myFragmentView;
 	}
@@ -87,11 +96,11 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 		//grab a ref to the map for later manipulation
 		MapFragment fm = (MapFragment) getFragmentManager().findFragmentById(R.id.googleMap);
         map = fm.getMap();
-        
+
+        bitmapLoader = new BitmapLoader(getActivity().getApplicationContext());
+
         //default to showing the user's location
         map.setMyLocationEnabled(true);
-
-        dropOddCoordinates = false;
         
         Context context = getActivity().getApplicationContext();
         
@@ -124,205 +133,150 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 		client.disconnect();
 	}
 
+    public void setDelegate(Bengal bengal) {
+        delegate = bengal;
+    }
+
 	  
-/* Public Interface */
+    /* Public Interface */
 	/**
-	 * Load a given array of trips into the map cache. 
-	 * @param trips
+	 * Clears cache and reloads.
 	 */
-	public void loadTrips(List<Trip> trips) {
-        Log.d(TAG, "Starting trip parse");
-		 //draw trips, cache
-		 for(Trip trip : trips) {   			
- 			new CalculateMapInfo(trip) { 
- 		        protected void onPostExecute(TripMapInformation info) {
- 		        	if (info != null) {
-    		        	displayTrips.add(info);
- 		        	}
- 		        }
- 		    }.execute();
- 		}
-	}
+	public void setTrips(List<Trip> newTrips) {
+        map.clear();
+        tripsCache = new ArrayList<TripMapInformation>();
 
-    public void addExisitingRecordingTrip(Trip trip) {
-        new CalculateMapInfo(trip) {
-            protected void onPostExecute(TripMapInformation info) {
-                if (info != null) {
-                    startRecording();
-                    recordingTrip = info;
-                    addTripToMap(info);
-                }
-            }
-        }.execute();
-    }
-
-	 /**
-	  * Follow the user on the map. Trace the user's route with a polyline. 
-	  * Ask locationManager to update more frequently.
-      * Note that recording begins regardless of the displaty status of the rest of the
-      * fragment. The displayed trip is hidden or presented, while maintaining its state,
-      * when trips are shown or hidden.
-	  */
-	 public void startRecording() {
-		 map.setMyLocationEnabled(true);
-		 recordingTrip = new TripMapInformation();
-
-         //a faking object that fakes location updates
-         if (simulator != null && BackgroundRecordingService.DEBUG) simulator.startSendingLocations(this, 120);
-	 }
-	 
-	 /**
-	  * Reverse of the above method. Stop following the user, remove the previous polyline.
-	  */
-	 public void stopRecording() {
-		 recordingTrip = null;
-		 if (!displaying) map.clear();
-
-         //a faking module used to debug and test
-
-         if (simulator != null && BackgroundRecordingService.DEBUG) simulator.stopSendingLocations();
-	 }
-	 
-	 /**
-	  * Show the given trips by drawing them on the map. Each trip gets a pair of points and a polyline between the two.
-	  */
-	 public void showTrips() {
-		 map.setMyLocationEnabled(false);
-         map.clear();
-		 addAllTripsToMap();
-		 displaying = true;
-	 }
-	 
-	 /**
-	  * Reverse of the above method. Remove all polylines drawn on the map.
-	  * 
-	  *  If a trip is currently selected, deselect it. 
-	  */
-	 public void hideTrips() {
-		 map.clear();
-		 map.setMyLocationEnabled(true);
-		 displaying = false;
-
-         if (recordingTrip != null) addTripToMap(recordingTrip);
-	 }
-
-    /**
-     * Delete pressed on the list. Remove the trip from the data structure, clear the map
-     * @param trip
-     */
-    public void deleteTrip(Trip trip) {
-        TripMapInformation remove = null;
-
-        for (int i = 0; i < displayTrips.size(); i++) {
-            if (displayTrips.get(i).trip.equals(trip)) {
-                displayTrips.remove(displayTrips.get(i));
-                break;
-            }
-        }
-
-        deselctTrip();
-    }
-
-	 
-	 /**
-	  * Select the given trip on the map. Should be a member of the displayed trips (i.e.
-	  * in display mode)
-	  * @param trip the trip that should be selected
-	  */
-	 public void selectTrip(Trip trip) {
-		 map.clear();
-
-		 for (TripMapInformation cachedTrip: displayTrips) {
-//			if (cachedTrip.trip.id == trip.id) {
-            if (true) {
-				addTripToMap(cachedTrip);
-
-                //zoom the map
-                LatLngBounds.Builder builder = new LatLngBounds.Builder();
-                builder.include(cachedTrip.marker1.getPosition());
-                builder.include(cachedTrip.marker2.getPosition());
-
-                LatLngBounds bounds = builder.build();
-
-                Log.d(TAG, "Bounds: " + bounds.toString());
-
-                try {
-                    map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
-                }
-                catch (IllegalStateException ex) {
-                    Log.e(TAG, "Map view error! " + ex.toString());
-                    ex.printStackTrace();
-                }
-                //map.animateCamera(CameraUpdateFactory.zoomTo(15));
-
-				return;
-			}
-		 }
-	 }
-	 
-	 /**
-	  * Deselect any trips selected on the map and show the fully list of displaytrips
-	  */
-	 public void deselctTrip() {
-		 map.clear();
-		 addAllTripsToMap();
-	 }
-
-	 
-/* Private Helpers */
-	 /**
-	  * Add the passed info to the map, drawing it on the screen.
-	  * @param trip trip to be added to the map
-	  */
-	 private void addTripToMap(TripMapInformation trip) {
-	    if (trip.line == null || trip.marker1 == null)
+        if (newTrips == null)
             return;
 
-        map.addPolyline(trip.line);
-		map.addMarker(trip.marker1);
-
-        if (trip.marker2 != null)
-            map.addMarker(trip.marker2);
-	 }
-	 
-	 private void addAllTripsToMap() {
-		 for (TripMapInformation trip: displayTrips) {
-			 addTripToMap(trip);
-		 }
-	 }
+		for(Trip trip : newTrips) {
+            new CalculateMapInfo(bitmapLoader) {
+                protected void onPostExecute(TripMapInformation info) {
+                    if (info != null) {
+                        tripsCache.add(info);
+                        Log.d(TAG, "Finished parsing trips");
+                    }
+                }
+            }.execute(trip);
+        }
+	}
 
     /**
-     * Update the currently recording trip with the new coordinate passed in. Append it to the
-     * active trip object and add it to the map.
-     * @param coordinate the coordinate to be passed in
+     * Does not check if the trips exist in the cache-- must call setTrips first.
+     *
+     * TODO: what if the asynctask hasn't finished
      */
-    private void updateRecordingTrip(LatLng coordinate) {
+    public void showTrips(List<Trip> showTrips) {
+        displaying = true;
+        map.clear();
+
+        if (showTrips == null)
+            return;
+
+        Log.d(TAG, "Showing " + showTrips.size() + " trips");
+        map.setMyLocationEnabled(false);
+
+        if (showTrips.size() == 1)
+            addTripToMap(findTripInCache(showTrips.get(0)), true, true);
+        else {
+            for (Trip trip : showTrips)
+                addTripToMap(findTripInCache(showTrips.get(0)), false, false);
+        }
+
+        //TODO: zoom to the added trips
+    }
+
+    public void showRecordingTrip(Trip trip) {
+        map.setMyLocationEnabled(true);
+
+        new CalculateMapInfo(bitmapLoader) {
+            protected void onPostExecute(TripMapInformation info) {
+                if (info != null) {
+                    recordingTrip = info;
+
+                    //reload map
+                }
+            }
+        }.execute(trip);
+    }
+
+    public void updateRecordingTrip(List<MappableEvent> events) {
+        //add patterns to recording trip
         if (recordingTrip == null) {
             Log.e(TAG, "WARN: Update recording trip called while there is no recordingTrip!");
             return;
         }
 
-        if (coordinate == null) {
-            Log.e(TAG, "WARN: Update recording trip called with a null coordinate!");
-            return;
-        }
-
-        recordingTrip.addCoordinate(coordinate);
-
-
-        //do not update the map with the recording trip if the map is busy displaying trips
-        if (displaying) return;
-
-        map.addPolyline(recordingTrip.line);
-
-        if (recordingTrip.marker1 == null) {
-            recordingTrip.setMarker1(coordinate);
-            map.addMarker(recordingTrip.marker1);
-        }
-
+//        recordingTrip.addCoordinate(coordinate);
+//
+//        //do not update the map with the recording trip if the map is busy displaying trips
+//        if (displaying) return;
+//        map.addPolyline(recordingTrip.line);
+//
+//        if (recordingTrip.marker1 == null) {
+//            recordingTrip.setMarker1(coordinate);
+//            map.addMarker(recordingTrip.marker1);
+//        }
     }
-	    
-/* Location callback */
+
+
+    /* Private Helpers */
+    /**
+     * Add the passed info to the map, drawing it on the screen.
+     * @param trip trip to be added to the map
+     */
+    private void addTripToMap(TripMapInformation trip, boolean showPatterns, boolean zoom) {
+        if (trip.line == null || trip.marker1 == null)
+            return;
+
+        Log.d(TAG, "Adding trip: " + trip.toString());
+
+        map.addPolyline(trip.line);
+        map.addMarker(trip.marker1);
+
+        if (trip.marker2 != null)
+            map.addMarker(trip.marker2);
+
+//        if (showPatterns) {
+//            for (MarkerOptions marker: trip.patterns)
+//                map.addMarker(marker);
+//        }
+
+        //alternative
+        if (showPatterns) {
+            for (GroundOverlayOptions marker: trip.patterns)
+                map.addGroundOverlay(marker);
+        }
+
+
+        if (zoom) {
+            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+            builder.include(trip.marker1.getPosition());
+            builder.include(trip.marker2.getPosition());
+            LatLngBounds bounds = builder.build();
+
+            try {
+                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+            }
+            catch (IllegalStateException ex) {
+                Log.e(TAG, "Map view error!");
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
+    /* Private Implementation */
+    private TripMapInformation findTripInCache(Trip trip) {
+        for (TripMapInformation info: tripsCache) {
+            if(info.trip.getId() == trip.getId())
+                return info;
+        }
+
+        return null;
+    }
+
+	/* Location callback */
 	 /**
 	  * If currently recording, add a new point to the polyline. 
 	  * 
@@ -342,16 +296,6 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             map.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
-
-        //omit every other coordinate to cut down on crashes from having too many coordinates
-        dropOddCoordinates = !dropOddCoordinates;
-        if (dropOddCoordinates) return;
-		
-		//do not follow the user if we are not currently recording the trip
-		if (recordingTrip != null)
-            updateRecordingTrip(latLng);
-
-
 	}
 
 
@@ -361,12 +305,7 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 		LocationRequest locationrequest = new LocationRequest();
 		locationrequest.setInterval(3);
 
-        if (BackgroundRecordingService.DEBUG) {
-            simulator = new SensorSimulator();
-            //simulator.startSendingLocations(this, 120);
-        }
-        else
-            client.requestLocationUpdates(locationrequest, this);
+        client.requestLocationUpdates(locationrequest, this);
 	}
 
 	@Override

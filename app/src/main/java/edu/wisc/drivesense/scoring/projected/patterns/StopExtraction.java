@@ -19,7 +19,7 @@ public class StopExtraction {
         return extractStopIntervals(Readings, wnd, threshold);
     }
 
-    static public List<DrivingPattern> extractStopIntervals(List<Reading> Readings) {
+    static public ArrayList<DrivingPattern> extractStopIntervals(List<Reading> Readings) {
         int wnd = Parameters.kAccelerometerSlidingWindowSize;
         double threshold = Parameters.kMovementDetectionThreshold;
         return extractStopIntervals(Readings, wnd, threshold);
@@ -29,9 +29,9 @@ public class StopExtraction {
      * get the static intervals over RAW accelerometer values
      * we want to use the raw data
      * */
-    static public List<DrivingPattern> extractStopIntervals(List<Reading> Readings, int wnd, double threshold) {
+    static public ArrayList<DrivingPattern> extractStopIntervals(List<Reading> Readings, int wnd, double threshold) {
 
-        List<DrivingPattern> intervals = new ArrayList<DrivingPattern>();
+        ArrayList<DrivingPattern> intervals = new ArrayList<DrivingPattern>();
         int sz = Readings.size();
         //Log.log(Thread.currentThread().getStackReading()[1].getMethodName(), "the size of input Readings is:" + String.valueOf(sz));
 

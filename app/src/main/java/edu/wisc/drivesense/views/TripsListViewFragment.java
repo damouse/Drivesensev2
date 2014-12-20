@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.activities.MainActivity;
-import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.Bengal;
+import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
@@ -31,18 +31,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.LinearLayout.LayoutParams;
 
-public class TripsListViewFragment extends ListFragment implements ConnectionManagerCallback {
+public class TripsListViewFragment extends ListFragment  {
 	private static final String TAG = "TripsListViewFragment";
-	private ArrayList<Trip> trips;
-	private TripsListViewFragment thisObject; //what a silly hack.
-	
+
+    private Bengal delegate;
+    private ArrayList<Trip> trips;
+
 	View openView;
 	Trip openTrip = null; //saved in case the open cell is closed as the trip is uploading
 
-    Trip uploadingTrip;
-	
 	Context context;
-
     ArrayAdapter<Trip> listAdapter;
 	
 	
@@ -50,54 +48,13 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         context = getActivity();
-        
-        thisObject = this;
-        
-        //tracks which list item was last selected
+
         openTrip = null;
         openView = null;
     }
 	
 
 /* Listeners */
-    OnClickListener uploadListener = new Button.OnClickListener() {
-    	public void onClick(View v) {
-    		//check to make sure the user is logged in
-    		Context context = getActivity().getApplicationContext();
-    		DrivesensePreferences prefs = new DrivesensePreferences(context);
-    		
-    		if (!prefs.loggedIn()) {
-    			Toast.makeText(context, "You must be logged in to upload trips", Toast.LENGTH_SHORT).show();
-    			return;
-    		}
-    		
-    		//ensure the trip has not already been uploaded
-    		//if (!openTrip.uploaded)
-    		v.setVisibility(View.INVISIBLE);
-        	((ProgressBar)openView.findViewById(R.id.spinner)).setVisibility(View.VISIBLE);
-
-            ((MainActivity) getActivity()).setBusy(true);
-            uploadingTrip = openTrip;
-        	new ConnectionManager(context, thisObject).convertUploadTrip(openTrip, prefs.loggedInUser());
-        }
-    };
-
-    OnClickListener deleteListener = new Button.OnClickListener() {
-        public void onClick(View v) {
-            Toast.makeText(context, "Deleted trip", Toast.LENGTH_SHORT).show();
-            trips.remove(openTrip);
-            listAdapter.notifyDataSetChanged();
-
-            //notify activity of change, propogates to map
-            ((MainActivity) getActivity()).listFragmentDeletedTrip(openTrip);
-
-//            BackgroundRecordingService.getInstance().deleteTrip(openTrip);
-
-            openView = null;
-            openTrip = null;
-        }
-    };
-
     OnClickListener facebookListener = new Button.OnClickListener() {
         public void onClick(View v) {
             Toast.makeText(context, "Social functionality disabled for testing", Toast.LENGTH_SHORT).show();
@@ -109,38 +66,6 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
             Toast.makeText(context, "Social functionality disabled for field testing", Toast.LENGTH_SHORT).show();
         }
     };
-	
-    
-/* Connection Manage Delegate Methods */
-    @Override
-    public void onLoginCompletion(boolean success, User user, String response) { }
-    @Override
-    public void onSessionCompletion(boolean success) {  }
-
-    @Override
-    public void onUploadCompletion(boolean success, String response) {
-        ((MainActivity) getActivity()).setBusy(false);
-
-        if (!success) {
-            Toast.makeText(context, "There was a problem uploading the trip", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (openView == null) {
-            Log.e(TAG, "The open view was switched out!");
-            return;
-        }
-
-        if (((Button)openView.findViewById(R.id.uploadButton)).getVisibility() == View.VISIBLE) {
-            Log.e(TAG, "The open view was switched out! Open view has a visible button!");
-            return;
-        }
-
-        ((Button)openView.findViewById(R.id.uploadButton)).setVisibility(View.VISIBLE);
-        ((ProgressBar)openView.findViewById(R.id.spinner)).setVisibility(View.INVISIBLE);
-
-        setItemUpdated(openView);
-    }
 
 
     private void setItemUpdated(View view) {
@@ -148,9 +73,30 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
     	status.setText("Trip Uploaded");
     	status.setTextColor(getResources().getColor(R.color.green));
 	}
-	
-	
-	/**
+
+    public void setDelegate(Bengal bengal) {
+        delegate = bengal;
+    }
+
+
+
+    public void showTrip(Trip trip) {
+
+    }
+
+    public void showAllTrips() {
+
+    }
+
+    public void setTrips(List<Trip> trips) {
+        this.trips = new ArrayList<Trip>(trips);
+        listAdapter = new CustomListAdapter(context, this.trips);
+        this.setListAdapter(listAdapter);
+    }
+
+
+
+    /**
 	 * Expands the given cell on click. Saves the "open" trip represented by the given cell.
 	 * 
 	 * If no cell is open, open the current cell. 
@@ -163,11 +109,15 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
 		View toolbar = view.findViewById(R.id.toolbar);
         ExpandAnimation expandAni = new ExpandAnimation(toolbar, 300);
         toolbar.startAnimation(expandAni);
+
+        openTrip = trips.get(position);
+        delegate.selectTrip(openTrip);
         
       //touch on previously opened cell- close open cenn
         if (openView == view) {
     		openView = null;
-    		openTrip = ((MainActivity) getActivity()).listFragmentItemClicked(position, false);
+            openTrip = null;
+            delegate.showAll();
         }	
         else {
         	//touch on new cell with another cell already opened
@@ -179,13 +129,22 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
         	
         	//last cell is recorded regardless if the openView was either null or newview didnt match the last open view
         	openView = view;
-        	openTrip = ((MainActivity) getActivity()).listFragmentItemClicked(position, true);
         	
         	Button upload = (Button) openView.findViewById(R.id.uploadButton);
-        	upload.setOnClickListener(uploadListener);
+        	upload.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    delegate.upload(openTrip);
+                }
+            });
 
             Button delete = (Button) openView.findViewById(R.id.delete);
-            delete.setOnClickListener(deleteListener);
+            delete.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    delegate.delete();
+                }
+            });
 
             Button facebook = (Button) openView.findViewById(R.id.facebook);
             facebook.setOnClickListener(facebookListener);
@@ -195,17 +154,7 @@ public class TripsListViewFragment extends ListFragment implements ConnectionMan
         }
     }
 
-	
-	/**
-	 * Refresh the list
-	 */
-	public void loadTrips(List<Trip> trips) {
-        this.trips = new ArrayList<Trip>(trips);
-		listAdapter = new CustomListAdapter(context, this.trips);
-	    this.setListAdapter(listAdapter);
-	}
 
-	
 	
 /* ListView Methods */
 	/**

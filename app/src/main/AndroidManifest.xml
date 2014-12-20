@@ -6,7 +6,6 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="com.google.android.providers.gsf.permission.READ_GSERVICES"/>
 
     <!-- The following two permissions are not required to use Google Maps Android API v2, but are recommended. -->
@@ -41,7 +40,7 @@
         tools:replace="icon">
 
         <meta-data android:name="DATABASE" android:value="drivesense.db" />
-        <meta-data android:name="VERSION" android:value="14" />
+        <meta-data android:name="VERSION" android:value="15" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="edu.wisc.drivesense.model" />
 
@@ -57,7 +56,7 @@
         <service android:name=".businessLogic.BackgroundRecordingService"/>
 
         <receiver
-            android:name=".activities.BootStarterReceiver"
+            android:name=".controllers.BootStarterReceiver"
             android:enabled="true"
             android:exported="true"
             android:label="StartMyServiceAtBootReceiver">
@@ -74,7 +73,7 @@
         </receiver>
 
         <activity
-            android:name="edu.wisc.drivesense.activities.MainActivity"
+            android:name="edu.wisc.drivesense.controllers.MainActivity"
 
             android:label="@string/app_name" >
             <intent-filter>
@@ -87,8 +86,8 @@
 
         <activity
             android:label="Settings"
-            android:name="edu.wisc.drivesense.activities.PreferenceActivity"
-            android:parentActivityName="edu.wisc.drivesense.activities.MainActivity"/>
+            android:name="edu.wisc.drivesense.controllers.PreferenceActivity"
+            android:parentActivityName="edu.wisc.drivesense.controllers.MainActivity"/>
 
 
         <!-- Live key: make sure uncommented for releases! -->

@@ -20,6 +20,13 @@ public class LanechangeExtraction {
     private static int kXIndex = 0;
     private static double kLaneChangeThresholdByAccelerometer = 2;
 
+    /*
+    private static double kLaneChangeThreshold = 0.17;
+    private static long kMinimumDuration = 2000;
+    private static int kSlidingWindowSize = 20;
+    private static int kZIndex = 2;
+    */
+
     private static boolean isLanechange(List<Reading> gyroscope, DrivingPattern pattern) {
 
         if (pattern.end - pattern.start < kMinimumDuration) return false;
@@ -41,12 +48,12 @@ public class LanechangeExtraction {
         return false;
     }
 
-    static public List<DrivingPattern> /*List<Reading>*/ extractLanechanges(List<Reading> gyroscope) {
+    static public ArrayList<DrivingPattern> /*List<Reading>*/ extractLanechanges(List<Reading> gyroscope) {
 
         ///List<Reading> div = new ArrayList<Reading>();
 
         int wnd = kSlidingWindowSize;
-        List<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
+        ArrayList<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
         int sz = gyroscope.size();
         //Log.log(Thread.currentThread().getStackReading()[1].getMethodName(), "the size of input Readings is:" + String.valueOf(sz));
         LinkedList<Reading> sliding = new LinkedList<Reading>();
@@ -123,10 +130,10 @@ public class LanechangeExtraction {
      * @return
      */
 
-    static public List<DrivingPattern> extractLanechangesByAccelerometer(List<Reading> accelerometer) {
+    static public ArrayList<DrivingPattern> extractLanechangesByAccelerometer(List<Reading> accelerometer) {
 
         int wnd = kSlidingWindowSize;
-        List<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
+        ArrayList<DrivingPattern> patterns = new ArrayList<DrivingPattern>();
         int sz = accelerometer.size();
         LinkedList<Reading> sliding = new LinkedList<Reading>();
         boolean in_turn = false;

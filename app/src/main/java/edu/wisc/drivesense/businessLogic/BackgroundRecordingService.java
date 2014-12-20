@@ -12,8 +12,10 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
+import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
+import edu.wisc.drivesense.model.SugarDatabse;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.scoring.common.LocalDataTester;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
@@ -23,7 +25,6 @@ import edu.wisc.drivesense.sensors.TripListener;
 import edu.wisc.drivesense.server.DrivesensePreferences;
 import edu.wisc.drivesense.model.ReadingHolder;
 import edu.wisc.drivesense.utilities.Ticker;
-import edu.wisc.drivesense.scoring.DrivingAnalyst;
 import edu.wisc.drivesense.sensors.PowerListener;
 import edu.wisc.drivesense.sensors.SensorMonitor;
 import edu.wisc.drivesense.server.ServerLogger;
@@ -60,19 +61,17 @@ public class BackgroundRecordingService extends Service implements Observer {
     private static final String TAG = "BackgroundService";
     private static BackgroundRecordingService instance = null; //singleton ivar
 
-    //modules
     public SensorMonitor monitor;
+    public Concierge concierge;
+    public BackgroundState stateManager;
 
-    //State Variables
-    public static BackgroundState stateManager = new BackgroundState();
     boolean recording;
     boolean listening;
 
     private PowerListener power;
     private TripListener listener;
     private ServerLogger serverLogger;
-    private DrivingAnalyst analyst;
-    private TripRecorder recorder;
+    public TripRecorder recorder;
 
     //taskbar status
     private TaskbarNotifications taskbar;
@@ -85,10 +84,6 @@ public class BackgroundRecordingService extends Service implements Observer {
     /* Boilerplate */
     // Singleton accessor
     public static BackgroundRecordingService getInstance() {
-        if (instance == null) {
-            instance = new BackgroundRecordingService();
-        }
-
         return instance;
     }
 
@@ -99,7 +94,7 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     @Override
     public void onStart(Intent intent, int startId) {
-        Log.d(TAG, "ModelManager started");
+        Log.d(TAG, "BackgroundService started");
 
         instance = this;
 
@@ -109,9 +104,19 @@ public class BackgroundRecordingService extends Service implements Observer {
         listener = new TripListener();
         serverLogger = new ServerLogger(this);
         taskbar = new TaskbarNotifications(this);
+        concierge = new Concierge();
 
-        //DEBUG
-        localDataTester();
+        stateManager = new BackgroundState();
+        stateManager.addObserver(this);
+
+        //Broadcast on start
+        Intent startupIntent = new Intent(MainActivity.BACKGROUND_ACTION);
+
+        try { sendBroadcast(startupIntent); }
+        catch(NullPointerException ex) {
+            Log.e(TAG, "Intent broadcast to the main activity failed.");
+        }
+
     }
 
     @Override
@@ -154,8 +159,7 @@ public class BackgroundRecordingService extends Service implements Observer {
                 return;
             }
 
-            recorder = new TripRecorder();
-            analyst = new DrivingAnalyst(recorder, this);
+            recorder = new TripRecorder(concierge.getCurrentUser(), this);
         } else if (!state && recording) {
             if (recorder == null) {
                 Log.e(TAG, "Can't end the trip, no trip is active!");
@@ -164,7 +168,6 @@ public class BackgroundRecordingService extends Service implements Observer {
 
             recorder.endTrip();
             recorder = null;
-            analyst = null;
         } else {
             Log.e(TAG, "Mismatched states! Received newRecordingState: " + state + " but old recording was: " + recording);
             return;
@@ -206,15 +209,12 @@ public class BackgroundRecordingService extends Service implements Observer {
     }
 
     public void newReading(Reading reading) {
-        if (recorder == null)
-            return;
-
-        if (analyst == null) {
-            Log.d(TAG, "Analyst is null as readings come in!");
+        if (recorder == null) {
+            Log.e(TAG, "Analyst is null as readings come in!");
             return;
         }
 
-        analyst.newReading(reading);
+        recorder.newReading(reading);
     }
 
 
@@ -258,58 +258,24 @@ public class BackgroundRecordingService extends Service implements Observer {
         return null;
     }
 
+
     /* TESTING */
-    private void localDataTester() {
+    public void localDataTester() {
+        SugarDatabse.clearDatabase();
+        concierge = new Concierge();
+
         //loadTestData();
-        //feedTestData();
         loadAndFeed();
-
-//        recorder = new TripRecorder();
-//        analyst = new DrivingAnalyst(recorder, this);
-//
-
-//
-//        Log.d(TAG, "Data Ending");
-//        Trip trip = recorder.getTrip();
-//        recorder.endTrip();
-//
-//        List<MappableEvent> events = trip.getEvents();
-//
-//        Log.d(TAG, "Number of events: " + events.size());
-    }
-
-    private void feedTestData() {
-        Log.d(TAG, "Starting feed...");
-        recorder = new TripRecorder();
-        analyst = new DrivingAnalyst(recorder, this);
-
-        LocalDataTester tester = new LocalDataTester(analyst, this);
-        tester.feedTestData();
-
-        Log.d(TAG, "Data Ending");
-        Trip trip = recorder.getTrip();
-        analyst.analyzePeriod();
-        recorder.endTrip();
-
-        Log.d(TAG, "Finished feeding test data");
-    }
-
-    private void loadTestData() {
-        Log.d(TAG, "Starting load...");
-        ReadingHolder.deleteAll(ReadingHolder.class);
-        LocalDataTester tester = new LocalDataTester(analyst, this);
-        tester.saveTestData(this);
-        Log.d(TAG, "Finished load");
     }
 
     void loadAndFeed() {
         Log.d(TAG, "Starting file load...");
-        recorder = new TripRecorder();
-        analyst = new DrivingAnalyst(recorder, this);
-        LocalDataTester tester = new LocalDataTester(analyst, this);
+        recorder = new TripRecorder(concierge.getCurrentUser(), this);
+        LocalDataTester tester = new LocalDataTester(recorder, this);
 
         tester.readAndLoadTestData(this);
-        analyst.analyzePeriod();
+
+        recorder.analyzePeriod();
         recorder.endTrip();
 
         Log.d(TAG, "Finished load");

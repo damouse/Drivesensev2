@@ -58,9 +58,6 @@ import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.timestampRangeF
  * TODO: missing sensors or sensor values
  */
 public class DataReceiver {
-
-    //How frequently to analyze enqueued data (milliseconds)
-    public int period;
     //queues for storing incomign data streams
     public TimestampQueue acceleration = new TimestampQueue();
     public TimestampQueue magnet = new TimestampQueue();
@@ -77,14 +74,10 @@ public class DataReceiver {
 
     /* Boilerplate */
     /**
-     * @param period In milliseconds, how long to wait before building a DataSetInput
      * @param memory The number of past periods to remember
      */
-    public DataReceiver(int period, int memory) {
-
-        this.period = period;
+    public DataReceiver(int memory) {
         inputMemorySize = memory;
-
         inputMemory = new TimestampQueue();
     }
 
@@ -137,23 +130,23 @@ public class DataReceiver {
     public DataSetInput getProcessedPeriod() {
         DataSetInput inputSet = buildRawPeriod();
 
-        Log.d("Receiver", inputSet.toString());
+        Log.d("Receiver period: ", inputSet.toString());
 
         //this could many any of a hundred things...
         if(!validatePeriod(inputSet))
             return null;
 
-        //old processessing
-        inputSet.preProcessedAcceleration = averageSeries(inputSet.acceleration);
-        inputSet.preProcessedGyroscope = averageSeries(inputSet.gyroscope);
-        inputSet.preProcessedGPS = averageSeries(inputSet.gps);
-        inputSet.preProcessedMagnet = averageSeries(inputSet.magnet);
-        inputSet.preProcessedGravity = averageSeries(inputSet.gravity);
-
-        //up to date processesing
-        processGps(inputSet, inputMemory);
-        processAcceleration(inputSet);
-        processGyroscope(inputSet);
+//        //old processessing
+//        inputSet.preProcessedAcceleration = averageSeries(inputSet.acceleration);
+//        inputSet.preProcessedGyroscope = averageSeries(inputSet.gyroscope);
+//        inputSet.preProcessedGPS = averageSeries(inputSet.gps);
+//        inputSet.preProcessedMagnet = averageSeries(inputSet.magnet);
+//        inputSet.preProcessedGravity = averageSeries(inputSet.gravity);
+//
+//        //up to date processesing
+//        processGps(inputSet, inputMemory);
+//        processAcceleration(inputSet);
+//        processGyroscope(inputSet);
 
         rememberLastInput(inputSet);
 

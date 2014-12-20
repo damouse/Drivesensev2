@@ -6,54 +6,32 @@ import java.util.List;
 
 import android.content.Context;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import edu.wisc.drivesense.model.Reading;
+import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
+import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
+import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 
 public class PreProcess {
 
     /**
      * Calculate rotation matricies from accel and magnetic readings. Need context to access the sensor monitor.
-     *
-     * @param accelerometer
-     * @param magnetic
-     * @return
      */
-    public static List<Reading> calculateRotationMatricies(List<Reading> accelerometer, List<Reading> magnetic, Context context) {
-        //get nearest magnetic reading to an accel
-        Reading magnet = null;
-        List<Reading> ret = new ArrayList<Reading>();
+    public static TimestampQueue<Reading> calculateRotationMatricies(DataSetInput period, Context context) {
+        Log.i("Preprocess", "Calculating rotation matricies...");
+        TimestampQueue<Reading> result = new TimestampQueue<Reading>();
         SensorManager sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
 
-        for (int i = 0; i < accelerometer.size(); i++) {
-            Reading accel = accelerometer.get(i);
+        for (Reading accel: period.acceleration) {
+            Reading magnet = period.magnet.getClosestTimestamp(accel.timestamp);
+            float[] rotation = new float[9];
 
-            //int movingIndex = i;
-
-            //testing placeholder- match the nearest reading by comparing times
-            if (i < magnetic.size()) {
-                magnet = magnetic.get(i);
-            }
-
-            Reading rotationMatrix = new Reading(accel);
-            float[] result = new float[9];
-            float[] accelValues = accel.getFloatValues();
-            float[] magnetValues = magnet.getFloatValues();
-
-            sensorManager.getRotationMatrix(result, null, accelValues, magnetValues);
-            rotationMatrix.setFloatValues(result, 9);
-
-            ret.add(rotationMatrix);
-
-			/*float diff = Float.POSITIVE_INFINITY;
-			float last_diff = Float.POSITIVE_INFINITY - 1;
-			
-			//check the nearest magnetic reading, continue moving until the smallest time diff is found
-			for (int n = 0; n < 3; n++) {
-				diff = Math.abs(accel.timestamp - magnetReading.timestamp);
-			}*/
+            sensorManager.getRotationMatrix(rotation, null, accel.getFloatValues(), magnet.getFloatValues());
+            result.push(new Reading(rotation, accel.timestamp, Reading.Type.ROTATION_MATRIX));
         }
 
-        return ret;
+        return result;
     }
 
 
@@ -196,34 +174,26 @@ public class PreProcess {
         return res;
     }
 
-    /*alpha is from 0 to 1
+    /** alpha is from 0 to 1
      * if alpha is 1, the result List is exactly the same to input Readings
      * if alpha is 0, the result List is a List of the first value of input Readings
      * */
-    public static List<Reading> exponentialMovingAverage(List<Reading> Readings) {
-
+    public static TimestampQueue exponentialMovingAverage(TimestampQueue<Reading> readings) {
         double alpha = Parameters.kExponentialMovingAverageAlpha;
+        TimestampQueue result = new TimestampQueue();
 
-        List<Reading> res = new ArrayList<Reading>();
-        int sz = Readings.size();
-        int d = Readings.get(sz - 1).dimension;
-        double[] history = new double[d];
+        for (Reading oldReading: readings) {
+            Reading reading = new Reading(oldReading);
 
-        for (int i = 0; i < sz; ++i) {
-            Reading Reading = new Reading(Readings.get(i));
-
-            if (i == 0) {
-                history = Reading.values.clone();
-                res.add(Reading);
-                continue;
+            if (result.size() != 0) {
+                for (int i = 0; i < reading.dimension; i++)
+                    reading.values[i] = alpha * reading.values[i] + (1.0 - alpha) * readings.peekLast().values[i];
             }
-            for (int j = 0; j < d; ++j) {
-                Reading.values[j] = alpha * Readings.get(i).values[j] + (1.0 - alpha) * history[j];
-                history[j] = Reading.values[j];
-            }
-            res.add(Reading);
+
+            result.push(reading);
         }
-        return res;
+
+        return result;
     }
 	
 
@@ -231,7 +201,6 @@ public class PreProcess {
 	 * make the Reading starts from time 0
 	 * 
 	 * */
-
     public static List<Reading> ClearTimeOffset(List<Reading> Readings) {
         int offset = (int) Readings.get(0).timestamp;
         List<Reading> res = new ArrayList<Reading>();

@@ -5,6 +5,9 @@ package edu.wisc.drivesense.utilities;
  * organization to follow.
  */
 public class Utils {
+    public static final double FEET_T0_MILES = 0.000189394;
+    public static final double MILES_TO_FEET = 5280;
+
     /* Formatting */
     public static String formatDistance(double distance) {
         return String.format("%.2f miles", distance);
@@ -29,4 +32,9 @@ public class Utils {
         minutes = minutes % 60;
         return "" + hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
+
+    public static int convertToSeconds(long miliseconds) {
+        return (int) miliseconds / 1000;
+    }
+
 }

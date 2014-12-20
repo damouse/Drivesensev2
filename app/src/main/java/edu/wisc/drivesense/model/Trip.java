@@ -1,8 +1,7 @@
 package edu.wisc.drivesense.model;
 
-import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -39,7 +38,7 @@ public class Trip extends SugarRecord<Trip> {
     public float scoreTurns;
 
     @Expose
-    public float scoreBreaks;
+    public float scoreBrakes;
 
     @Expose
     public float scoreAccels;
@@ -53,10 +52,24 @@ public class Trip extends SugarRecord<Trip> {
 
     public User user;
 
+    @Ignore
+    public boolean scored;
+
+    public int numAccels;
+    public int numBrakes;
+    public int numTurns;
+    public int numLaneChanges;
 
     /* Constructors */
     public Trip() {
         trip_id = -1;
+        scored = false;
+        timestamp = new Date().getTime();
+
+        numAccels = 0;
+        numBrakes = 0;
+        numTurns = 0;
+        numLaneChanges = 0;
     }
 
 
@@ -89,7 +102,7 @@ public class Trip extends SugarRecord<Trip> {
         sb.append("\nnumber of total patterns: " + patternCount);
 
         //sb.append("\nnumber of brakes:" + brakes.size());
-        sb.append("\naverage score of brakes: " + scoreBreaks);
+        sb.append("\naverage score of brakes: " + scoreBrakes);
 
         //sb.append("\nnumber of accelerations:" + accelerations.size());
         sb.append("\naverage score of accelerations: " + scoreAccels);
@@ -107,6 +120,8 @@ public class Trip extends SugarRecord<Trip> {
 
     /** NOT async! */
     public List<MappableEvent> getEvents() {
-        return MappableEvent.find(MappableEvent.class, "trip = ?", "" + getId());
+        return MappableEvent.find(MappableEvent.class, "trip = ? order by timestamp asc", "" + getId());
     }
+
+
 }

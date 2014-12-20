@@ -4,8 +4,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
@@ -30,10 +32,24 @@ public class TripMapInformation {
 	MarkerOptions marker2 = null;
 	
 	List<LatLng> coordinates;
-	
+    List<GroundOverlayOptions> patterns;
+
+//    List<MarkerOptions> accelerations;
+//    List<MarkerOptions> brakes;
+//    List<MarkerOptions> turns;
+//    List<MarkerOptions> laneChanges;
+
+//        accelerations = new ArrayList<MarkerOptions>();
+//        brakes = new ArrayList<MarkerOptions>();
+//        turns = new ArrayList<MarkerOptions>();
+//        laneChanges = new ArrayList<MarkerOptions>();
+
+
 	TripMapInformation() {
 		coordinates = new ArrayList<LatLng>();
-        line = new PolylineOptions();
+        patterns = new ArrayList<GroundOverlayOptions>();
+
+        line = new PolylineOptions().geodesic(true);
 	}
 	
 	void addCoordinate(LatLng coord) {
@@ -42,33 +58,54 @@ public class TripMapInformation {
 	}
 
     void setMarker1(LatLng coordinate) {
-        marker1 = new MarkerOptions() .title("Start") .position(coordinate)
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_map));
+        marker1 = new MarkerOptions()
+                        .title("Start")
+                        .position(coordinate)
+                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_map));
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("Trip name: " + trip.name);
+        sb.append(" start: " + marker1.toString());
+        sb.append(" end: " + marker2.toString());
+        sb.append(" coordinates: " + coordinates.size());
+        sb.append(" patterns: " + patterns.size());
+
+        return sb.toString();
     }
 }
 
 /* Background task for creating polylines-- consider caching for performance*/
-class CalculateMapInfo extends AsyncTask<Void, Integer, TripMapInformation> {
+class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
     private final static String TAG = "TripMapInfo";
-	private Trip trip;
-	
-	public CalculateMapInfo(Trip t) {
-		trip = t;
-	}
-	
+
+    private BitmapLoader loader;
+
+    public CalculateMapInfo(BitmapLoader bitmap) {
+        loader = bitmap;
+    }
+
     @Override
-    protected TripMapInformation doInBackground(Void... arg0) {
-    	PolylineOptions line = new PolylineOptions().geodesic(true);
-    	ArrayList<MappableEvent> readings = null; //trip.getGPSReadings();
-    	
+    protected TripMapInformation doInBackground(Trip... params) {
+        Trip trip = params[0];
+
+    	List<MappableEvent> readings = trip.getEvents();
+        TripMapInformation info = new TripMapInformation();
+
+        info.trip = trip;
+
     	if(readings.size() < 1)
     		return null;
     	
     	for(MappableEvent reading : readings) {
-    		LatLng coord = new LatLng(reading.latitude, reading.longitude);
-    		line.add(coord);
-    		//Log.d(TAG, "adding coord");
+            LatLng coord = new LatLng(reading.latitude, reading.longitude);
+            info.addCoordinate(coord);
 
+            if (reading.type != MappableEvent.Type.GPS) {
+                info.patterns.add(createOverlay(reading, coord));
+            }
     	}
     	
     	//add pins
@@ -83,15 +120,45 @@ class CalculateMapInfo extends AsyncTask<Void, Integer, TripMapInformation> {
     	MarkerOptions marker2 = new MarkerOptions() .title("End") .snippet(trip.name) .position(end)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop));
 
-    	
-    	//wrap the return data in a wrapper class, return to UI thread
-    	TripMapInformation info = new TripMapInformation();
-
-    	info.trip = trip;
-    	info.line = line;
-    	info.marker1 = marker1;
-    	info.marker2 = marker2;
+        info.marker1 = marker1;
+        info.marker2 = marker2;
     	
     	return info;
-    }	
+    }
+
+
+    private MarkerOptions createMarker(MappableEvent event, LatLng coordinate) {
+        MarkerOptions marker = new MarkerOptions();
+
+        marker.position(coordinate);
+        marker.snippet("Score: " + event.score);
+        marker.icon(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));
+
+        if (event.type == MappableEvent.Type.ACCELERATION)
+            marker.title("Acceleration");
+
+        else if (event.type == MappableEvent.Type.BRAKE)
+            marker.title("Brake");
+
+        else if (event.type == MappableEvent.Type.TURN)
+            marker.title("Turn");
+
+
+        else if (event.type == MappableEvent.Type.LANE_CHANGE)
+            marker.title("Lane Change");
+
+        else
+            return null;
+
+        return marker;
+    }
+
+    private GroundOverlayOptions createOverlay(MappableEvent event, LatLng coordinate) {
+        GroundOverlayOptions marker = new GroundOverlayOptions().zIndex(1)
+                .position(coordinate, 50, 50)
+                .image(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));
+
+
+        return marker;
+    }
 }
