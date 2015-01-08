@@ -13,9 +13,9 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 
+import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
 import static edu.wisc.drivesense.scoring.neural.processing.GeneralProcessor.roundValuesInArray;
 import static edu.wisc.drivesense.scoring.neural.offline.FileUtils.*;
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
 import static edu.wisc.drivesense.scoring.neural.utils.Arrays.averageSeries;
 import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.*;
 
@@ -62,7 +62,9 @@ public class TrainingDataHandler {
         //the first and last timestamp in data where each series has values
         long timestampRange[] = completeTimestampRangeInDataSet(allLists);
 
-        for (long currentTime = timestampRange[0]; currentTime < timestampRange[1]; currentTime += receiver.period) {
+        //the "10" as the last parameter used to read: receiver.period. I removed the period from receiver at some point,
+        //so this needs to be refactored to reflect that
+        for (long currentTime = timestampRange[0]; currentTime < timestampRange[1]; currentTime += 10) {
             periodizedReadings = dequeueBeforeTimestamp(allLists, currentTime);
 
             for (TimestampSortable reading : periodizedReadings) {

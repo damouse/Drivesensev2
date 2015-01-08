@@ -28,6 +28,7 @@ import edu.wisc.drivesense.utilities.SensorSimulator;
 import android.app.Fragment;
 import android.content.Context;
 import android.location.Location;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -61,29 +62,26 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 	private static final String TAG = "PinMapFragment";
 
     private Bengal delegate;
-
 	private GoogleMap map;
-
     private BitmapLoader bitmapLoader;
+    private TripMapInformation recordingTrip;
+    private LocationClient client;
 
     private List<TripMapInformation> tripsCache;
+	private List<AsyncTask> processing;
 
-    private boolean showRequested = false;
-
-	private TripMapInformation recordingTrip;
-	
 	private boolean displaying;
+    private boolean displayingAllTrips = false;
 
-	
-	private LocationClient client;
-
-	
 	
     /* Boilerplate */
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(R.layout.map_fragment, container, false);
-	 
+
+        tripsCache = new ArrayList<TripMapInformation>();
+        processing = new ArrayList<AsyncTask>();
+
 		initMap();
 
 		return myFragmentView;
@@ -139,51 +137,42 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 
 	  
     /* Public Interface */
-	/**
-	 * Clears cache and reloads.
-	 */
-	public void setTrips(List<Trip> newTrips) {
+    /**
+     * Searches the cache for the passed trips, displaying them immediately if found.
+     *
+     * If the trip is not found in the cache, a new async processing task is spun off
+     * and added to a local queue. When finished, trip is added to the map unless the
+     * user has navigated off show all.
+     *
+     * Zooms to the range of trips.
+     */
+    public void showTrips(List<Trip> trips) {
+        Log.d(TAG, "Showing " + trips.size() + " trips");
+        map.setMyLocationEnabled(false);
+        displayingAllTrips = true;
         map.clear();
-        tripsCache = new ArrayList<TripMapInformation>();
 
-        if (newTrips == null)
-            return;
-
-		for(Trip trip : newTrips) {
-            new CalculateMapInfo(bitmapLoader) {
-                protected void onPostExecute(TripMapInformation info) {
-                    if (info != null) {
-                        tripsCache.add(info);
-                        Log.d(TAG, "Finished parsing trips");
-                    }
-                }
-            }.execute(trip);
+        for (Trip trip: trips) {
+            queueParseTrip(trip, false);
         }
-	}
+    }
 
     /**
-     * Does not check if the trips exist in the cache-- must call setTrips first.
-     *
-     * TODO: what if the asynctask hasn't finished
+     * Show just one trip on the map, with patterns
+     * TODO: this method matches the above method-- refactor it
      */
-    public void showTrips(List<Trip> showTrips) {
-        displaying = true;
+    public void showTrip(Trip trip) {
+        map.setMyLocationEnabled(false);
+        displayingAllTrips = true;
         map.clear();
 
-        if (showTrips == null)
-            return;
+        queueParseTrip(trip, true);
+    }
 
-        Log.d(TAG, "Showing " + showTrips.size() + " trips");
-        map.setMyLocationEnabled(false);
-
-        if (showTrips.size() == 1)
-            addTripToMap(findTripInCache(showTrips.get(0)), true, true);
-        else {
-            for (Trip trip : showTrips)
-                addTripToMap(findTripInCache(showTrips.get(0)), false, false);
-        }
-
-        //TODO: zoom to the added trips
+    public void showNothing() {
+        map.setMyLocationEnabled(true);
+        displayingAllTrips = false;
+        map.clear();
     }
 
     public void showRecordingTrip(Trip trip) {
@@ -221,11 +210,49 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 
 
     /* Private Helpers */
+
+    /**
+     * Create a parse task for the trip, enqueue it in the task queue, and add the trip
+     * once the parse finishes.
+     * @param trip
+     */
+    private void queueParseTrip(Trip trip, final boolean showPatterns) {
+        TripMapInformation info = findTripInCache(trip);
+
+        if (info != null)
+            addTripToMap(info, showPatterns);
+        else {
+
+            //TODO: the start of a long list of "carefuls." Trip added to task before adding to queue...
+            //what if it finishes before the add?
+            AsyncTask processor = new CalculateMapInfo(bitmapLoader) {
+                protected void onPostExecute(TripMapInformation info) {
+                    Log.d(TAG, "Finished trip process, adding to map.");
+                    if (info != null) {
+                        tripsCache.add(info);
+                    }
+
+                    //TODO: careful- what does "this" refer to?
+                    processing.remove(this);
+
+                    //TODO: careful again- what happens if the map goes away before the task completes?
+                    addTripToMap(info, showPatterns);
+                }
+            }.execute(trip);
+
+            processing.add(processor);
+            //processor.execute(trip);
+        }
+
+
+        //TODO: zoom to the added trips
+    }
+
     /**
      * Add the passed info to the map, drawing it on the screen.
      * @param trip trip to be added to the map
      */
-    private void addTripToMap(TripMapInformation trip, boolean showPatterns, boolean zoom) {
+    private void addTripToMap(TripMapInformation trip, boolean showPatterns) {
         if (trip.line == null || trip.marker1 == null)
             return;
 
@@ -247,22 +274,23 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
             for (GroundOverlayOptions marker: trip.patterns)
                 map.addGroundOverlay(marker);
         }
+    }
 
-
-        if (zoom) {
-            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-            builder.include(trip.marker1.getPosition());
-            builder.include(trip.marker2.getPosition());
-            LatLngBounds bounds = builder.build();
-
-            try {
-                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
-            }
-            catch (IllegalStateException ex) {
-                Log.e(TAG, "Map view error!");
-                ex.printStackTrace();
-            }
-        }
+    private void zoomToBounds(List<Trip> trips) {
+//        if (zoom) {
+//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
+//            builder.include(trip.marker1.getPosition());
+//            builder.include(trip.marker2.getPosition());
+//            LatLngBounds bounds = builder.build();
+//
+//            try {
+//                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+//            }
+//            catch (IllegalStateException ex) {
+//                Log.e(TAG, "Map view error!");
+//                ex.printStackTrace();
+//            }
+//        }
     }
 
 
@@ -292,7 +320,7 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 
         //if we're not displaying all of the trips, move the camera to the user's position
         //note: only happens when currently recording
-        if (!displaying) {
+        if (!displayingAllTrips) {
             map.moveCamera(CameraUpdateFactory.newLatLng(latLng));
             map.animateCamera(CameraUpdateFactory.zoomTo(15));
         }

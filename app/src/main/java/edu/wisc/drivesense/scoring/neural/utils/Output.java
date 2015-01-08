@@ -7,7 +7,7 @@ import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
+import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
 
 /**
  * Created by Damouse on 12/14/2014.
@@ -47,15 +47,15 @@ public class Output {
 
 
     /* Individual model object conversion */
-    public static String readingToString(Reading reading) {
-        TabbingStringBuilding sb = new TabbingStringBuilding();
-        sb.append(reading.timestamp);
+public static String readingToString(Reading reading) {
+    TabbingStringBuilding sb = new TabbingStringBuilding();
+    sb.append(reading.timestamp);
 
-        for (int i = 0; i < reading.values.length; i++)
-            sb.append(reading.values[i]);
+    for (int i = 0; i < reading.values.length; i++)
+        sb.append(reading.values[i]);
 
-        return sb.toString();
-    }
+    return sb.toString();
+}
 
     public static String inputToString(DataSetInput input, String key) {
         TabbingStringBuilding sb = new TabbingStringBuilding();

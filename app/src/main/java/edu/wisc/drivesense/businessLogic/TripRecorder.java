@@ -45,7 +45,6 @@ public class TripRecorder  {
 
     private MappableEvent lastEvent;
 
-
     /**
      * Begins a new trip with the assigned analyst providing data.
      */

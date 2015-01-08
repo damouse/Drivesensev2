@@ -219,10 +219,10 @@ public class MainActivity extends Activity implements Observer {
     public void toggleDisplayTrips(View view) {
         if(displayingTrips) {
             animator.dismissTrips();
-            bengal.showAll();
+            bengal.clear();
         }
         else {
-            bengal.clear();
+            bengal.showAll();
             animator.presentTrips();
         }
 

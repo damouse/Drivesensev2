@@ -84,8 +84,9 @@ public class TripsListViewFragment extends ListFragment  {
 
     }
 
-    public void showAllTrips() {
-
+    public void showTrips(List<Trip> trips) {
+        //temporary until the new list is put in place
+        setTrips(trips);
     }
 
     public void setTrips(List<Trip> trips) {

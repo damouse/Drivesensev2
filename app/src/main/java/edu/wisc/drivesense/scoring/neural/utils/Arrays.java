@@ -4,7 +4,8 @@ import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
+import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
+
 
 /**
  * Created by Damouse on 12/13/2014.

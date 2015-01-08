@@ -2,7 +2,7 @@ package edu.wisc.drivesense.scoring.neural.offline;
 
 import java.util.ArrayList;
 
-import edu.wisc.drivesense.scoring.DrivingAnalyst;
+import android.util.Log;
 import edu.wisc.drivesense.scoring.common.DataReceiver;
 
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
@@ -47,7 +47,7 @@ public class OfflineWrapper {
         trainNetwork();
         //testData();
 
-        DrivingAnalyst.log("Done");
+        log("Done");
     }
 
 
@@ -55,7 +55,7 @@ public class OfflineWrapper {
     static void trainNetwork() {
         ArrayList<TrainingSet> rawInputSets = new ArrayList<TrainingSet>();
         ArrayList<TimestampQueue> trainingSets = new ArrayList<TimestampQueue>();
-        DataReceiver receiver = new DataReceiver(period, memory);
+        DataReceiver receiver = new DataReceiver(memory);
         NeuralNetworkTrainer trainer = new NeuralNetworkTrainer(5, 5);
 
         for (String s : allDataFolders) {
@@ -116,11 +116,17 @@ public class OfflineWrapper {
      */
     static TimestampQueue filteredKeyedTrainingSet(String path, int period, long start, long end) {
         TrainingSet trainingSet = loadData(baseSourcePath + path);
-        DataReceiver receiver = new DataReceiver(period, memory);
+        DataReceiver receiver = new DataReceiver(memory);
 
         TimestampQueue inputSeries = generateInputSeries(receiver, trainingSet.copy());
         inputSeries.trimInPlace(start, end);
         return inputSeries;
     }
 
+    public static void log(Object e) {
+        if (localLog)
+            System.out.println(e);
+        else
+            Log.d("LocalLogger", "" + e);
+    }
 }

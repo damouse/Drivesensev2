@@ -9,7 +9,8 @@ import java.util.List;
 
 import edu.wisc.drivesense.model.Reading;
 
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
+import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
+
 
 /**
  * Created by Damouse on 12/14/2014.
@@ -20,6 +21,73 @@ import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
 public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> {
     private ArrayList<T> contents;
 
+    public static void main(String[] args) {
+        /* BENCHMARKING
+        Note: most of the methods below have big commented out setins. These represent the original
+        implementation of the methods, before the efficiency methods were added.
+        TODO: write tests for new methods
+
+        Results- 1m elements, old method
+        getAtTimestamp: 11
+        getBeforeTimestamp: 19
+        dequeueBeforeTimestamp: 101048
+        getClosestTimestamp: 0
+        getQueueInRange: 29
+        trimInPlace: 198261
+
+        Results- 1m elements, using efficient time searches
+        getAtTimestamp: 12
+        getBeforeTimestamp: 19
+        dequeueBeforeTimestamp: 14
+        getClosestTimestamp: 0
+        getQueueInRange: 1
+        trimInPlace: 2
+         */
+
+        //create queue and items
+        TimestampQueue<Reading> queue = new TimestampQueue<Reading>();
+        int n = 1000000;
+        double values[] = {0, 0, 0};
+        long startTime = 1234567;
+        long distance = 1000; //between neighboring timestamps
+
+        for (int i = 0; i < n; i++) {
+            Reading reading = new Reading(values, startTime + distance * i, Reading.Type.ACCELERATION);
+            reading.degrees = i;
+            queue.push(reading);
+        }
+
+        Reading targetMiddle = queue.getContents().get(500000);
+        Reading targetQuarter = queue.getContents().get(250000);
+        Reading targetThreeQuarter = queue.getContents().get(750000);
+
+
+        //BENCH-
+        long timeOne = System.currentTimeMillis();
+        queue.getAtTimestamp(targetMiddle.timestamp);
+        long timeTwo = System.currentTimeMillis();
+        System.out.println("getAtTimestamp: " + (timeTwo - timeOne));
+
+        queue.getBeforeTimestamp(targetMiddle.timestamp);
+        timeOne = System.currentTimeMillis();
+        System.out.println("getBeforeTimestamp: " + (timeOne - timeTwo));
+
+        queue.dequeueBeforeTimestamp(targetMiddle.timestamp);
+        timeTwo = System.currentTimeMillis();
+        System.out.println("dequeueBeforeTimestamp: " + (timeTwo - timeOne));
+
+        queue.getClosestTimestamp(targetMiddle.timestamp);
+        timeOne = System.currentTimeMillis();
+        System.out.println("getClosestTimestamp: " + (timeOne - timeTwo));
+
+        queue.getQueueInRange(targetQuarter.timestamp, targetThreeQuarter.timestamp);
+        timeTwo = System.currentTimeMillis();
+        System.out.println("getQueueInRange: " + (timeTwo - timeOne));
+
+        queue.trimInPlace(targetQuarter.timestamp, targetThreeQuarter.timestamp);
+        timeOne = System.currentTimeMillis();
+        System.out.println("trimInPlace: " + (timeOne - timeTwo));
+    }
 
     /* Boilerplate Constructors */
     public TimestampQueue() {
@@ -65,15 +133,21 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      * @return Element or null
      */
     public T getAtTimestamp(long timestamp) {
-        for (T element: this) {
-            if (element.getTime() == timestamp)
-                return element;
+        int index = efficientTimeSearch(timestamp);
+        if (index == -1)
+            return null;
 
-            if (element.getTime() > timestamp)
-                break;
-        }
+        return contents.get(index);
 
-        return null;
+//        for (T element: this) {
+//            if (element.getTime() == timestamp)
+//                return element;
+//
+//            if (element.getTime() > timestamp)
+//                break;
+//        }
+//
+//        return null;
     }
 
     /**
@@ -83,27 +157,29 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      * @return
      */
     public T getClosestTimestamp(long timestamp) {
-        long bestDifference = Long.MAX_VALUE;
-        long currentDifference;
-        long lastDifference = Long.MAX_VALUE;
-        T closestElement = null;
-
-        for (T element: this) {
-            currentDifference = Math.abs(element.getTime() - timestamp);
-
-            if (currentDifference < bestDifference) {
-                bestDifference = currentDifference;
-                closestElement = element;
-            }
-
-            //break early to save performance
-            if (currentDifference > lastDifference)
-                break;
-
-            lastDifference = currentDifference;
-        }
-
-        return closestElement;
+        int index = efficientTimeBound(timestamp);
+        return contents.get(index);
+//        long bestDifference = Long.MAX_VALUE;
+//        long currentDifference;
+//        long lastDifference = Long.MAX_VALUE;
+//        T closestElement = null;
+//
+//        for (T element: this) {
+//            currentDifference = Math.abs(element.getTime() - timestamp);
+//
+//            if (currentDifference < bestDifference) {
+//                bestDifference = currentDifference;
+//                closestElement = element;
+//            }
+//
+//            //break early to save performance
+//            if (currentDifference > lastDifference)
+//                break;
+//
+//            lastDifference = currentDifference;
+//        }
+//
+//        return closestElement;
     }
 
     /**
@@ -122,17 +198,24 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
             return result;
         }
 
-        for (T element: this) {
-            if(element.getTime() < start)
-                continue;
+        int startIndex = efficientTimeBound(start);
+        int endIndex = efficientTimeBound(end);
 
-            if (element.getTime() > end)
-                break;
+        if (startIndex == endIndex)
+            return new TimestampQueue<T>();
 
-            result.push(element);
-        }
-
-        return result;
+        return new TimestampQueue<T>(new ArrayList<T>(contents.subList(startIndex, endIndex)));
+//        for (T element: this) {
+//            if(element.getTime() < start)
+//                continue;
+//
+//            if (element.getTime() > end)
+//                break;
+//
+//            result.push(element);
+//        }
+//
+//        return result;
     }
 
 
@@ -145,7 +228,7 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
         contents.addAll(target.contents);
     }
 
-    public void addList(List<T> target) { contents.addAll(target);}
+    public void addList(List<T> target) { contents.addAll(target); }
 
     public void sort() {
         TimestampComparator compare = new TimestampComparator();
@@ -176,15 +259,27 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
             return;
         }
 
-        for (T element: this) {
-            if(element.getTime() < start)
-                remove.add(element);
+        int startIndex = efficientTimeBound(start);
+        int endIndex = efficientTimeBound(end);
 
-            if (element.getTime() > end)
-                remove.add(element);
+        if (startIndex == endIndex){
+            log("Trimmed a queue to nothing.");
+            contents = new ArrayList<T>();
+            return;
         }
 
-        contents.removeAll(remove);
+        contents.subList(0, startIndex).clear();
+        contents.subList(endIndex + 1, contents.size() - 1);
+
+//        for (T element: this) {
+//            if(element.getTime() < start)
+//                remove.add(element);
+//
+//            if (element.getTime() > end)
+//                remove.add(element);
+//        }
+//
+//        contents.removeAll(remove);
     }
 
 
@@ -260,6 +355,29 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
         if (time < peek().getTime() || time > peekLast().getTime())
             return -1;
 
+        //use the other method to get the element with the closest timestamp to the target time--
+        //return its index only if the timestamp EXACTLY matches the target
+        int index = efficientTimeBound(time);
+        if (contents.get(index).getTime() == time)
+            return index;
+
+        return -1;
+    }
+
+    /**
+     * Similar to the above method, but returns the element with the timestamp closest to
+     * the passed timestamp.
+     *
+     * @param time timestamp to use when querying elements
+     * @return index of element closest to the passed timestamp, or -1 if it doesn't exist
+     */
+    public int efficientTimeBound(long time) {
+        if (time < peek().getTime())
+            return 0;
+
+        if (time > peekLast().getTime())
+            return contents.size() -1;
+
         long totalTime = 0;
         int elementsToQuery = 5;
 
@@ -279,36 +397,56 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
         //if current element time is later than target time, must move down the array, else up
         int direction = probableElement.getTime() > time ? -1 : 1;
+        long bestDifference = Math.abs(probableElement.getTime() - time);
+        int bestIndex = currentIndex;
 
         while (probableElement.getTime() != time) {
-            //occurs if moved past the target time: element with time does not exist
-            if (direction == -1 && probableElement.getTime() < time)
-                return -1;
-
-            if (direction == 1 && probableElement.getTime() > time)
-                return -1;
-
             currentIndex += direction;
             probableElement = contents.get(currentIndex);
+            long newDifference = Math.abs(probableElement.getTime() - time);
+
+            //if the new difference is greater than the best, we passed the element- return closest
+            if (newDifference >= bestDifference) {
+                return bestIndex;
+            }
+            else {
+                bestDifference = newDifference;
+                bestIndex = currentIndex;
+            }
         }
 
-        return currentIndex;
+        return bestIndex;
     }
 
     private TimestampQueue<T> processBeforeTimestamp(long timestamp, boolean shouldRemove) {
-        TimestampQueue<T> result = new TimestampQueue<T>();
-        ArrayList<T> remove = new ArrayList<T>();
+        //get the starting point for the cut
+        int closestIndex = efficientTimeBound(timestamp);
+        T closestElement = contents.get(closestIndex);
 
-        for (T element: this) {
-            if (element.getTime() >= timestamp)
-                break;
+        //Three cases for the returned closest index-- could be exactly the timestamp (which is fine),
+        //coule be earlier than the target timestamp (also fine), or could be an element that is later than the
+        //bounded time (not acceptable). In the last case, move the index forward an element
+        //NOTE: this is currently not implemented, as a huge amount of readings means a sortof close return is
+        //"good enough"
+//        if (closestElement.getTime() > timestamp) {
+//            closestElement = contents.get(closestIndex - 1);
+//        }
 
-            result.push(element);
-            remove.add(element);
-        }
+        TimestampQueue<T> result = new TimestampQueue<T>(new ArrayList<T>(contents.subList(0, closestIndex)));
 
         if (shouldRemove)
-            contents.removeAll(remove);
+            contents.subList(0, closestIndex).clear();
+
+//        for (T element: this) {
+//            if (element.getTime() >= timestamp)
+//                break;
+//
+//            result.push(element);
+//            remove.add(element);
+//        }
+//
+//        if (shouldRemove)
+//            contents.removeAll(remove);
 
         return  result;
     }

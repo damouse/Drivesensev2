@@ -75,12 +75,20 @@ public class TripMapInformation {
 
         return sb.toString();
     }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof TripMapInformation))
+            return false;
+
+        TripMapInformation other = (TripMapInformation) obj;
+        return other.trip.getId() == this.trip.getId();
+    }
 }
 
 /* Background task for creating polylines-- consider caching for performance*/
 class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
     private final static String TAG = "TripMapInfo";
-
+    private Trip trip;
     private BitmapLoader loader;
 
     public CalculateMapInfo(BitmapLoader bitmap) {
@@ -89,7 +97,7 @@ class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
 
     @Override
     protected TripMapInformation doInBackground(Trip... params) {
-        Trip trip = params[0];
+        trip = params[0];
 
     	List<MappableEvent> readings = trip.getEvents();
         TripMapInformation info = new TripMapInformation();
@@ -111,13 +119,18 @@ class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
     	//add pins
     	MappableEvent startReading = readings.get(0);
     	MappableEvent endReading = readings.get(readings.size() - 1);
+
+        LatLng start = new LatLng(startReading.latitude, startReading.longitude);
+        LatLng end = new LatLng(endReading.latitude, endReading.longitude);
     	
-    	LatLng start = new LatLng(startReading.latitude, startReading.longitude);
-    	LatLng end = new LatLng(endReading.latitude, endReading.longitude);
-    	
-    	MarkerOptions marker1 = new MarkerOptions() .title("Start") .snippet(trip.name) .position(start)
+    	MarkerOptions marker1 = new MarkerOptions().title("Start")
+                .snippet(trip.name)
+                .position(start)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_map));
-    	MarkerOptions marker2 = new MarkerOptions() .title("End") .snippet(trip.name) .position(end)
+
+    	MarkerOptions marker2 = new MarkerOptions().title("End")
+                .snippet(trip.name)
+                .position(end)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop));
 
         info.marker1 = marker1;
@@ -143,7 +156,6 @@ class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
         else if (event.type == MappableEvent.Type.TURN)
             marker.title("Turn");
 
-
         else if (event.type == MappableEvent.Type.LANE_CHANGE)
             marker.title("Lane Change");
 
@@ -160,5 +172,13 @@ class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
 
 
         return marker;
+    }
+
+    public boolean equals(Object obj) {
+        if (!(obj instanceof CalculateMapInfo))
+            return false;
+
+        CalculateMapInfo other = (CalculateMapInfo) obj;
+        return other.trip.getId() == this.trip.getId();
     }
 }

@@ -64,10 +64,12 @@ public class DataReceiver {
     public TimestampQueue gravity = new TimestampQueue();
     public TimestampQueue gyroscope = new TimestampQueue();
     public TimestampQueue gps = new TimestampQueue();
+
     //The last (inputMemorySize) input results are remembered if needed. Measured in number of periods,
     // not milliseconds
     private int inputMemorySize;
     private TimestampQueue inputMemory;
+
     //processors-- These hold some relevant pieces of data as needed
     private AccelerometerProcessor accelerometerProcessor = new AccelerometerProcessor();
 

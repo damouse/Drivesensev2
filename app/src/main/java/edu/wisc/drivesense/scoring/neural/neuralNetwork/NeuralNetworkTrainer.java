@@ -13,8 +13,7 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 
-import static edu.wisc.drivesense.scoring.DrivingAnalyst.log;
-
+import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
 /**
  * Created by Damouse on 12/9/2014.
  * <p/>

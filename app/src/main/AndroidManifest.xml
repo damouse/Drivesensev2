@@ -89,15 +89,15 @@
             android:name="edu.wisc.drivesense.controllers.PreferenceActivity"
             android:parentActivityName="edu.wisc.drivesense.controllers.MainActivity"/>
 
-
-        <!-- Live key: make sure uncommented for releases! -->
-        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyB-MJ3HifimBMMlGB5LiHIjG6CF_EgTT2E"/>-->
+        <!--Note to other developer- Google Maps requires the signing key used to set up the app on your local computer. -->
+        <!--You will not be able to access the map on the app unless you use this key to create a Google Maps API key in the -->
+        <!--console. Ask Mickey for access to the dev account. -->
 
         <!-- Debug key: make active for local testing ON MAC -->
         <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAie2cHPM2-7-4JK4UlSDPwTyg_Ju4e02g"/>-->
 
-        <!-- Debug key: make active for local testing ON WINDOWS -->
-        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAnJ0uIGPQQuLPO4uUJYezqNqQJy3HBEu8"/>
+        <!-- Debug key: make active for local testing ON UBUNTU -->
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBoecL6C0XyIJv-I0QB8Q-fTC1-J-n37II"/>
 
 
         <meta-data android:name="com.google.android.gms.version" android:value="@integer/google_play_services_version" />

@@ -65,28 +65,9 @@ public class Bengal {
         tripsInScope.remove(displayingTrip);
 
         state = State.SHOW_ALL_TRIPS;
+        displayingTrip = null;
 
         refresh();
-    }
-
-    public void selectTrip(Trip trip) {
-        if (displayingTrip == null) {
-            state = State.SHOW_ONE_TRIP;
-            displayingTrip = trip;
-        }
-        else if (displayingTrip == trip) {
-            state = State.SHOW_ALL_TRIPS;
-            displayingTrip = null;
-        }
-        else  {
-            displayingTrip = trip;
-        }
-
-        refresh();
-    }
-
-    public void selectPattern() {
-
     }
 
     public void upload(Trip trip) {
@@ -96,16 +77,9 @@ public class Bengal {
         refresh();
     }
 
-    public void changeScope() {
-        refresh();
-    }
-
     public void load(User user) {
         trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
         tripsInScope = applyScope();
-
-        map.setTrips(trips);
-        list.setTrips(trips);
 
         refresh();
 
@@ -113,11 +87,13 @@ public class Bengal {
     }
 
     public void showAll() {
+        displayingTrip = null;
         state = State.SHOW_ALL_TRIPS;
         refresh();
     }
 
     public void clear() {
+        displayingTrip = null;
         state = State.SHOW_NOTHING;
         refresh();
     }
@@ -138,6 +114,25 @@ public class Bengal {
         refresh();
     }
 
+    /**
+     * Pass the trip to be selected
+     * @param trip
+     */
+    public void selectTrip(Trip trip) {
+        state = State.SHOW_ONE_TRIP;
+        displayingTrip = trip;
+
+        refresh();
+    }
+
+    public void selectPattern() {
+
+    }
+
+    public void changeScope() {
+        refresh();
+    }
+
 
     /* Trip Recorder Callbacks */
     public void newPatterns(List<MappableEvent> patterns) {
@@ -147,7 +142,6 @@ public class Bengal {
     public void endTrip() {
         if (recorder == null)
             return;
-
 
         refresh();
     }
@@ -164,21 +158,17 @@ public class Bengal {
     private void refresh() {
         if (state == State.SHOW_ALL_TRIPS) {
             map.showTrips(tripsInScope);
-            list.showAllTrips();
+            list.showTrips(tripsInScope);
         }
 
         if (state == State.SHOW_ONE_TRIP) {
-            List<Trip> displayingTrips = new ArrayList<Trip>();
-            displayingTrips.add(displayingTrip);
-            map.showTrips(displayingTrips);
-
+            map.showTrip(displayingTrip);
             list.showTrip(displayingTrip);
-
         }
 
         if (state == State.SHOW_NOTHING) {
-            map.showTrips(null);
-            list.showAllTrips();
+            map.showNothing();
+            list.showTrips(tripsInScope);
 
             if (recorder != null) {
                 map.showRecordingTrip(recorder.getTrip());

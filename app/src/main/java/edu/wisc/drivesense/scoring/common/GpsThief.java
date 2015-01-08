@@ -34,7 +34,8 @@ public class GpsThief {
     public static ArrayList<MappableEvent> getSparseCoordinates(TimestampQueue<Reading> gps, TimestampQueue<DrivingPattern> patterns) {
         ArrayList<MappableEvent> mappedPatterns = attachPatternsToCoordinates(gps, patterns);
         mappedPatterns = mergeGpsPatterns(mappedPatterns, gps);
-        return ramerDouglasPeuckerFunction(mappedPatterns, 0, mappedPatterns.size() - 1);
+        return mappedPatterns;
+//        return ramerDouglasPeuckerFunction(mappedPatterns, 0, mappedPatterns.size() - 1);
     }
 
     /**
