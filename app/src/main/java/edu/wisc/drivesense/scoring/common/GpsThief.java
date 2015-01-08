@@ -47,7 +47,7 @@ public class GpsThief {
      *
      * TODO: check timestamp difference, only accept if its within a threshold
      */
-    private static ArrayList<MappableEvent> attachPatternsToCoordinates(TimestampQueue<Reading> gps, TimestampQueue<DrivingPattern> patterns) {
+    public static ArrayList<MappableEvent> attachPatternsToCoordinates(TimestampQueue<Reading> gps, TimestampQueue<DrivingPattern> patterns) {
         ArrayList<MappableEvent> result = new ArrayList<MappableEvent>();
         ArrayList<MappableEvent> mappedGps = new ArrayList<MappableEvent>();
 
@@ -60,7 +60,7 @@ public class GpsThief {
         return result;
     }
 
-    private static ArrayList<MappableEvent> mergeGpsPatterns(ArrayList<MappableEvent> patterns, TimestampQueue<Reading> gps) {
+    public static ArrayList<MappableEvent> mergeGpsPatterns(ArrayList<MappableEvent> patterns, TimestampQueue<Reading> gps) {
         ArrayList<MappableEvent> result = new ArrayList<MappableEvent>();
         result.addAll(patterns);
 
@@ -130,7 +130,7 @@ public class GpsThief {
 
 
     //Returns distance in feet
-    private static double distance(double lat1, double lon1, double lat2, double lon2) {
+    public static double distance(double lat1, double lon1, double lat2, double lon2) {
         double theta = lon1 - lon2;
         double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
         dist = Math.acos(dist);
