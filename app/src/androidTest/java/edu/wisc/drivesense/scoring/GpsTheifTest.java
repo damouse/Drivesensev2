@@ -34,7 +34,7 @@ public class GpsTheifTest extends TestCase {
 //            DrivingPattern pattern = new DrivingPattern();
 //            pattern.start = start + step * i;
 //            patterns.push(pattern);
-//        }
+//        }udo
     }
 
     public void tearDown(  ) {

@@ -5,11 +5,12 @@ import java.util.List;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
 import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
-import com.google.android.gms.location.LocationClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapFragment;
@@ -58,14 +59,14 @@ import android.widget.Toast;
  * 
  * @author Damouse
  */
-public class PinMapFragment extends Fragment implements LocationListener, ConnectionCallbacks {
+public class PinMapFragment extends Fragment implements LocationListener {
 	private static final String TAG = "PinMapFragment";
 
     private Bengal delegate;
 	private GoogleMap map;
     private BitmapLoader bitmapLoader;
     private TripMapInformation recordingTrip;
-    private LocationClient client;
+    private GoogleApiClient client;
 
     private List<TripMapInformation> tripsCache;
 	private List<AsyncTask> processing;
@@ -116,7 +117,9 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 			public void onConnectionFailed(ConnectionResult arg0) { }
 		};
 		
-		client = new LocationClient(context, this, failed);
+		client = new GoogleApiClient.Builder(context)
+                .addApi(LocationServices.API)
+                .build();
 	}
 	
 	@Override
@@ -328,14 +331,14 @@ public class PinMapFragment extends Fragment implements LocationListener, Connec
 
 
 /* Misc Android Callbacks */
-	@Override
-	public void onConnected(Bundle arg0) { 
-		LocationRequest locationrequest = new LocationRequest();
-		locationrequest.setInterval(3);
-
-        client.requestLocationUpdates(locationrequest, this);
-	}
-
-	@Override
-	public void onDisconnected() { }
+//	@Override
+//	public void onConnected(Bundle arg0) {
+//		LocationRequest locationrequest = new LocationRequest();
+//		locationrequest.setInterval(3);
+//
+//        client.requestLocationUpdates(locationrequest, this);
+//	}
+//
+//	@Override
+//	public void onDisconnected() { }
 }
