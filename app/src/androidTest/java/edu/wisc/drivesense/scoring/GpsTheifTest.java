@@ -3,14 +3,11 @@ package edu.wisc.drivesense.scoring;
 import edu.wisc.drivesense.model.DrivingPattern;
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
-import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.scoring.common.GpsThief;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import junit.framework.TestCase;
-import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 
@@ -19,15 +16,27 @@ public class GpsTheifTest extends TestCase {
     TimestampQueue<Reading> gps;
     TimestampQueue<DrivingPattern> patterns;
 
+    MappableEvent a;
+    MappableEvent b;
+    MappableEvent c;
+
     double latMin = 43.073214;
     double longMin = -89.400558;
-    double coordinateIncrement = .0001;
+    double coordinateIncrement = .001;
     long start = 0;
     long step = 100;
 
 
     public void setUp()  {
         reset();
+
+        a = new MappableEvent();
+        b = new MappableEvent();
+        c = new MappableEvent();
+
+        a.type = MappableEvent.Type.GPS;
+        b.type = MappableEvent.Type.GPS;
+        c.type = MappableEvent.Type.GPS;
 
         //patterns
 //        for (int i = 0; i < n; i++) {
@@ -41,6 +50,10 @@ public class GpsTheifTest extends TestCase {
         events = null;
         gps = null;
         patterns = null;
+
+        a = null;
+        b = null;
+        c = null;
     }
 
 
@@ -66,15 +79,11 @@ public class GpsTheifTest extends TestCase {
 
     public void testDistance() {
         double result = GpsThief.distance(32.9697, -96.80322, 29.46786, -98.53506);
-        assertEquals(653679.7609555026, result);
+        assertEquals(1384030.45357375, result);
     }
 
     public void testPointLineDistance() {
-        double feetResult = 0.3112638023114618;
-
-        MappableEvent a = new MappableEvent();
-        MappableEvent b = new MappableEvent();
-        MappableEvent c = new MappableEvent();
+        double feetResult = 364.829396001742;
 
         a.latitude = 43.073214;
         b.latitude = 43.073214 + coordinateIncrement;
@@ -82,10 +91,71 @@ public class GpsTheifTest extends TestCase {
 
         a.longitude = -89.400558;
         b.longitude = -89.400558;
-        c.longitude = -89.400558 + coordinateIncrement / 2;
+        c.longitude = -89.400558 - coordinateIncrement;
 
-        double result = GpsThief.PointLineDistance(a, b, c);
+        double result = GpsThief.pointLineDistance(c, a, b);
         assertEquals(feetResult, result);
+    }
+
+    public void testRDPLeavesThree() {
+        a.latitude = 43.073214;
+        b.latitude = 43.073214;
+        c.latitude = 43.073214 + coordinateIncrement;
+
+        a.longitude = -89.400558;
+        b.longitude = -89.400558 - coordinateIncrement;
+        c.longitude = -89.400558 - coordinateIncrement;
+
+        ArrayList<MappableEvent> points = new ArrayList<MappableEvent>();
+        points.add(a);
+        points.add(b);
+        points.add(c);
+
+        List<MappableEvent> result = GpsThief.ramerDouglasPeuckerFunction(points);
+        assertEquals(3, result.size());
+    }
+
+    public void testRDPLeavesTwo() {
+        //given three colinear coordinates, RDP should remove the middle one
+        a.latitude = 43.073214;
+        b.latitude = 43.073214;
+        c.latitude = 43.073214;
+
+        a.longitude = -89.400558;
+        b.longitude = -89.400558 - coordinateIncrement;
+        c.longitude = -89.400558 - coordinateIncrement * 2;
+
+        ArrayList<MappableEvent> points = new ArrayList<MappableEvent>();
+        points.add(a);
+        points.add(b);
+        points.add(c);
+
+        List<MappableEvent> result = GpsThief.ramerDouglasPeuckerFunction(points);
+        assertEquals(2, result.size());
+    }
+
+    public void testRDPLeavesThreeWithPattern() {
+        //given three colinear coordinates, RDP would normally remove the middle one, but in this test case
+        //its a pattern and therefor must be retained
+        a.latitude = 43.073214;
+        b.latitude = 43.073214;
+        c.latitude = 43.073214;
+
+        a.longitude = -89.400558;
+        b.longitude = -89.400558 - coordinateIncrement;
+        c.longitude = -89.400558 - coordinateIncrement * 2;
+
+        b.type = MappableEvent.Type.ACCELERATION;
+
+        ArrayList<MappableEvent> points = new ArrayList<MappableEvent>();
+        points.add(a);
+        points.add(b);
+        points.add(c);
+
+        List<MappableEvent> result = GpsThief.ramerDouglasPeuckerFunction(points);
+        assertEquals(3, result.size());
+
+        b.type = MappableEvent.Type.GPS;
     }
 
     void reset() {

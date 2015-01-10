@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import edu.wisc.drivesense.model.DrivingPattern;
 import edu.wisc.drivesense.model.MappableEvent;
@@ -94,7 +95,7 @@ public class TripRecorder  {
      *
      * Events must be sorted!
      */
-    public void newPatterns(ArrayList<MappableEvent> events) {
+    public void newPatterns(List<MappableEvent> events) {
         Log.d(TAG, "Analyzing Patterns... ");
 
         if (trip == null) {
@@ -175,7 +176,7 @@ public class TripRecorder  {
             patterns = score.getDrivingEvents(period); //obviously temporary
         }
 
-        ArrayList<MappableEvent> events = GpsThief.getSparseCoordinates(period.gps, patterns);
+        List<MappableEvent> events = GpsThief.getSparseCoordinates(period.gps, patterns);
         Log.i(TAG, "New Period- GPS coordinates-  " + period.gps.size() + " Patterns: " + patterns.size());
         newPatterns(events);
     }

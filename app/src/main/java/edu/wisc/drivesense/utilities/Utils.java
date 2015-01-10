@@ -7,6 +7,8 @@ package edu.wisc.drivesense.utilities;
 public class Utils {
     public static final double FEET_T0_MILES = 0.000189394;
     public static final double MILES_TO_FEET = 5280;
+    public static final double METERS_TO_FEET = 3.28084;
+    public static final double DECIMAL_DEGREE_TO_FEET = 364829.396;
 
     /* Formatting */
     public static String formatDistance(double distance) {

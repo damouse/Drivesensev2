@@ -1,10 +1,12 @@
 package edu.wisc.drivesense.scoring.common;
 
+import android.location.Location;
 import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import edu.wisc.drivesense.model.DrivingPattern;
 import edu.wisc.drivesense.model.MappableEvent;
@@ -21,7 +23,7 @@ import edu.wisc.drivesense.utilities.Utils;
  */
 public class GpsThief {
     //in feet: how far deviations from a straight line should be considered as another line
-    public static final double epsilon = 10 * Utils.FEET_T0_MILES;
+    public static final double epsilon = 10;
 
     /**
      * Given the current chunk of data and a window X into the past, make the gps coordinates more sparse
@@ -31,11 +33,15 @@ public class GpsThief {
      *
      * Assumes all relevant arrays are sorted
      */
-    public static ArrayList<MappableEvent> getSparseCoordinates(TimestampQueue<Reading> gps, TimestampQueue<DrivingPattern> patterns) {
+    public static List<MappableEvent> getSparseCoordinates(TimestampQueue<Reading> gps, TimestampQueue<DrivingPattern> patterns) {
         ArrayList<MappableEvent> mappedPatterns = attachPatternsToCoordinates(gps, patterns);
         mappedPatterns = mergeGpsPatterns(mappedPatterns, gps);
-        return mappedPatterns;
-//        return ramerDouglasPeuckerFunction(mappedPatterns, 0, mappedPatterns.size() - 1);
+
+        int countBefore = mappedPatterns.size();
+        List<MappableEvent> result = ramerDouglasPeuckerFunction(mappedPatterns);
+        Log.d("Theif", "Theif started with " + countBefore + " coordinates, ended with " + result.size());
+
+        return result;
     }
 
     /**
@@ -75,11 +81,16 @@ public class GpsThief {
 
 
     /* Ramer Doublas Peucker Filter */
-    private static ArrayList<MappableEvent> ramerDouglasPeuckerFunction(ArrayList<MappableEvent> events, int startIndex, int lastIndex) {
-        double dmax = 0f;
-        int index = startIndex;
+    public static List<MappableEvent> ramerDouglasPeuckerFunction(List<MappableEvent> events) {
 
-        for (int i = index + 1; i < lastIndex; ++i) {
+        //Can't remove points if there are aren't at least three
+        if (events.size() < 3)
+            return events;
+
+        double dmax = 0f;
+        int index = 1;
+
+        for (int i = index; i < events.size() - 1; ++i) {
             MappableEvent event = events.get(i);
 
             //break early if a pattern is found-- we want to split on it no matter what
@@ -89,8 +100,7 @@ public class GpsThief {
                 break;
             }
             else {
-                double d = PointLineDistance(events.get(i), events.get(startIndex), events.get(lastIndex));
-                Log.d("GPSThief", "RDP Distance: " + d * Utils.MILES_TO_FEET + " epsilon: " + epsilon * Utils.MILES_TO_FEET);
+                double d = pointLineDistance(event, events.get(0), events.get(events.size() - 1));
 
                 if (d > dmax) {
                     index = i;
@@ -100,14 +110,13 @@ public class GpsThief {
         }
 
         if (dmax > epsilon) {
-            ArrayList<MappableEvent> res1 = ramerDouglasPeuckerFunction(events, startIndex, index);
-            ArrayList<MappableEvent> res2 = ramerDouglasPeuckerFunction(events, index, lastIndex);
+            List<MappableEvent> res1 = ramerDouglasPeuckerFunction(events.subList(0, index + 1));
+            List<MappableEvent> res2 = ramerDouglasPeuckerFunction(events.subList(index, events.size()));
 
-            ArrayList<MappableEvent>  finalRes = new ArrayList<MappableEvent>();
-            finalRes.addAll(res1);
-            finalRes.addAll(res2);
+            //RDP is called recursively with points [A...B] and [B...C]. B is included twice and must be removed.
+            res1.addAll(res2.subList(1, res2.size()));
 
-            return finalRes;
+            return res1;
         }
         else {
             ArrayList<MappableEvent> result = new ArrayList<MappableEvent>();
@@ -117,7 +126,11 @@ public class GpsThief {
         }
     }
 
-    public static double PointLineDistance(MappableEvent point, MappableEvent start, MappableEvent end) {
+    /**
+     * WARN- this method calcuates euclidean distance-- will break (badly) near the poles and as distances increase
+     * TODO: fix this.
+     */
+    public static double pointLineDistance(MappableEvent point, MappableEvent start, MappableEvent end) {
         if (start.latitude == end.latitude && start.longitude == end.longitude) {
             return distance(point, start);
         }
@@ -125,18 +138,22 @@ public class GpsThief {
         double n = Math.abs((end.latitude - start.latitude) * (start.longitude - point.longitude) - (start.latitude - point.latitude) * (end.longitude - start.longitude));
         double d = Math.sqrt((end.latitude - start.latitude) * (end.latitude - start.latitude) + (end.longitude - start.longitude) * (end.longitude - start.longitude));
 
-        return n / d;
+        return (n / d) * Utils.DECIMAL_DEGREE_TO_FEET;
     }
 
 
     //Returns distance in feet
     public static double distance(double lat1, double lon1, double lat2, double lon2) {
-        double theta = lon1 - lon2;
-        double dist = Math.sin(deg2rad(lat1)) * Math.sin(deg2rad(lat2)) + Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.cos(deg2rad(theta));
-        dist = Math.acos(dist);
-        dist = rad2deg(dist);
+        Location locationA = new Location("");
+        Location locationB = new Location("");
 
-        return dist * 60 * 1.1515;
+        locationA.setLatitude(lat1);
+        locationA.setLongitude(lon1);
+
+        locationB.setLatitude(lat2);
+        locationB.setLongitude(lon2);
+
+        return locationA.distanceTo(locationB) * Utils.METERS_TO_FEET;
     }
 
     public static double distance(MappableEvent first, MappableEvent second) {
