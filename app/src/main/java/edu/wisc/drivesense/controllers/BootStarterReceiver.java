@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.Concierge;
 import edu.wisc.drivesense.server.DrivesensePreferences;
 
 /**
@@ -13,10 +14,10 @@ import edu.wisc.drivesense.server.DrivesensePreferences;
 public class BootStarterReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
-        DrivesensePreferences prefs = new DrivesensePreferences(context);
+        Concierge concierge = new Concierge();
 
-        //do not boot if automati recording is not turned on
-        if (prefs.manualRecording())
+        //do not boot if the current user does not have active recording turned on
+        if (!concierge.getCurrentUser().isAutomaticRecording())
             return;
 
         if (Intent.ACTION_BOOT_COMPLETED.equals(intent.getAction())) {

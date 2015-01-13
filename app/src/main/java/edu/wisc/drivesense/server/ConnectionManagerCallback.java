@@ -1,16 +1,14 @@
 package edu.wisc.drivesense.server;
 
-import edu.wisc.drivesense.model.User;
-
 /**
- * A callback interface for the connection manager
- * @author Damouse
- *
+ * Created by Damouse on 1/13/15.
  */
-public interface ConnectionManagerCallback {
-	public void onLoginCompletion(boolean success, User user, String response);
+public class ConnectionManagerCallback {
+    public void onConnectionCompleted(Object... result) {
 
-	public void onUploadCompletion(boolean success, String response);
+    }
 
-    public void onSessionCompletion(boolean success);
+    public void onConnectionFailed(String message) {
+
+    }
 }

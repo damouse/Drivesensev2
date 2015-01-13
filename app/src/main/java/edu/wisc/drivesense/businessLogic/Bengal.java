@@ -16,33 +16,22 @@ import edu.wisc.drivesense.views.TripsListViewFragment;
 
 /**
  * Created by Damouse on 12/19/2014.
- *
+ * <p/>
  * Trip management on the front end-- i.e. as it relates to the
  * objects that display the trips through UI. Does not implement
  * ant of the UI work itself.
- *
+ * <p/>
  * Bengal is assured to start after the background recording service has started
  */
 public class Bengal {
     private static final String TAG = "MainActivity";
-
-    enum State {
-        SHOW_NOTHING,
-        SHOW_ALL_TRIPS,
-        SHOW_ONE_TRIP
-    }
-
     private State state;
-
     private PinMapFragment map;
     private TripsListViewFragment list;
-
     private List<Trip> trips;
     private List<Trip> tripsInScope;
-
     private Trip displayingTrip = null;
     private TripRecorder recorder;
-
 
     public Bengal(PinMapFragment mapFragment, TripsListViewFragment tripsFragment) {
         map = mapFragment;
@@ -52,7 +41,6 @@ public class Bengal {
 
         state = State.SHOW_NOTHING;
     }
-
 
     /* Public Interface */
     public void delete() {
@@ -71,7 +59,7 @@ public class Bengal {
     }
 
     public void upload(Trip trip) {
-        //upload the trip
+        //TODO: upload the trip
 
         //change the state of the trip in list
         refresh();
@@ -101,8 +89,7 @@ public class Bengal {
     public void setRecordingTrip(TripRecorder activeRecorder) {
         if (activeRecorder == null) {
             endTrip();
-        }
-        else {
+        } else {
             if (recorder != null)
                 endTrip();
 
@@ -116,6 +103,7 @@ public class Bengal {
 
     /**
      * Pass the trip to be selected
+     *
      * @param trip
      */
     public void selectTrip(Trip trip) {
@@ -133,7 +121,6 @@ public class Bengal {
         refresh();
     }
 
-
     /* Trip Recorder Callbacks */
     public void newPatterns(List<MappableEvent> patterns) {
         refresh();
@@ -145,7 +132,6 @@ public class Bengal {
 
         refresh();
     }
-
 
     /* Internal Implementation  */
     private List<Trip> applyScope() {
@@ -174,5 +160,11 @@ public class Bengal {
                 map.showRecordingTrip(recorder.getTrip());
             }
         }
+    }
+
+    enum State {
+        SHOW_NOTHING,
+        SHOW_ALL_TRIPS,
+        SHOW_ONE_TRIP
     }
 }

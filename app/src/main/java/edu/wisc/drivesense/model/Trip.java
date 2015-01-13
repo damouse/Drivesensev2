@@ -54,16 +54,18 @@ public class Trip extends SugarRecord<Trip> {
 
     @Ignore
     public boolean scored;
-
     public int numAccels;
     public int numBrakes;
     public int numTurns;
     public int numLaneChanges;
+    @Ignore
+    private boolean uploaded;
 
     /* Constructors */
     public Trip() {
         trip_id = -1;
         scored = false;
+        uploaded = false;
         timestamp = new Date().getTime();
 
         numAccels = 0;
@@ -124,4 +126,12 @@ public class Trip extends SugarRecord<Trip> {
     }
 
 
+    /* Accessors */
+    public boolean isUploaded() {
+        return uploaded;
+    }
+
+    public void setUploaded(boolean uploaded) {
+        this.uploaded = uploaded;
+    }
 }

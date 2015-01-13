@@ -17,6 +17,7 @@ import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.model.SugarDatabse;
 import edu.wisc.drivesense.model.Trip;
+import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.scoring.common.LocalDataTester;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
@@ -64,22 +65,17 @@ public class BackgroundRecordingService extends Service implements Observer {
     public SensorMonitor monitor;
     public Concierge concierge;
     public BackgroundState stateManager;
-
+    public TripRecorder recorder;
     boolean recording;
     boolean listening;
-
+    boolean firstLoad = true;
     private PowerListener power;
     private TripListener listener;
     private ServerLogger serverLogger;
-    public TripRecorder recorder;
-
     //taskbar status
     private TaskbarNotifications taskbar;
-
     //testing
     private Ticker ticker;
-    boolean firstLoad = true;
-
 
     /* Boilerplate */
     // Singleton accessor
@@ -112,8 +108,9 @@ public class BackgroundRecordingService extends Service implements Observer {
         //Broadcast on start
         Intent startupIntent = new Intent(MainActivity.BACKGROUND_ACTION);
 
-        try { sendBroadcast(startupIntent); }
-        catch(NullPointerException ex) {
+        try {
+            sendBroadcast(startupIntent);
+        } catch (NullPointerException ex) {
             Log.e(TAG, "Intent broadcast to the main activity failed.");
         }
 
@@ -137,12 +134,12 @@ public class BackgroundRecordingService extends Service implements Observer {
     private void initState() {
         stateManager.addObserver(this);
         stateManager.setServiceOn(true);
-        DrivesensePreferences preferences = new DrivesensePreferences(this);
+        User user = concierge.getCurrentUser();
 
         stateManager.setGpsAvailable(monitor.gpsEnabled());
         stateManager.setPowered(PowerListener.isPluggedIn(this));
-        stateManager.setAutomaticRecording(preferences.backgroundRecording());
-        stateManager.setAutomaticUnpoweredRecording(preferences.backgroundRecordingPower());
+        stateManager.setAutomaticRecording(user.isAutomaticRecording());
+        stateManager.setAutomaticUnpoweredRecording(user.isAutomaticUnpoweredRecording());
     }
 
 
@@ -175,7 +172,6 @@ public class BackgroundRecordingService extends Service implements Observer {
 
         recording = state;
     }
-
 
 
     private void setRecordingAndListenening(boolean rec, boolean listen) {
@@ -222,10 +218,12 @@ public class BackgroundRecordingService extends Service implements Observer {
 
 
     /* Callbacks from Listeners and State */
+
     /**
      * Called from BackgroundState upon state changes
+     *
      * @param observable The object that is returning the observation
-     * @param o Most likely a State value
+     * @param o          Most likely a State value
      */
     @Override
     public void update(Observable observable, Object o) {
@@ -254,7 +252,7 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     public Trip getActiveTrip() {
         if (recorder != null)
-            return  recorder.getTrip();
+            return recorder.getTrip();
         return null;
     }
 

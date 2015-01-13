@@ -2,7 +2,6 @@ package edu.wisc.drivesense.model;
 
 import com.google.gson.annotations.Expose;
 import com.orm.SugarRecord;
-import java.util.List;
 
 /**
  * Created by Damouse on 8/5/14.
@@ -22,7 +21,11 @@ public class User extends SugarRecord<User> {
     public boolean loggedIn;
 
     //preferences
-
+    private boolean automaticRecording;
+    private boolean automaticUnpoweredRecording;
+    private boolean automaticUploading;
+    private boolean automaticUploadOffWifi;
+    private boolean automaticDelete;
 
     public User() {
         userId = -1;
@@ -30,6 +33,12 @@ public class User extends SugarRecord<User> {
         authenticationToken = "";
         group_id = -1;
         admin = false;
+
+        automaticRecording = false;
+        automaticUnpoweredRecording = false;
+        automaticUploading = false;
+        automaticUploadOffWifi = false;
+        automaticDelete = false;
     }
 
 
@@ -65,5 +74,52 @@ public class User extends SugarRecord<User> {
         authenticationToken = "";
         loggedIn = false;
         this.save();
+    }
+
+
+    /* Preference Accessors */
+    public boolean isAutomaticRecording() {
+        return automaticRecording;
+    }
+
+    public void setAutomaticRecording(boolean automaticRecording) {
+        if (!demoUser())
+            this.automaticRecording = automaticRecording;
+    }
+
+    public boolean isAutomaticUnpoweredRecording() {
+        return automaticUnpoweredRecording;
+    }
+
+    public void setAutomaticUnpoweredRecording(boolean automaticUnpoweredRecording) {
+        if (!demoUser())
+            this.automaticUnpoweredRecording = automaticUnpoweredRecording;
+    }
+
+    public boolean isAutomaticUploading() {
+        return automaticUploading;
+    }
+
+    public void setAutomaticUploading(boolean automaticUploading) {
+        if (!demoUser())
+            this.automaticUploading = automaticUploading;
+    }
+
+    public boolean isAutomaticUploadOffWifi() {
+        return automaticUploadOffWifi;
+    }
+
+    public void setAutomaticUploadOffWifi(boolean automaticUploadOffWifi) {
+        if (!demoUser())
+            this.automaticUploadOffWifi = automaticUploadOffWifi;
+    }
+
+    public boolean isAutomaticDelete() {
+        return automaticDelete;
+    }
+
+    public void setAutomaticDelete(boolean automaticDelete) {
+        if (!demoUser())
+            this.automaticDelete = automaticDelete;
     }
 }

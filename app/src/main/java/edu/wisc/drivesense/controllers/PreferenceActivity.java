@@ -31,66 +31,58 @@ import edu.wisc.drivesense.server.DrivesensePreferences;
 /**
  * Created by Damouse on 7/21/14.
  */
-public class PreferenceActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener, ConnectionManagerCallback {
+public class PreferenceActivity extends Activity implements SharedPreferences.OnSharedPreferenceChangeListener {
     private static final String TAG = "PreferenceActivity";
-
+    PrefsFragment fragmentPreferences;
     //We manually control the state of the shared preference "loggedIn" in this activity not
     //based on the user's touch but instaed the actual login state. When the state is changed,
     //the callback method is called-- if this is false then disregard that change
     private boolean ignoreLoginChange;
-
     private boolean ignoreRecordingChange;
-
-    PrefsFragment fragmentPreferences;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         // Display the fragment as the main content.
-        FragmentManager mFragmentManager = getFragmentManager();
-        FragmentTransaction mFragmentTransaction = mFragmentManager .beginTransaction();
-        fragmentPreferences = new PrefsFragment();
-
-        mFragmentTransaction.replace(android.R.id.content, fragmentPreferences);
-        mFragmentTransaction.commit();
-
-        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
-
-//  We could have condensed the 5 lines into 1 line of code.
-//		getFragmentManager().beginTransaction()
-//				.replace(android.R.id.content, new PrefsFragment()).commit();
-
-        ignoreLoginChange = false;
-        ignoreRecordingChange = false;
-
-        //set default recording settings
-        DrivesensePreferences prefs = new DrivesensePreferences(this);
-
-        if (!prefs.manualRecording() && !prefs.backgroundRecording() && !prefs.backgroundRecordingPower()) {
-            ignoreRecordingChange = true;
-            prefs.setManualRecording(true);
-            ignoreRecordingChange = false;
-        }
+//        FragmentManager mFragmentManager = getFragmentManager();
+//        FragmentTransaction mFragmentTransaction = mFragmentManager.beginTransaction();
+//        fragmentPreferences = new PrefsFragment();
+//
+//        mFragmentTransaction.replace(android.R.id.content, fragmentPreferences);
+//        mFragmentTransaction.commit();
+//
+//        PreferenceManager.getDefaultSharedPreferences(this).registerOnSharedPreferenceChangeListener(this);
+//
+//        ignoreLoginChange = false;
+//        ignoreRecordingChange = false;
+//
+//        //set default recording settings
+//        DrivesensePreferences prefs = new DrivesensePreferences(this);
+//
+//        if (!prefs.manualRecording() && !prefs.backgroundRecording() && !prefs.backgroundRecordingPower()) {
+//            ignoreRecordingChange = true;
+//            prefs.setManualRecording(true);
+//            ignoreRecordingChange = false;
+//        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         CheckBoxPreference login = (CheckBoxPreference) fragmentPreferences.findPreference("logInTrigger");
-
-        DrivesensePreferences drivesensePreferences = new DrivesensePreferences(this);
-        if (drivesensePreferences.loggedIn()) {
-            login.setSummary("Logged in as " + drivesensePreferences.userEmail());
-            login.setTitle("Logged In");
-
-            drivesensePreferences.setLoginFlag(true);
-        }
-        else {
-            login.setTitle("Log In");
-            drivesensePreferences.setLoginFlag(false);
-        }
+//
+//        DrivesensePreferences drivesensePreferences = new DrivesensePreferences(this);
+//        if (drivesensePreferences.loggedIn()) {
+//            login.setSummary("Logged in as " + drivesensePreferences.userEmail());
+//            login.setTitle("Logged In");
+//
+//            drivesensePreferences.setLoginFlag(true);
+//        }
+//        else {
+//            login.setTitle("Log In");
+//            drivesensePreferences.setLoginFlag(false);
+//        }
     }
 
     /* Preference change interface implementation */
@@ -101,178 +93,171 @@ public class PreferenceActivity extends Activity implements SharedPreferences.On
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String s) {
         DrivesensePreferences drivesensePreferences = new DrivesensePreferences(this);
-
-        if (s.equals("logInTrigger")) {
-            //if flag is set, disregard the login change
-            if (ignoreLoginChange) {
-                ignoreLoginChange = false;
-                return;
-            }
-
-            CheckBoxPreference login = (CheckBoxPreference)fragmentPreferences.findPreference("logInTrigger");
-
-            //If logged in log the current user out
-            if (drivesensePreferences.loggedIn()) {
-                login.setSummary("");
-                login.setTitle("Log In");
-                Toast.makeText(this.getApplicationContext(), "You have been signed out", Toast.LENGTH_SHORT);
-                drivesensePreferences.logOut();
-            }
-            else {
-                showLoginDialog();
-                ignoreLoginChange = true;
-                login.setChecked(false);
-            }
-        }
-
-        else {
-            if (!ignoreRecordingChange) {
-                CheckBoxPreference manual = (CheckBoxPreference) fragmentPreferences.findPreference("manualRecording");
-                CheckBoxPreference background = (CheckBoxPreference) fragmentPreferences.findPreference("backgroundRecording");
-                CheckBoxPreference unpowered = (CheckBoxPreference) fragmentPreferences.findPreference("backgroundRecordingPower");
-
-                Log.d(TAG, "Checkbox: " + s);
-                Log.d(TAG, "Manual, background, unpowered" + manual.isChecked() + " " + background.isChecked() + " " + unpowered.isChecked() + " " );
-
-                ignoreRecordingChange = true;
-
-                //switch between the three visible options, making them act like radio buttons
-                if (s.equals("manualRecording") || (!manual.isChecked() && !background.isChecked() && !unpowered.isChecked())) {
-                    if (BackgroundState.getState() != BackgroundState.State.UNINITIALIZED) {
-                        stopService(new Intent(this, BackgroundRecordingService.class));
-                    }
-
-                    manual.setChecked(true);
-                    background.setChecked(false);
-                    unpowered.setChecked(false);
-                } else {
-                    if (BackgroundState.getState() == BackgroundState.State.UNINITIALIZED) {
-                        startService(new Intent(this, BackgroundRecordingService.class));
-                    }
-
-                    if (s.equals("backgroundRecording")) {
-                        manual.setChecked(false);
-                        unpowered.setChecked(false);
-                    } else if (s.equals("backgroundRecordingPower")) {
-                        manual.setChecked(false);
-                        background.setChecked(false);
-                    }
-                }
-
-                ignoreRecordingChange = false;
-
-
-            }
-        }
+//
+//        if (s.equals("logInTrigger")) {
+//            //if flag is set, disregard the login change
+//            if (ignoreLoginChange) {
+//                ignoreLoginChange = false;
+//                return;
+//            }
+//
+//            CheckBoxPreference login = (CheckBoxPreference)fragmentPreferences.findPreference("logInTrigger");
+//
+//            //If logged in log the current user out
+//            if (drivesensePreferences.loggedIn()) {
+//                login.setSummary("");
+//                login.setTitle("Log In");
+//                Toast.makeText(this.getApplicationContext(), "You have been signed out", Toast.LENGTH_SHORT);
+//                drivesensePreferences.logOut();
+//            }
+//            else {
+//                showLoginDialog();
+//                ignoreLoginChange = true;
+//                login.setChecked(false);
+//            }
+//        }
+//
+//        else {
+//            if (!ignoreRecordingChange) {
+//                CheckBoxPreference manual = (CheckBoxPreference) fragmentPreferences.findPreference("manualRecording");
+//                CheckBoxPreference background = (CheckBoxPreference) fragmentPreferences.findPreference("backgroundRecording");
+//                CheckBoxPreference unpowered = (CheckBoxPreference) fragmentPreferences.findPreference("backgroundRecordingPower");
+//
+//                Log.d(TAG, "Checkbox: " + s);
+//                Log.d(TAG, "Manual, background, unpowered" + manual.isChecked() + " " + background.isChecked() + " " + unpowered.isChecked() + " " );
+//
+//                ignoreRecordingChange = true;
+//
+//                //switch between the three visible options, making them act like radio buttons
+//                if (s.equals("manualRecording") || (!manual.isChecked() && !background.isChecked() && !unpowered.isChecked())) {
+//                    if (BackgroundState.getState() != BackgroundState.State.UNINITIALIZED) {
+//                        stopService(new Intent(this, BackgroundRecordingService.class));
+//                    }
+//
+//                    manual.setChecked(true);
+//                    background.setChecked(false);
+//                    unpowered.setChecked(false);
+//                } else {
+//                    if (BackgroundState.getState() == BackgroundState.State.UNINITIALIZED) {
+//                        startService(new Intent(this, BackgroundRecordingService.class));
+//                    }
+//
+//                    if (s.equals("backgroundRecording")) {
+//                        manual.setChecked(false);
+//                        unpowered.setChecked(false);
+//                    } else if (s.equals("backgroundRecordingPower")) {
+//                        manual.setChecked(false);
+//                        background.setChecked(false);
+//                    }
+//                }
+//
+//                ignoreRecordingChange = false;
+//
+//
+//            }
+//        }
     }
 
 
     /* Connection Manager Callbacks */
-    @Override
     public void onLoginCompletion(boolean success, User user, String response) {
-        final DrivesensePreferences preferences = new DrivesensePreferences(this.getApplicationContext());
-
-        //determine the cause of failure and alert the user
-        //Possible responsese:
-//        'missing parameters'
-//        'user not found'
-//        'wrong password'
-        if (!success) {
-
-            if (response.equals("missing parameters")) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Error")
-                        .setMessage("Looks like something went wrong-- you need to provide both email and password!")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-
-            else if (response.equals("user not found")) {
-                new AlertDialog.Builder(this)
-                        .setTitle("User not found")
-                        .setMessage("User \'" + preferences.userEmail() + "\' not found. Would you like to create a new account?")
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                regiseterRequest();
-                            }
-                        })
-                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) {
-                                // do nothing
-                            }
-                        })
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-
-            else if (response.equals("wrong password")) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Wrong password")
-                        .setMessage("The password you provided was incorrect!")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-
-            else if (response.equals("user already exists with that email")) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Email taken")
-                        .setMessage("The email \'" + preferences.userEmail() + "\' is already in use. If this is your email and you've forgotten your password, please reset it at knowmydrive.com")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) { }
-                        })
-                        .show();
-            }
-
-            else if (response.equals("registration failed")) {
-                new AlertDialog.Builder(this)
-                        .setTitle("Registration Error")
-                        .setMessage("An error occured registering your account. Please enter a password that is at least 8 characters.")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int which) { }
-                        })
-                        .show();
-            }
-
-            else {
-                new AlertDialog.Builder(this)
-                        .setTitle("Error")
-                        .setMessage("It looks like something is wrong with the server or your internet connection")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .show();
-            }
-        }
-        else {
-            Log.d(TAG, "Login returned to prefsactivity");
-            preferences.logIn(user);
-
-            Toast.makeText(this.getApplicationContext(), "You have been signed in", Toast.LENGTH_SHORT);
-            CheckBoxPreference preference = (CheckBoxPreference) fragmentPreferences.findPreference("logInTrigger");
-
-            ignoreLoginChange = true;
-            preferences.setLoginFlag(true);
-            preference.setChecked(true);
-            preference.setTitle("Logged in");
-
-            preference.setSummary("Logged in as " + preferences.userEmail());
-        }
+//        final DrivesensePreferences preferences = new DrivesensePreferences(this.getApplicationContext());
+//
+//        //determine the cause of failure and alert the user
+//        //Possible responsese:
+////        'missing parameters'
+////        'user not found'
+////        'wrong password'
+//        if (!success) {
+//
+//            if (response.equals("missing parameters")) {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Error")
+//                        .setMessage("Looks like something went wrong-- you need to provide both email and password!")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+//            }
+//
+//            else if (response.equals("user not found")) {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("User not found")
+//                        .setMessage("User \'" + preferences.userEmail() + "\' not found. Would you like to create a new account?")
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                regiseterRequest();
+//                            }
+//                        })
+//                        .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) {
+//                                // do nothing
+//                            }
+//                        })
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+//            }
+//
+//            else if (response.equals("wrong password")) {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Wrong password")
+//                        .setMessage("The password you provided was incorrect!")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+//            }
+//
+//            else if (response.equals("user already exists with that email")) {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Email taken")
+//                        .setMessage("The email \'" + preferences.userEmail() + "\' is already in use. If this is your email and you've forgotten your password, please reset it at knowmydrive.com")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) { }
+//                        })
+//                        .show();
+//            }
+//
+//            else if (response.equals("registration failed")) {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Registration Error")
+//                        .setMessage("An error occured registering your account. Please enter a password that is at least 8 characters.")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int which) { }
+//                        })
+//                        .show();
+//            }
+//
+//            else {
+//                new AlertDialog.Builder(this)
+//                        .setTitle("Error")
+//                        .setMessage("It looks like something is wrong with the server or your internet connection")
+//                        .setIcon(android.R.drawable.ic_dialog_alert)
+//                        .show();
+//            }
+//        }
+//        else {
+//            Log.d(TAG, "Login returned to prefsactivity");
+//            preferences.logIn(user);
+//
+//            Toast.makeText(this.getApplicationContext(), "You have been signed in", Toast.LENGTH_SHORT);
+//            CheckBoxPreference preference = (CheckBoxPreference) fragmentPreferences.findPreference("logInTrigger");
+//
+//            ignoreLoginChange = true;
+//            preferences.setLoginFlag(true);
+//            preference.setChecked(true);
+//            preference.setTitle("Logged in");
+//
+//            preference.setSummary("Logged in as " + preferences.userEmail());
+//        }
     }
-
-    @Override
-    public void onUploadCompletion(boolean success, String response) { }
-
-    @Override
-    public void onSessionCompletion(boolean success) { }
 
     private void loginRequest() {
         DrivesensePreferences preferences = new DrivesensePreferences(this.getApplicationContext());
-        new ConnectionManager(getApplicationContext(), this).logIn(preferences.userEmail(), preferences.userPassword());
+//        new ConnectionManager(getApplicationContext(), this).logIn(preferences.userEmail(), preferences.userPassword());
     }
 
     private void regiseterRequest() {
         DrivesensePreferences preferences = new DrivesensePreferences(this.getApplicationContext());
-        new ConnectionManager(getApplicationContext(), this).register(preferences.userEmail(), preferences.userPassword());
+//        new ConnectionManager(getApplicationContext(), this).register(preferences.userEmail(), preferences.userPassword());
     }
 
     private void showLoginDialog() {

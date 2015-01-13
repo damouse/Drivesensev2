@@ -22,6 +22,7 @@ import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.businessLogic.Bengal;
 //import edu.wisc.drivesense.server.DrivesensePreferences;
+import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.views.PinMapFragment;
 import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.ViewAnimator;
@@ -39,48 +40,38 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * @author Damouse
  */
 public class MainActivity extends Activity implements Observer {
-    private static final String TAG = "MainActivity";
     public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
-
+    private static final String TAG = "MainActivity";
     //flag indicating state
     boolean displayingTrips;
     boolean busy = false;
-
-    //Manages trips on the front end-- for Map and List
-    private Bengal bengal;
-
-    //view elements pulled for later reference
-    private Button recordButton;
-
-    private LinearLayout mapLayout;
-    private SmoothProgressBar progressBar;
-
     BackgroundStatusReceiver statusBroadcastReceiver;
-
     //animator
     ViewAnimator animator;
-
-
     //keeps track of the timer used to update UI with trip timer
     Handler timerHandler;
     boolean shouldUpdateTimer;
     int durationCounter = 0;
-
-    Runnable timerRunnable= new Runnable() {
+    Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
             durationCounter += 1;
             //Log.d(TAG, "New duration counter: " + durationCounter);
-            TextView duration = (TextView)findViewById(R.id.textview_duration);
+            TextView duration = (TextView) findViewById(R.id.textview_duration);
             duration.setText("" + durationCounter + " seconds");
 
-            if(BackgroundRecordingService.getInstance().recording())
+            if (BackgroundRecordingService.getInstance().recording())
                 timerHandler.postDelayed(this, 1000);
             else
                 durationCounter = 0;
         }
     };
-
+    //Manages trips on the front end-- for Map and List
+    private Bengal bengal;
+    //view elements pulled for later reference
+    private Button recordButton;
+    private LinearLayout mapLayout;
+    private SmoothProgressBar progressBar;
 
     /* Boilerplate Activity Methods */
     @Override
@@ -272,16 +263,6 @@ public class MainActivity extends Activity implements Observer {
     }
 
     /**
-     * Broadcastreceiver called when the background service starts up for the first time
-     */
-    class BackgroundStatusReceiver extends BroadcastReceiver {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            setupWorkers();
-        }
-    }
-
-    /**
      * Toggle spinner functionality. Called from Background servie on loads and from the list on API
      *
      */
@@ -292,5 +273,15 @@ public class MainActivity extends Activity implements Observer {
             progressBar.progressiveStop();
 
         busy = set;
+    }
+
+    /**
+     * Broadcastreceiver called when the background service starts up for the first time
+     */
+    class BackgroundStatusReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            setupWorkers();
+        }
     }
 }
