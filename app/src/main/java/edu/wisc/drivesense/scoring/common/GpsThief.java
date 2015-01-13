@@ -110,7 +110,7 @@ public class GpsThief {
         }
 
         if (dmax > epsilon) {
-            List<MappableEvent> res1 = ramerDouglasPeuckerFunction(events.subList(0, index + 1));
+            List<MappableEvent> res1 = new ArrayList<MappableEvent>(ramerDouglasPeuckerFunction(events.subList(0, index + 1)));
             List<MappableEvent> res2 = ramerDouglasPeuckerFunction(events.subList(index, events.size()));
 
             //RDP is called recursively with points [A...B] and [B...C]. B is included twice and must be removed.
