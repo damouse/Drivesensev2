@@ -93,7 +93,7 @@
         <!--console. Ask Mickey for access to the dev account. -->
 
         <!-- Debug key: make active for local testing ON MAC -->
-        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyAie2cHPM2-7-4JK4UlSDPwTyg_Ju4e02g"/>-->
+        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ"/>-->
 
         <!-- Debug key: make active for local testing ON UBUNTU -->
         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBoecL6C0XyIJv-I0QB8Q-fTC1-J-n37II"/>
