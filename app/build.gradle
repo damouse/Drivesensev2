@@ -6,7 +6,7 @@ android {
     buildToolsVersion "20.0.0"
 
     defaultConfig {
-        applicationId "edu.wisc.drivesense"
+        applicationId "edu.wisc.knowmydrive"
         minSdkVersion 16
         targetSdkVersion 21
         versionCode 1
