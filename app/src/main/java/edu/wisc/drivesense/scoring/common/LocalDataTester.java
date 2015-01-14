@@ -122,7 +122,7 @@ public class LocalDataTester {
 
     private void readAndLoad(String name, Context context, Reading.Type type) {
         Log.d("LocalReader", "Starting load for " + name);
-        long maxTime = 200000;
+        long maxTime = 400000;
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));

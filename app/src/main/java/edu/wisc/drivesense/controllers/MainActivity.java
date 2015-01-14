@@ -156,6 +156,7 @@ public class MainActivity extends Activity implements Observer {
         PinMapFragment fragmentMap = (PinMapFragment) fragmentManager.findFragmentById(R.id.map);
 
         bengal = new Bengal(fragmentMap, fragmentList, this);
+        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
     }
 
     /**
@@ -165,6 +166,8 @@ public class MainActivity extends Activity implements Observer {
         //for whatever reason, initialize was never called
         if (bengal == null)
             return;
+
+        bengal = null;
     }
 
 

@@ -62,6 +62,9 @@ public class Concierge extends Observable {
         currentUser.save();
 
         currentUser = getDemoUser();
+        currentUser.loggedIn = true;
+        currentUser.save();
+
         setChanged();
         notifyObservers(currentUser);
     }

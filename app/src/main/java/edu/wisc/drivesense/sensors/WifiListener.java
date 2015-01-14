@@ -49,10 +49,10 @@ public class WifiListener extends BroadcastReceiver {
             if (networkInfo.getType() == ConnectivityManager.TYPE_WIFI) {
                 //get the different network states
                 if (networkInfo.getState() == NetworkInfo.State.CONNECTING || networkInfo.getState() == NetworkInfo.State.CONNECTED) {
-                    BackgroundRecordingService.getInstance().wifiTurnedOn();
+                    if (BackgroundRecordingService.getInstance() != null)
+                        BackgroundRecordingService.getInstance().wifiTurnedOn();
                 }
             }
         }
-
     }
 }

@@ -23,6 +23,9 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 import edu.wisc.drivesense.sensors.TripListener;
+import edu.wisc.drivesense.sensors.WifiListener;
+import edu.wisc.drivesense.server.ConnectionManager;
+import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.server.DrivesensePreferences;
 import edu.wisc.drivesense.model.ReadingHolder;
 import edu.wisc.drivesense.utilities.Ticker;
@@ -66,16 +69,21 @@ public class BackgroundRecordingService extends Service implements Observer {
     public Concierge concierge;
     public BackgroundState stateManager;
     public TripRecorder recorder;
+
     boolean recording;
     boolean listening;
     boolean firstLoad = true;
+
     private PowerListener power;
     private TripListener listener;
     private ServerLogger serverLogger;
+
     //taskbar status
     private TaskbarNotifications taskbar;
+
     //testing
     private Ticker ticker;
+
 
     /* Boilerplate */
     // Singleton accessor
@@ -104,6 +112,8 @@ public class BackgroundRecordingService extends Service implements Observer {
 
         stateManager = new BackgroundState();
         stateManager.addObserver(this);
+
+        initState();
 
         //Broadcast on start
         Intent startupIntent = new Intent(MainActivity.BACKGROUND_ACTION);
@@ -166,13 +176,12 @@ public class BackgroundRecordingService extends Service implements Observer {
             recorder.endTrip();
             recorder = null;
         } else {
-            Log.e(TAG, "Mismatched states! Received newRecordingState: " + state + " but old recording was: " + recording);
+            //Log.e(TAG, "Mismatched states! Received newRecordingState: " + state + " but old recording was: " + recording);
             return;
         }
 
         recording = state;
     }
-
 
     private void setRecordingAndListenening(boolean rec, boolean listen) {
         //turn check if GPS needs to be turned on or off
@@ -206,7 +215,7 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     public void newReading(Reading reading) {
         if (recorder == null) {
-            Log.e(TAG, "Analyst is null as readings come in!");
+            Log.e(TAG, "Recorder is null as readings come in!");
             return;
         }
 
@@ -214,11 +223,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     }
 
 
-    /* DrivingAnalyst Callbacks */
-
-
     /* Callbacks from Listeners and State */
-
     /**
      * Called from BackgroundState upon state changes
      *
@@ -244,10 +249,35 @@ public class BackgroundRecordingService extends Service implements Observer {
     }
 
     /**
+     * Tries to upload trips that have not yet been pushed to the backend.
+     * TODO: move to Connection manager-- might have to call this from somewhere else.
+     */
+    public void uploadTrips() {
+        User user = concierge.getCurrentUser();
+
+        //TODO: optionally load over cellular with a user preference
+        if (user.demoUser() || !WifiListener.isConnected(this))
+            return;
+
+        List<Trip> trips =  Trip.find(Trip.class, "scored = true and uploaded = false and user = ?", "" + user.getId());
+
+        if (trips.size() == 0)
+            return;
+
+        Log.d(TAG, "Attempting to upload " + trips.size() + "trips");
+        ConnectionManager api = new ConnectionManager(this);
+
+        for (Trip trip: trips)
+            api.convertUploadTrip(trip, user, null);
+
+    }
+
+    /**
      * Called when WiFi changes state
      */
     public void wifiTurnedOn() {
         //try and upload trips that have not yet been uploaded
+        uploadTrips();
     }
 
     public Trip getActiveTrip() {

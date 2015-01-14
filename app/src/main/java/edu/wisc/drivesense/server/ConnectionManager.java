@@ -62,7 +62,8 @@ public class ConnectionManager {
                 Gson gson = new Gson();
                 User user = gson.fromJson(response, User.class);
 
-                callback.onConnectionCompleted(user);
+                if (callback != null)
+                    callback.onConnectionCompleted(user);
             }
         });
     }
@@ -92,7 +93,8 @@ public class ConnectionManager {
                 Gson gson = new Gson();
                 User user = gson.fromJson(response, User.class);
 
-                callback.onConnectionCompleted(user);
+                if (callback != null)
+                    callback.onConnectionCompleted(user);
             }
         });
     }
@@ -108,7 +110,8 @@ public class ConnectionManager {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] rawResponse) {
                 super.onSuccess(statusCode, headers, rawResponse);
-                callback.onConnectionCompleted(true);
+                if (callback != null)
+                    callback.onConnectionCompleted(true);
             }
         });
     }
@@ -126,7 +129,9 @@ public class ConnectionManager {
                         super.onSuccess(statusCode, headers, rawResponse);
                         trip.setUploaded(true);
                         trip.save();
-                        callback.onConnectionCompleted(true);
+
+                        if (callback != null)
+                            callback.onConnectionCompleted(true);
                     }
                 });
             }

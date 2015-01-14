@@ -52,13 +52,13 @@ public class Trip extends SugarRecord<Trip> {
 
     public User user;
 
-    @Ignore
+
     public boolean scored;
     public int numAccels;
     public int numBrakes;
     public int numTurns;
     public int numLaneChanges;
-    @Ignore
+
     private boolean uploaded;
 
     /* Constructors */

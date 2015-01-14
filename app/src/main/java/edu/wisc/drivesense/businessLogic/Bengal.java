@@ -161,16 +161,6 @@ public class Bengal {
      * TODO: cant call refresh on the map with every load, it readds the trips to the map
      */
     private void refresh() {
-        if (state == State.SHOW_ALL_TRIPS) {
-            map.showTrips(tripsInScope);
-            list.showTrips(tripsInScope);
-        }
-
-        if (state == State.SHOW_ONE_TRIP) {
-            map.showTrip(displayingTrip);
-            list.showTrip(displayingTrip);
-        }
-
         if (state == State.SHOW_NOTHING) {
             map.showNothing();
             list.showTrips(tripsInScope);
@@ -178,6 +168,20 @@ public class Bengal {
             if (recorder != null) {
                 map.showRecordingTrip(recorder.getTrip());
             }
+        }
+
+        else if (tripsInScope == null) {
+            Log.e(TAG, "Trying to Show trips before Begnal gets loaded!");
+            return;
+        }
+        else if (state == State.SHOW_ALL_TRIPS) {
+            map.showTrips(tripsInScope);
+            list.showTrips(tripsInScope);
+        }
+
+        else if (state == State.SHOW_ONE_TRIP) {
+            map.showTrip(displayingTrip);
+            list.showTrip(displayingTrip);
         }
     }
 

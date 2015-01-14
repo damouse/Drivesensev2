@@ -17,7 +17,8 @@ public class PowerListener extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        BackgroundRecordingService.getInstance().stateManager.setPowered(isPluggedIn(context));
+        if (BackgroundRecordingService.getInstance() != null)
+            BackgroundRecordingService.getInstance().stateManager.setPowered(isPluggedIn(context));
     }
 
     /* Static Methods */

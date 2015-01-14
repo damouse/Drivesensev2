@@ -78,6 +78,9 @@ public class TripRecorder  {
         Log.d(TAG, "Ended trip: " + trip.name);
         trip.save();
         trip = null;
+
+        //try a trip upload
+        BackgroundRecordingService.getInstance().uploadTrips();
     }
 
     public Trip getTrip() {
