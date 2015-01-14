@@ -102,13 +102,9 @@ public class BackgroundState extends Observable {
     private void establishState(boolean manualTrigger, boolean adviseTripStart, boolean adviseTripStop) {
         State oldState = state;
 
-        //if the service is off, turn off our state tracking
-        if (!serviceOnline) {
+        if (!serviceOnline)
             state = State.UNINITIALIZED;
-            return;
-        }
-
-        if (state == State.AUTOMATIC_RECORDING)
+        else if (state == State.AUTOMATIC_RECORDING)
             transitionAutomaticRecording(adviseTripStop);
         else if (state == State.AUTOMATIC_STOP_LISTEN)
             transitionAutomaticStopListen(adviseTripStart);

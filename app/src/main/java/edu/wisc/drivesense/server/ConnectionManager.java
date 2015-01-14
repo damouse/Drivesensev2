@@ -35,6 +35,7 @@ import edu.wisc.drivesense.model.User;
 public class ConnectionManager {
 	private static final String TAG = "ConnectionManager";
 	private static final String SERVER_URL = "https://knowmydrive.com/";
+    //private static final String SERVER_URL = "128.105.32.102:3000";
 
 	private Context context;
 
@@ -48,12 +49,14 @@ public class ConnectionManager {
      */
     public void logIn(String email, String password, final ConnectionManagerCallback callback) {
         AsyncHttpClient client = new AsyncHttpClient();
-        String url = SERVER_URL + "mobile_login?user_email=" + email + "&password=" + password;
 
-        client.get(url, new AsyncHTTPResponseCallback(callback) {
+        JsonObject json = new JsonObject();
+        json.addProperty("user_email", email);
+        json.addProperty("user_password", password);
+
+        createAndPostRequest("mobile_login", json.toString(), new AsyncHTTPResponseCallback(callback) {
             @Override
             public void onSuccess(int statusCode, Header[] headers, byte[] rawResponse) {
-                super.onSuccess(statusCode, headers, rawResponse);
                 String response = new String(rawResponse);
 
                 Gson gson = new Gson();
@@ -187,6 +190,7 @@ public class ConnectionManager {
         } catch (UnsupportedEncodingException e1) {
             e1.printStackTrace();
             client = null;
+            //do something here
         }
 
         client.post(context, urlPath, entity, "Application/json", callback);
@@ -243,6 +247,10 @@ public class ConnectionManager {
 
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+            String response = null;
+            if (errorResponse != null)
+                response = new String(errorResponse);
+
             if (LOG_CONNECTIONS) {
 
                 Log.d(TAG, "Status Code:" + statusCode);
@@ -258,6 +266,9 @@ public class ConnectionManager {
                     Log.d(TAG, new String(errorResponse));
                 }
             }
+
+
+            //pull the response message out of the return and pass it back up to the caller
 
             delegate.onConnectionFailed("something has gone wrong");
         }

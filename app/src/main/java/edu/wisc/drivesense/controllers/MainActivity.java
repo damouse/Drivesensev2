@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.controllers;
 
+import java.sql.Connection;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -23,6 +24,7 @@ import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.businessLogic.Bengal;
 //import edu.wisc.drivesense.server.DrivesensePreferences;
 import edu.wisc.drivesense.server.ConnectionManager;
+import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.views.PinMapFragment;
 import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.ViewAnimator;
@@ -42,16 +44,20 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 public class MainActivity extends Activity implements Observer {
     public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
     private static final String TAG = "MainActivity";
+
     //flag indicating state
     boolean displayingTrips;
     boolean busy = false;
     BackgroundStatusReceiver statusBroadcastReceiver;
+
     //animator
     ViewAnimator animator;
+
     //keeps track of the timer used to update UI with trip timer
     Handler timerHandler;
     boolean shouldUpdateTimer;
     int durationCounter = 0;
+
     Runnable timerRunnable = new Runnable() {
         @Override
         public void run() {
@@ -66,14 +72,17 @@ public class MainActivity extends Activity implements Observer {
                 durationCounter = 0;
         }
     };
+
     //Manages trips on the front end-- for Map and List
     private Bengal bengal;
+
     //view elements pulled for later reference
     private Button recordButton;
     private LinearLayout mapLayout;
     private SmoothProgressBar progressBar;
 
-    /* Boilerplate Activity Methods */
+
+    /* Boilerplate */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,9 +155,8 @@ public class MainActivity extends Activity implements Observer {
         FragmentManager fragmentManager = this.getFragmentManager();
         TripsListViewFragment fragmentList = (TripsListViewFragment)fragmentManager.findFragmentById(R.id.list);
         PinMapFragment fragmentMap = (PinMapFragment) fragmentManager.findFragmentById(R.id.map);
-        bengal = new Bengal(fragmentMap, fragmentList);
 
-
+        bengal = new Bengal(fragmentMap, fragmentList, this);
     }
 
     /**
@@ -163,21 +171,19 @@ public class MainActivity extends Activity implements Observer {
 
     /* Inputs from UI */
     public void settingsClick(View view) {
-        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
-//        Intent myIntent = new Intent(MainActivity.this, PreferenceActivity.class);
-//        MainActivity.this.startActivity(myIntent);
+        Intent myIntent = new Intent(MainActivity.this, PreferenceActivity.class);
+        MainActivity.this.startActivity(myIntent);
     }
 
     public void toggleRecord(View view) {
-        //TODO: debugging, remove
-        BackgroundRecordingService.getInstance().localDataTester();
-        return;
+        if (BackgroundRecordingService.getInstance().stateManager.getAutomaticRecording())
+            return;
 
-//        if (BackgroundRecordingService.getInstance().stateManager.getAutomaticRecording())
-//            return;
-//
-//        BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
-//        toggleRecordEffectsOn();
+        //Seatbelt check
+
+
+        BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
+        toggleRecordEffectsOn();
     }
 
     private void toggleRecordEffectsOn() {
@@ -218,6 +224,23 @@ public class MainActivity extends Activity implements Observer {
         }
 
         displayingTrips = !displayingTrips;
+    }
+
+    /**
+     * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
+     * All existing trips are dropped, new trip is loaded into the database.
+     *
+     * Intentionally on the main thread so you cant break things while the load is running.
+     *
+     * You don't have to do this more than once-- the trip stays loaded.
+     */
+    public void onLoadLocal(View view) {
+        Log.d(TAG, "Starting local trip load. This will take a while.");
+
+        BackgroundRecordingService.getInstance().localDataTester();
+        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
+
+        Log.d(TAG, "Finsihed local trip load. Press the 'Trips' button to see the loaded trip.");
     }
 
     /**
