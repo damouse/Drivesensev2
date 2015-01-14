@@ -127,7 +127,7 @@ public class ConnectionManager {
                     }
                 });
             }
-        }.execute(new Object[]{trip, user});
+        }.execute(trip, user);
     }
 
     /**

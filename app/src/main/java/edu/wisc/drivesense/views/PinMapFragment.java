@@ -213,7 +213,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
 
 
     /* Private Helpers */
-
     /**
      * Create a parse task for the trip, enqueue it in the task queue, and add the trip
      * once the parse finishes.

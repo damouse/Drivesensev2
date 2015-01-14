@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.businessLogic;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -11,6 +12,8 @@ import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.SugarDatabse;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
+import edu.wisc.drivesense.server.ConnectionManager;
+import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.views.PinMapFragment;
 import edu.wisc.drivesense.views.TripsListViewFragment;
 
@@ -25,21 +28,28 @@ import edu.wisc.drivesense.views.TripsListViewFragment;
  */
 public class Bengal {
     private static final String TAG = "MainActivity";
+
     private State state;
     private PinMapFragment map;
     private TripsListViewFragment list;
+
     private List<Trip> trips;
     private List<Trip> tripsInScope;
+
+    private Context context;
+    private User activeUser = null;
     private Trip displayingTrip = null;
     private TripRecorder recorder;
 
-    public Bengal(PinMapFragment mapFragment, TripsListViewFragment tripsFragment) {
+
+    public Bengal(PinMapFragment mapFragment, TripsListViewFragment tripsFragment, Context context) {
         map = mapFragment;
         list = tripsFragment;
         map.setDelegate(this);
         list.setDelegate(this);
 
         state = State.SHOW_NOTHING;
+        this.context = context;
     }
 
     /* Public Interface */
@@ -59,10 +69,19 @@ public class Bengal {
     }
 
     public void upload(Trip trip) {
-        //TODO: upload the trip
+        ConnectionManager api = new ConnectionManager(context);
+        api.convertUploadTrip(trip, activeUser, new ConnectionManagerCallback() {
+            @Override
+            public void onConnectionCompleted(Object... result) {
+                //refresh trip list
+                refresh();
+            }
 
-        //change the state of the trip in list
-        refresh();
+            @Override
+            public void onConnectionFailed(String message) {
+                //show alert with message contents
+            }
+        });
     }
 
     public void load(User user) {

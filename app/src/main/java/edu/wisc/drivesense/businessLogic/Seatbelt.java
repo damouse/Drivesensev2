@@ -8,4 +8,5 @@ package edu.wisc.drivesense.businessLogic;
  * as needed.
  */
 public class Seatbelt {
+
 }
