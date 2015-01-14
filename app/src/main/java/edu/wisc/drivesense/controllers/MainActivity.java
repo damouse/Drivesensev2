@@ -1,9 +1,5 @@
 package edu.wisc.drivesense.controllers;
 
-import java.sql.Connection;
-import java.util.Observable;
-import java.util.Observer;
-
 import android.app.Activity;
 import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
@@ -18,17 +14,20 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Observable;
+import java.util.Observer;
+
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.businessLogic.Bengal;
-//import edu.wisc.drivesense.server.DrivesensePreferences;
-import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.server.ConnectionManagerCallback;
+import edu.wisc.drivesense.businessLogic.Seatbelt;
 import edu.wisc.drivesense.views.PinMapFragment;
 import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.ViewAnimator;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
+
+//import edu.wisc.drivesense.server.DrivesensePreferences;
 
 
 /**
@@ -179,8 +178,8 @@ public class MainActivity extends Activity implements Observer {
         if (BackgroundRecordingService.getInstance().stateManager.getAutomaticRecording())
             return;
 
-        //Seatbelt check
-
+        if (!Seatbelt.manualRecordingCheck(BackgroundRecordingService.getInstance().concierge.getCurrentUser(), this))
+            return;
 
         BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
         toggleRecordEffectsOn();

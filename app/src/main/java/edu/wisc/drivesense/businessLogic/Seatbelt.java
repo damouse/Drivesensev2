@@ -4,6 +4,7 @@ import android.content.Context;
 import android.location.LocationManager;
 import android.widget.Toast;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.sensors.PowerListener;
 
@@ -19,8 +20,8 @@ import edu.wisc.drivesense.sensors.PowerListener;
 public class Seatbelt {
 
     //should seatbelt show an alert or a toast on errors? Note-- alert overrides toast.
-    public static boolean showAlert = false;
-    public static boolean showToast = true;
+    public static boolean showAlert = true;
+    public static boolean showToast = false;
 
     /**
      * Given a user, check to make sure recording is cleared to occur-- ensure the device is
@@ -30,7 +31,7 @@ public class Seatbelt {
      * @param user the active user
      * @return true if recording is clear to go ahead, false otherwise
      */
-    public boolean manualRecordingCheck(User user, Context context) {
+    public static boolean manualRecordingCheck(User user, Context context) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
             notifyUser("Gps is turned off!", context);
@@ -45,7 +46,7 @@ public class Seatbelt {
     /**
      * Same as the above method, but for automatic recording.
      */
-    public boolean automaticRecordingCheck(User user, Context context) {
+    public static boolean automaticRecordingCheck(User user, Context context) {
         boolean allClear = true;
 
         allClear = allClear && (PowerListener.isPluggedIn(context) || user.isAutomaticUnpoweredRecording());
@@ -60,9 +61,12 @@ public class Seatbelt {
 
 
     /* Notifications */
-    private void notifyUser(String message, Context context) {
+    private static void notifyUser(String message, Context context) {
         if (showAlert) {
-
+            new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
+                    .setTitleText("Oops...")
+                    .setContentText(message)
+                    .show();
         }
         else if (showToast) {
             Toast.makeText(context, message, Toast.LENGTH_LONG).show();
