@@ -19,6 +19,10 @@ import edu.wisc.drivesense.views.newUi.SettingsFragment;
 import edu.wisc.drivesense.views.newUi.StatsFragment;
 import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenu;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
         MenuFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
@@ -50,7 +54,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private void setUpMenu() {
         // attach to current activity;a
         resideMenu = new ResideMenu(this);
-        resideMenu.setBackground(R.drawable.menu_background);
+        resideMenu.setBackground(imageForTimeOfDay());
         resideMenu.attachToActivity(this);
 //        resideMenu.setMenuListener(menuListener);
     }
@@ -95,4 +99,26 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 //      Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
         }
     };
+
+
+    /* Misc and helper files */
+    /**
+     * Choose a different background image based on the time of day
+     * @return an image resource
+     */
+    private int imageForTimeOfDay() {
+        Date date = new Date();   // given date
+        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
+        calendar.setTime(date);   // assigns calendar to given date
+        int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
+
+        if (hour < 6)
+            return R.drawable.night;
+        else if (hour < 8)
+            return R.drawable.morning;
+        else if (hour < 20)
+            return R.drawable.day;
+        else
+            return R.drawable.evening;
+    }
 }
