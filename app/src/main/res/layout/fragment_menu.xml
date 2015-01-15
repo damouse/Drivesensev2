@@ -2,8 +2,38 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="edu.wisc.drivesense.views.newUi.MenuFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <com.makeramen.RoundedImageView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/imageView1"
+            android:src="@drawable/user_default"
+            android:scaleType="fitCenter"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="80dp"
+            app:riv_corner_radius="30dip"
+            app:riv_border_width="0dip"
+            app:riv_border_color="#333333"
+            app:riv_mutate_background="true"
+            app:riv_tile_mode="repeat"
+            app:riv_oval="true" />
+
+        <Button
+            style="@style/MenuButton"
+            android:text="@string/menu_button_one" />
+
+        <Button
+            style="@style/MenuButton"
+            android:text="@string/menu_button_two" />
+
+        <Button
+            style="@style/MenuButton"
+            android:text="@string/menu_button_three" />
+
+
+    </LinearLayout>
 </FrameLayout>

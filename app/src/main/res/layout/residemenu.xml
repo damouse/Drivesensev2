@@ -55,6 +55,12 @@
                 android:layout_height="wrap_content"
                 android:gravity="right">
 
+            <fragment
+                android:id="@+id/settings"
+                android:name="edu.wisc.drivesense.views.newUi.SettingsFragment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 

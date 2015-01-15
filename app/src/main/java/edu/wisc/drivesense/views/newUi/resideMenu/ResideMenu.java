@@ -6,6 +6,8 @@ import android.content.res.Configuration;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.*;
+import android.view.animation.AccelerateInterpolator;
+import android.view.animation.AnticipateInterpolator;
 import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -39,7 +41,7 @@ public class ResideMenu extends FrameLayout {
     private ImageView imageViewShadow;
     private ImageView imageViewBackground;
 //    public LinearLayout layoutLeftMenu;
-    public LinearLayout layoutRightMenu;
+//    public LinearLayout layoutRightMenu;
     private ScrollView scrollViewLeftMenu;
     private ScrollView scrollViewRightMenu;
     private ScrollView scrollViewMenu;
@@ -80,7 +82,7 @@ public class ResideMenu extends FrameLayout {
         scrollViewRightMenu = (ScrollView) findViewById(R.id.sv_right_menu);
         imageViewShadow = (ImageView) findViewById(R.id.iv_shadow);
 //        layoutLeftMenu = (LinearLayout) findViewById(R.id.layout_left_menu);
-        layoutRightMenu = (LinearLayout) findViewById(R.id.layout_right_menu);
+//        layoutRightMenu = (LinearLayout) findViewById(R.id.layout_right_menu);
         imageViewBackground = (ImageView) findViewById(R.id.iv_background);
     }
 
@@ -393,7 +395,7 @@ public class ResideMenu extends FrameLayout {
         );
 
 //        scaleDown.setInterpolator(AnimationUtils.loadInterpolator(activity, android.R.anim.anticipate_interpolator));
-        scaleDown.setInterpolator(new BounceInterpolator());
+        scaleDown.setInterpolator(new AccelerateInterpolator());
         scaleDown.setDuration(250);
         return scaleDown;
     }

@@ -34,6 +34,8 @@ dependencies {
 
     compile 'com.nineoldandroids:library:2.4.0'
 
+    compile 'com.makeramen:roundedimageview:1.5.0'
+
     compile 'org.encog:encog-core:3.3.0'
     compile 'com.github.satyan:sugar:1.3'
 
