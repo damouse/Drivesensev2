@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/Drivesensev2.iml" filepath="$PROJECT_DIR$/Drivesensev2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/drivesense.iml" filepath="$PROJECT_DIR$/drivesense.iml" />
+      <module fileurl="file://$PROJECT_DIR$/library/sweet-alert-lib.iml" filepath="$PROJECT_DIR$/library/sweet-alert-lib.iml" />
     </modules>
   </component>
 </project>

@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
 import edu.wisc.drivesense.model.Trip;
@@ -120,5 +121,14 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             return R.drawable.day;
         else
             return R.drawable.evening;
+    }
+
+    /* Button Callbacks */
+        /* Button Callbacks */
+    public void onButtonLeftClick(View view) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText("Look! A dialog!")
+                .show();
     }
 }
