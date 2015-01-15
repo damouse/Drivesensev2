@@ -36,9 +36,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * compile 'com.github.nirhart:parallaxscroll:1.0'
  * https://github.com/nirhart/ParallaxScroll
  *
- *        CalendarFragment newFragment = new CalendarFragment();
- getFragmentManager().beginTransaction().add(resideMenu.layoutLeftMenu.getId(), newFragment).commit();
- *
  * @author Damouse
  */
 public class MainActivity extends Activity implements Observer {

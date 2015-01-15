@@ -1,30 +1,22 @@
 package edu.wisc.drivesense.controllers.newUi;
 
+import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 import edu.wisc.drivesense.R;
 
-import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.Toast;
+import edu.wisc.drivesense.views.newUi.MenuFragment;
 import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenu;
 import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenuItem;
 
 
-public class LandingActivity extends FragmentActivity implements View.OnClickListener{
+public class LandingActivity extends FragmentActivity implements View.OnClickListener, MenuFragment.OnFragmentInteractionListener {
+    private static final String TAG = "LandingActivity";
 
     private ResideMenu resideMenu;
     private ResideMenuItem itemHome;
@@ -50,27 +42,30 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         resideMenu.setBackground(R.drawable.menu_background);
         resideMenu.attachToActivity(this);
         resideMenu.setMenuListener(menuListener);
+
         //valid scale factor is between 0.0f and 1.0f. leftmenu'width is 150dip.
         resideMenu.setScaleValue(0.6f);
 
         // create menu items;
-        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
-        itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "Profile");
+//        itemHome     = new ResideMenuItem(this, R.drawable.icon_home,     "Home");
+//        itemProfile  = new ResideMenuItem(this, R.drawable.icon_profile,  "Profile");
         itemCalendar = new ResideMenuItem(this, R.drawable.icon_calendar, "Calendar");
         itemSettings = new ResideMenuItem(this, R.drawable.icon_settings, "Settings");
 
-        itemHome.setOnClickListener(this);
-        itemProfile.setOnClickListener(this);
+//        itemHome.setOnClickListener(this);
+//        itemProfile.setOnClickListener(this);
         itemCalendar.setOnClickListener(this);
         itemSettings.setOnClickListener(this);
 
-        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
-        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
+//        resideMenu.addMenuItem(itemHome, ResideMenu.DIRECTION_LEFT);
+//        resideMenu.addMenuItem(itemProfile, ResideMenu.DIRECTION_LEFT);
         resideMenu.addMenuItem(itemCalendar, ResideMenu.DIRECTION_RIGHT);
         resideMenu.addMenuItem(itemSettings, ResideMenu.DIRECTION_RIGHT);
 
         // You can disable a direction by setting ->
         // resideMenu.setSwipeDirectionDisable(ResideMenu.DIRECTION_RIGHT);
+
+
 
         findViewById(R.id.title_bar_left_menu).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,12 +106,14 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
         @Override
         public void openMenu() {
-            Toast.makeText(getApplication().getApplicationContext(), "Menu is opened!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Menu Opened");
+//            Toast.makeText(getApplication().getApplicationContext(), "Menu is opened!", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void closeMenu() {
-            Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Menu closed");
+//      Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
         }
     };
 
@@ -132,5 +129,10 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     // What good method is to access resideMenu？
     public ResideMenu getResideMenu(){
         return resideMenu;
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }

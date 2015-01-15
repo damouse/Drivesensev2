@@ -16,6 +16,7 @@ import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.views.newUi.MenuFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  * Time: 下午10:44
  * Mail: specialcyci@gmail.com
  */
-public class ResideMenu extends FrameLayout{
+public class ResideMenu extends FrameLayout {
 
     public  static final int DIRECTION_LEFT  = 0;
     public  static final int DIRECTION_RIGHT = 1;
@@ -37,7 +38,7 @@ public class ResideMenu extends FrameLayout{
 
     private ImageView imageViewShadow;
     private ImageView imageViewBackground;
-    public LinearLayout layoutLeftMenu;
+//    public LinearLayout layoutLeftMenu;
     public LinearLayout layoutRightMenu;
     private ScrollView scrollViewLeftMenu;
     private ScrollView scrollViewRightMenu;
@@ -73,13 +74,12 @@ public class ResideMenu extends FrameLayout{
     }
 
     private void initViews(Context context){
-        LayoutInflater inflater = (LayoutInflater)
-                context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.residemenu, this);
         scrollViewLeftMenu = (ScrollView) findViewById(R.id.sv_left_menu);
         scrollViewRightMenu = (ScrollView) findViewById(R.id.sv_right_menu);
         imageViewShadow = (ImageView) findViewById(R.id.iv_shadow);
-        layoutLeftMenu = (LinearLayout) findViewById(R.id.layout_left_menu);
+//        layoutLeftMenu = (LinearLayout) findViewById(R.id.layout_left_menu);
         layoutRightMenu = (LinearLayout) findViewById(R.id.layout_right_menu);
         imageViewBackground = (ImageView) findViewById(R.id.iv_background);
     }
@@ -111,6 +111,7 @@ public class ResideMenu extends FrameLayout{
         leftMenuItems   = new ArrayList<ResideMenuItem>();
         rightMenuItems  = new ArrayList<ResideMenuItem>();
         ignoredViews    = new ArrayList<View>();
+
         viewDecor = (ViewGroup) activity.getWindow().getDecorView();
         viewActivity = new TouchDisableView(this.activity);
 
@@ -163,8 +164,8 @@ public class ResideMenu extends FrameLayout{
      */
     @Deprecated
     public void addMenuItem(ResideMenuItem menuItem){
-        this.leftMenuItems.add(menuItem);
-        layoutLeftMenu.addView(menuItem);
+//        this.leftMenuItems.add(menuItem);
+//        layoutLeftMenu.addView(menuItem);
     }
 
     /**
@@ -174,13 +175,13 @@ public class ResideMenu extends FrameLayout{
      * @param direction
      */
     public void addMenuItem(ResideMenuItem menuItem, int direction){
-        if (direction == DIRECTION_LEFT){
-            this.leftMenuItems.add(menuItem);
-            layoutLeftMenu.addView(menuItem);
-        }else{
-            this.rightMenuItems.add(menuItem);
-            layoutRightMenu.addView(menuItem);
-        }
+//        if (direction == DIRECTION_LEFT){
+//            this.leftMenuItems.add(menuItem);
+//            layoutLeftMenu.addView(menuItem);
+//        }else{
+//            this.rightMenuItems.add(menuItem);
+//            layoutRightMenu.addView(menuItem);
+//        }
     }
 
     /**
@@ -209,12 +210,12 @@ public class ResideMenu extends FrameLayout{
     }
 
     private void rebuildMenu(){
-        layoutLeftMenu.removeAllViews();
-        layoutRightMenu.removeAllViews();
-        for (ResideMenuItem leftMenuItem : leftMenuItems)
-            layoutLeftMenu.addView(leftMenuItem);
-        for (ResideMenuItem rightMenuItem : rightMenuItems)
-            layoutRightMenu.addView(rightMenuItem);
+//        layoutLeftMenu.removeAllViews();
+//        layoutRightMenu.removeAllViews();
+//        for (ResideMenuItem leftMenuItem : leftMenuItems)
+//            layoutLeftMenu.addView(leftMenuItem);
+//        for (ResideMenuItem rightMenuItem : rightMenuItems)
+//            layoutRightMenu.addView(rightMenuItem);
     }
 
     /**
