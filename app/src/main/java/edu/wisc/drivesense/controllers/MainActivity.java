@@ -27,8 +27,6 @@ import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.ViewAnimator;
 import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
 
-//import edu.wisc.drivesense.server.DrivesensePreferences;
-
 
 /**
  * The main entry point for the application. Sets up menu, map, and handles events.

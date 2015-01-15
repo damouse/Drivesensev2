@@ -2,8 +2,69 @@
     android:layout_width="match_parent" android:layout_height="match_parent"
     tools:context="edu.wisc.drivesense.views.newUi.StatsFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/orange"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/MenuButton"
+                android:text="@string/menu_button_two"
+                android:layout_weight="1"/>
+
+            <Button
+                style="@style/MenuButton"
+                android:text="@string/menu_button_three"
+                android:layout_weight="1"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/StockTextview"
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="3"
+            android:text="20"
+            android:layout_gravity="center"
+            android:textSize="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/StockTextview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="One"/>
+
+            <TextView
+                style="@style/StockTextview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Two"/>
+
+            <TextView
+                style="@style/StockTextview"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Three"/>
+
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </FrameLayout>
