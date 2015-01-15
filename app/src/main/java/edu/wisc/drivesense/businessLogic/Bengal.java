@@ -31,7 +31,7 @@ public class Bengal {
 
     private State state;
     private PinMapFragment map;
-    private TripsListViewFragment list;
+//    private TripsListViewFragment list;
 
     private List<Trip> trips;
     private List<Trip> tripsInScope;
@@ -44,9 +44,9 @@ public class Bengal {
 
     public Bengal(PinMapFragment mapFragment, TripsListViewFragment tripsFragment, Context context) {
         map = mapFragment;
-        list = tripsFragment;
+//        list = tripsFragment;
         map.setDelegate(this);
-        list.setDelegate(this);
+//        list.setDelegate(this);
 
         state = State.SHOW_NOTHING;
         this.context = context;
@@ -163,7 +163,7 @@ public class Bengal {
     private void refresh() {
         if (state == State.SHOW_NOTHING) {
             map.showNothing();
-            list.showTrips(tripsInScope);
+//            list.showTrips(tripsInScope);
 
             if (recorder != null) {
                 map.showRecordingTrip(recorder.getTrip());
@@ -176,12 +176,12 @@ public class Bengal {
         }
         else if (state == State.SHOW_ALL_TRIPS) {
             map.showTrips(tripsInScope);
-            list.showTrips(tripsInScope);
+//            list.showTrips(tripsInScope);
         }
 
         else if (state == State.SHOW_ONE_TRIP) {
             map.showTrip(displayingTrip);
-            list.showTrip(displayingTrip);
+//            list.showTrip(displayingTrip);
         }
     }
 

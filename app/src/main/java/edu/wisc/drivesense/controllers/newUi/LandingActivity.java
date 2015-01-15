@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.controllers.newUi;
 
+import android.app.FragmentManager;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,33 +11,48 @@ import android.view.MotionEvent;
 import android.view.View;
 import edu.wisc.drivesense.R;
 
+import edu.wisc.drivesense.model.Trip;
+import edu.wisc.drivesense.views.PinMapFragment;
+import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.newUi.MenuFragment;
 import edu.wisc.drivesense.views.newUi.SettingsFragment;
+import edu.wisc.drivesense.views.newUi.StatsFragment;
 import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenu;
 
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
-        MenuFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener {
+        MenuFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
+        TripsListViewFragment.TripSelectedListener, StatsFragment.OnFragmentInteractionListener {
+
     private static final String TAG = "LandingActivity";
 
     private ResideMenu resideMenu;
+    private TripsListViewFragment fragmentList;
+    private StatsFragment fragmentStats;
 
-    /**
-     * Called when the activity is first created.
-     */
+
+    /* Boilerplate and Init */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+
+        //pull fragments
+        fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
+        fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
+
+        //dummy data
+        fragmentList.setUser(null);
+
         setUpMenu();
     }
 
     private void setUpMenu() {
-        // attach to current activity;
+        // attach to current activity;a
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(R.drawable.menu_background);
         resideMenu.attachToActivity(this);
-        resideMenu.setMenuListener(menuListener);
+//        resideMenu.setMenuListener(menuListener);
     }
 
     @Override
@@ -48,6 +64,22 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View view) {
         Log.d("Menu", "Touch");
 //        resideMenu.closeMenu();
+    }
+
+    // What good method is to access resideMenu？
+    public ResideMenu getResideMenu(){
+        return resideMenu;
+    }
+
+
+    /* Fragment Callbacks */
+    public void onTripSelected(Trip trip) {
+
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+        Log.d(TAG, "Something happened in a fragment");
     }
 
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
@@ -63,23 +95,4 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 //      Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
         }
     };
-
-    private void changeFragment(Fragment targetFragment){
-//        resideMenu.clearIgnoredViewList();
-//        getSupportFragmentManager()
-//                .beginTransaction()
-//                .replace(R.id.main_fragment, targetFragment, "fragment")
-//                .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//                .commit();
-    }
-
-    // What good method is to access resideMenu？
-    public ResideMenu getResideMenu(){
-        return resideMenu;
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.d(TAG, "Something happened in a menu fragment");
-    }
 }
