@@ -9,6 +9,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationSet;
+import android.widget.ImageView;
+
+import cn.pedant.SweetAlert.OptAnimationLoader;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
@@ -130,5 +134,19 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
                 .setTitleText("Oops...")
                 .setContentText("Look! A dialog!")
                 .show();
+    }
+
+    /**
+     * Menu Button Callbacks
+     */
+    public void onMenuButtonPress(View view) {
+        //TESTING METHOD- don't use this in production, spin it off to its own
+        //class
+
+        Log.d(TAG, "button press on menu");
+
+        AnimationSet mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.error_x_in);
+        ImageView x = (ImageView) findViewById(R.id.error_x);
+        x.startAnimation(mErrorXInAnim);
     }
 }

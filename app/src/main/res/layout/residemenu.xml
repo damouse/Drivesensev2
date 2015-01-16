@@ -20,8 +20,8 @@
     <ScrollView
             android:id="@+id/sv_left_menu"
             android:scrollbars="none"
-            android:paddingLeft="30dp"
-            android:layout_width="150dp"
+            android:paddingLeft="15dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="left|center_vertical">
 
@@ -44,8 +44,8 @@
     <ScrollView
             android:id="@+id/sv_right_menu"
             android:scrollbars="none"
-            android:paddingRight="30dp"
-            android:layout_width="150dp"
+            android:paddingRight="15dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_gravity="right|center_vertical">
         <LinearLayout

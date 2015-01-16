@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="2"
-            android:background="@color/red">
+            android:layout_weight="2" >
+            <!--android:background="@color/red">-->
 
             <com.pkmmte.view.CircularImageView
                 android:layout_width="match_parent"
@@ -55,18 +55,64 @@
             android:orientation="vertical"
             android:layout_weight="1">
 
-            <Button
-                style="@style/MenuButton"
-                android:text="@string/menu_button_one" />
+            <!--Start Menu Option-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:onClick="onMenuButtonPress">
 
-            <Button
-                style="@style/MenuButton"
-                android:text="@string/menu_button_two" />
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight=".8"
+                    android:orientation="vertical"
+                    android:layout_height="match_parent">
 
-            <Button
-                style="@style/MenuButton"
-                android:text="@string/menu_button_three" />
+                    <TextView
+                        style="@style/StockTextview"
+                        android:id="@+id/day"
+                        android:layout_width="match_parent"
+                        android:layout_weight=".5"
+                        android:layout_height="0dp"
+                        android:textSize="20dp"
+                        android:text="Button"/>
 
+                    <TextView
+                        style="@style/StockTextview"
+                        android:id="@+id/time"
+                        android:layout_width="match_parent"
+                        android:layout_weight=".5"
+                        android:layout_height="0dp"
+                        android:text="Description"/>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_weight=".2"
+                    android:layout_height="match_parent"
+                    android:gravity="right">
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/custom_image"-->
+                        <!--android:layout_width="40dp"-->
+                        <!--android:layout_height="40dp"-->
+                        <!--android:contentDescription="@string/app_name"-->
+                        <!--android:scaleType="fitCenter" />-->
+
+                    <ImageView
+                        android:id="@+id/error_x"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/app_name"
+                        android:src="@drawable/error_center_x"
+                        android:scaleType="center" />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+            <!--End Menu Option-->
 
         </LinearLayout>
     </LinearLayout>
