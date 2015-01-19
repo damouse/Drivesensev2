@@ -58,13 +58,12 @@
             <!--Start Menu Option-->
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="50dp"
                 android:orientation="horizontal"
                 android:onClick="onMenuButtonPress">
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".8"
+                    android:layout_width="200dp"
                     android:orientation="vertical"
                     android:layout_height="match_parent">
 
@@ -88,25 +87,62 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_weight=".2"
-                    android:layout_height="match_parent"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
                     android:gravity="right">
 
-                    <!--<ImageView-->
-                        <!--android:id="@+id/custom_image"-->
-                        <!--android:layout_width="40dp"-->
-                        <!--android:layout_height="40dp"-->
-                        <!--android:contentDescription="@string/app_name"-->
-                        <!--android:scaleType="fitCenter" />-->
-
-                    <ImageView
-                        android:id="@+id/error_x"
+                    <FrameLayout
+                        android:id="@+id/error_frame"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/error_center_x"
-                        android:scaleType="center" />
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/error_circle" />
+
+                        <ImageView
+                            android:id="@+id/error_x"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/app_name"
+                            android:src="@drawable/error_center_x"
+                            android:scaleType="center" />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/success_frame"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:visibility="gone">
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/success_bow" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/success_circle" />
+
+                        <cn.pedant.SweetAlert.SuccessTickView
+                            android:id="@+id/success_tick"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
+
+                    </FrameLayout>
+
+                    <!--<ImageView-->
+                        <!--android:id="@+id/error_x"-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:contentDescription="@string/app_name"-->
+                        <!--android:src="@drawable/error_center_x"-->
+                        <!--android:scaleType="center" />-->
 
                 </LinearLayout>
 

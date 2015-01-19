@@ -9,10 +9,13 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import cn.pedant.SweetAlert.OptAnimationLoader;
+import cn.pedant.SweetAlert.SuccessTickView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
@@ -38,6 +41,9 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private ResideMenu resideMenu;
     private TripsListViewFragment fragmentList;
     private StatsFragment fragmentStats;
+
+    //TEMP TESTING
+    boolean showingx = true;
 
 
     /* Boilerplate and Init */
@@ -140,13 +146,38 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * Menu Button Callbacks
      */
     public void onMenuButtonPress(View view) {
-        //TESTING METHOD- don't use this in production, spin it off to its own
-        //class
+        //TESTING METHOD- don't use this in production, spin it off to its own class
+        FrameLayout mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
+//        View mSuccessLeftMask = mSuccessFrame.findViewById(R.id.mask_left);
+//        View mSuccessRightMask = mSuccessFrame.findViewById(R.id.mask_right);
+        SuccessTickView mSuccessTick = (SuccessTickView)mSuccessFrame.findViewById(R.id.success_tick);
+        Animation mSuccessBowAnim = OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_bow_roate);
 
-        Log.d(TAG, "button press on menu");
+        AnimationSet mSuccessLayoutAnimSet = (AnimationSet)OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_mask_layout);
 
+        FrameLayout mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
         AnimationSet mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.error_x_in);
         ImageView x = (ImageView) findViewById(R.id.error_x);
-        x.startAnimation(mErrorXInAnim);
+
+        if(showingx) {
+            mSuccessFrame.setVisibility(View.VISIBLE);
+            mErrorFrame.setVisibility(View.GONE);
+
+            // initial rotate layout of success mask
+//            mSuccessLeftMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(0));
+//            mSuccessRightMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(1));
+//            mSuccessRightMask.startAnimation(mSuccessBowAnim);
+            mSuccessTick.startTickAnim();
+        }
+        else {
+            mSuccessFrame.setVisibility(View.GONE);
+            mErrorFrame.setVisibility(View.VISIBLE);
+
+            x.startAnimation(mErrorXInAnim);
+        }
+
+        showingx = !showingx;
+
+
     }
 }

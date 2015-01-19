@@ -78,6 +78,7 @@ public class ResideMenu extends FrameLayout {
     private void initViews(Context context){
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.residemenu, this);
+
         scrollViewLeftMenu = (ScrollView) findViewById(R.id.sv_left_menu);
         scrollViewRightMenu = (ScrollView) findViewById(R.id.sv_right_menu);
         imageViewShadow = (ImageView) findViewById(R.id.iv_shadow);
