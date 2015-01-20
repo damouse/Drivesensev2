@@ -114,7 +114,7 @@ public class BitmapLoader {
      */
     public static int colorForScore(double score) {
 
-        return Color.rgb(232, 118, 26);
+        return Color.rgb(132, 118, 26);
 
         //Xuan-- old code here. Think it works. Try it.
 //        int percent = (int) Math.abs(100 - score);
