@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import android.graphics.Color;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import edu.wisc.drivesense.R;
@@ -85,6 +86,8 @@ public class BitmapLoader {
 
 
     /* Color Changing */
+
+
 //    private int[] colorBitmap(int color, Bitmap bitmap) {
 //        int pixels[] = null;
 //        int width = bitmap.getWidth();
@@ -101,15 +104,28 @@ public class BitmapLoader {
 //        }
 //    }
 //
-    private int colorForScore(double score) {
-        int percent = (int) Math.abs(100 - score);
 
-        int r = ( (255 * percent) / 100 );
-        int g = ( 255 * (100) ) / 100;
-        int b = 0;
+    /**
+     * TODO: return a pastel that ranges between red and green, proportionally moving based on the
+      input Score: 0 is red and 100 is green.
 
-        return ((r&0x0ff)<<16)|((g&0x0ff)<<8)|(b&0x0ff);
+     * @param score score value from 0 to 100
+     * @return a Color that ranged from red to green based on Score-- faded to be light, drawn from pastel palette
+     */
+    public static int colorForScore(double score) {
 
+        return Color.rgb(232, 118, 26);
+
+        //Xuan-- old code here. Think it works. Try it.
+//        int percent = (int) Math.abs(100 - score);
+//
+//        int r = ( (255 * percent) / 100 );
+//        int g = ( 255 * (100) ) / 100;
+//        int b = 0;
+//
+//        return ((r&0x0ff)<<16)|((g&0x0ff)<<8)|(b&0x0ff);
+
+        //commented out because we don't want a blue component for raw red-to-green
 //        blue = 0;
 //        green = 255 * sqrt( cos ( power * PI / 200 ));
 //        red = 255 * sqrt( sin ( power * PI / 200 ));

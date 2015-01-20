@@ -8,8 +8,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import android.widget.LinearLayout;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.views.BitmapLoader;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -20,6 +22,10 @@ import edu.wisc.drivesense.R;
  * create an instance of this fragment.
  */
 public class StatsFragment extends Fragment {
+    private static final String TAG = "StatsFragment";
+
+    private LinearLayout layoutRoot;
+
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -60,6 +66,8 @@ public class StatsFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        setBackgroundColorTEST();
     }
 
     @Override
@@ -105,5 +113,11 @@ public class StatsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
+    }
+
+    /* TESTING METHOD */
+    public void setBackgroundColorTEST() {
+        layoutRoot = (LinearLayout) getView().findViewById(R.id.linearBackground);
+        layoutRoot.setBackgroundColor(BitmapLoader.colorForScore(50));
     }
 }

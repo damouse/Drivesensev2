@@ -9,4 +9,4 @@
     android:duration="300"
     android:fillAfter="true"
     android:startOffset="215">
-</rotate><!-- From: file:/Users/Damouse/Documents/projects/android/Drivesensev2/library/src/main/res/anim/success_bow_roate.xml --><!-- From: file:/Users/Damouse/Documents/projects/android/Drivesensev2/library/build/intermediates/bundles/debug/res/anim/success_bow_roate.xml -->
+</rotate><!-- From: file:/home/damouse/development/android/drivesense/drivesense/library/src/main/res/anim/success_bow_roate.xml --><!-- From: file:/home/damouse/development/android/drivesense/drivesense/library/build/intermediates/bundles/debug/res/anim/success_bow_roate.xml -->
