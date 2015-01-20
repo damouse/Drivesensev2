@@ -60,7 +60,14 @@ public class TripsListViewFragment extends ListFragment  {
     @Override
     public void onResume() {
         super.onResume();
+
+        //remove the white divider between cells
         getListView().setDivider(null);
+
+        //use along with "setListShown" to toggle empty list and spinner behavior.
+        //See: http://stackoverflow.com/questions/9384792/replace-loading-message-in-listfragment-when-list-is-empty
+        setListShown(true);
+        setEmptyText("No trips for this week");
     }
 
     public interface TripSelectedListener {
@@ -148,8 +155,9 @@ public class TripsListViewFragment extends ListFragment  {
             
             //format date
             SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMMM dd, hh:mma");
-            
-            hol
+
+            holder.day.setText("This is a cell");
+
 //            holder.date.setText(formatter.format(current.date));
 //            holder.distance.setText(current.formattedDistance());
 //            holder.duration.setText(current.formattedDuration());

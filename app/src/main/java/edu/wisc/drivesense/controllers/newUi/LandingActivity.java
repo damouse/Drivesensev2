@@ -1,6 +1,7 @@
 package edu.wisc.drivesense.controllers.newUi;
 
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +21,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
 import edu.wisc.drivesense.businessLogic.Concierge;
+import edu.wisc.drivesense.controllers.PreferenceActivity;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.views.PinMapFragment;
@@ -63,6 +65,15 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         //pull fragments
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
+
+//        resideMenu.addIgnoredView(findViewById(R.id.trips));
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+//        resideMenu.addIgnoredView(fragmentList.getView());
     }
 
     @Override
@@ -72,12 +83,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
     /* Fragment Callbacks */
     public void onTripSelected(Trip trip) {
-
+        Intent intent = new Intent(LandingActivity.this, TripViewerActivity.class);
+        intent.putExtra("tripId", trip.getId());
+        LandingActivity.this.startActivity(intent);
     }
 
 
     /* User Login and Logout */
-
     /**
      * Loads the currently logged in user into the list and the menu
      */
@@ -87,10 +99,11 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     }
 
 
-    /* Misc and helper files */
+    /* Stats Button Callbacks */
+    public void onRightButtonClick(View view) {
 
+    }
 
-    /* ORPHANED AND TEMP-- these method will be moved to their respective fragments */
     public void onButtonLeftClick(View view) {
         new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
                 .setTitleText("Oops...")
@@ -98,12 +111,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
                 .show();
     }
 
+
+    /* ORPHANED AND TEMP-- these method will be moved to their respective fragments */
     @Override
     public void onClick(View view) {
         Log.d("Menu", "Touch");
 //        resideMenu.closeMenu();
     }
-
 
     @Override
     public void onFragmentInteraction(Uri uri) {
