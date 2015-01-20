@@ -35,7 +35,7 @@ import android.widget.LinearLayout.LayoutParams;
 public class TripsListViewFragment extends ListFragment  {
 	private static final String TAG = "TripsListViewFragment";
 
-    private ArrayList<Trip> trips;
+    private List<Trip> trips;
     private ArrayList<Trip> tripsInScope;
 
     private TripSelectedListener delegate;
@@ -75,27 +75,22 @@ public class TripsListViewFragment extends ListFragment  {
      * @param user
      */
     public void setUser(User user) {
-        trips = new ArrayList<Trip>();
-        tripsInScope = new ArrayList<Trip>();
-
-        //load the trips for the user
-        tripsInScope = dummyData();
-
-        //Apply the scope to the trips
+        trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
+        tripsInScope = applyScope(trips);
 
         //reload list
         listAdapter = new CustomListAdapter(context, this.tripsInScope);
         this.setListAdapter(listAdapter);
     }
 
-    private ArrayList<Trip> dummyData() {
-        ArrayList<Trip> result = new ArrayList<Trip>();
-
-        for (int i = 0; i < 3; i++) {
-            result.add(new Trip());
-        }
-
-        return result;
+    /**
+     * Take the current scope, apply it to all trips, and return all of the trips that fall into the scope.
+     *
+     * The scope is a date or a date range.
+     * @return
+     */
+    private ArrayList<Trip> applyScope(List<Trip> trips) {
+        return new ArrayList<Trip>(trips);
     }
 
     /**
@@ -149,13 +144,12 @@ public class TripsListViewFragment extends ListFragment  {
             	holder = (ViewHolder) convertView.getTag();
             }
 
-
             Trip current = getItem(position);
             
             //format date
             SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMMM dd, hh:mma");
             
-//            holder.name.setText(current.name);
+            hol
 //            holder.date.setText(formatter.format(current.date));
 //            holder.distance.setText(current.formattedDistance());
 //            holder.duration.setText(current.formattedDuration());
@@ -175,3 +169,4 @@ public class TripsListViewFragment extends ListFragment  {
         }
     }
 }
+

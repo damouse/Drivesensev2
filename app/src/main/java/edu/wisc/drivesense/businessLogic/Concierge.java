@@ -15,12 +15,12 @@ import edu.wisc.drivesense.model.User;
  * <p/>
  * Loads the logged in user, informs
  */
-public class Concierge extends Observable {
+public class Concierge {
     private static final String TAG = "Concierge";
-    private User currentUser;
+    private static User currentUser;
 
 
-    public Concierge() {
+    public static void initializeConcierge() {
         currentUser = loadActiveUser();
         Log.d(TAG, "Loaded user: " + currentUser.email);
     }
@@ -50,11 +50,11 @@ public class Concierge extends Observable {
     }
 
     /* Update Methods */
-    public User getCurrentUser() {
+    public static User getCurrentUser() {
         return currentUser;
     }
 
-    public void logOut() {
+    public static void logOut() {
         if (currentUser.demoUser())
             return;
 
@@ -64,15 +64,12 @@ public class Concierge extends Observable {
         currentUser = getDemoUser();
         currentUser.loggedIn = true;
         currentUser.save();
-
-        setChanged();
-        notifyObservers(currentUser);
     }
 
 
     /* User loading and management */
 
-    public void logIn(User user) {
+    public static void logIn(User user) {
         if (currentUser.loggedIn) {
             currentUser.loggedIn = false;
             currentUser.save();
@@ -81,16 +78,13 @@ public class Concierge extends Observable {
         currentUser = user;
         currentUser.loggedIn = true;
         currentUser.save();
-
-        setChanged();
-        notifyObservers(currentUser);
     }
 
     /**
      * If no users exist, create a demo user.
      * Else, check preferences for a saved user and load him
      */
-    public User loadActiveUser() {
+    private static User loadActiveUser() {
         List<User> users = User.find(User.class, "logged_in = ?", "true");
 
         if (users.size() == 1)

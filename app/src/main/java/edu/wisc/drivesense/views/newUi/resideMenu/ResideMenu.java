@@ -20,8 +20,7 @@ import com.nineoldandroids.view.ViewHelper;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.views.newUi.MenuFragment;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * User: special
@@ -107,6 +106,10 @@ public class ResideMenu extends FrameLayout {
         initValue(activity);
         setShadowAdjustScaleXByOrientation();
         viewDecor.addView(this, 0);
+
+        //new init
+        setBackground(imageForTimeOfDay());
+        attachToActivity(activity);
     }
 
     private void initValue(Activity activity){
@@ -608,5 +611,27 @@ public class ResideMenu extends FrameLayout {
         if (scrollViewMenu != null && scrollViewMenu.getParent() != null){
             removeView(scrollViewMenu);
         }
+    }
+
+
+    /* Customization-- New Methods */
+    /**
+     * Choose a different background image based on the time of day
+     * @return an image resource
+     */
+    private int imageForTimeOfDay() {
+        Date date = new Date();   // given date
+        Calendar calendar = GregorianCalendar.getInstance();
+        calendar.setTime(date);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        if (hour < 6)
+            return R.drawable.night;
+        else if (hour < 8)
+            return R.drawable.morning;
+        else if (hour < 18)
+            return R.drawable.day;
+        else
+            return R.drawable.evening;
     }
 }

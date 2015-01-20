@@ -19,7 +19,9 @@ import cn.pedant.SweetAlert.SuccessTickView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
+import edu.wisc.drivesense.businessLogic.Concierge;
 import edu.wisc.drivesense.model.Trip;
+import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.views.PinMapFragment;
 import edu.wisc.drivesense.views.TripsListViewFragment;
 import edu.wisc.drivesense.views.newUi.MenuFragment;
@@ -41,6 +43,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private ResideMenu resideMenu;
     private TripsListViewFragment fragmentList;
     private StatsFragment fragmentStats;
+    private SettingsFragment fragmentSettings;
+    private MenuFragment fragmentMenu;
 
     //TEMP TESTING
     boolean showingx = true;
@@ -52,27 +56,46 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
+        //creates the dragging menu
+        resideMenu = new ResideMenu(this);
+        resideMenu.setMenuListener(menuListener);
+
         //pull fragments
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
-
-        //dummy data
-        fragmentList.setUser(null);
-
-        setUpMenu();
-    }
-
-    private void setUpMenu() {
-        // attach to current activity;a
-        resideMenu = new ResideMenu(this);
-        resideMenu.setBackground(imageForTimeOfDay());
-        resideMenu.attachToActivity(this);
-//        resideMenu.setMenuListener(menuListener);
     }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return resideMenu.dispatchTouchEvent(ev);
+    }
+
+    /* Fragment Callbacks */
+    public void onTripSelected(Trip trip) {
+
+    }
+
+
+    /* User Login and Logout */
+
+    /**
+     * Loads the currently logged in user into the list and the menu
+     */
+    private void loadUser() {
+        User user = Concierge.getCurrentUser();
+        fragmentList.setUser(user);
+    }
+
+
+    /* Misc and helper files */
+
+
+    /* ORPHANED AND TEMP-- these method will be moved to their respective fragments */
+    public void onButtonLeftClick(View view) {
+        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+                .setTitleText("Oops...")
+                .setContentText("Look! A dialog!")
+                .show();
     }
 
     @Override
@@ -81,16 +104,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 //        resideMenu.closeMenu();
     }
 
-    // What good method is to access resideMenu？
-    public ResideMenu getResideMenu(){
-        return resideMenu;
-    }
-
-
-    /* Fragment Callbacks */
-    public void onTripSelected(Trip trip) {
-
-    }
 
     @Override
     public void onFragmentInteraction(Uri uri) {
@@ -111,40 +124,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         }
     };
 
-
-    /* Misc and helper files */
-    /**
-     * Choose a different background image based on the time of day
-     * @return an image resource
-     */
-    private int imageForTimeOfDay() {
-        Date date = new Date();   // given date
-        Calendar calendar = GregorianCalendar.getInstance(); // creates a new calendar instance
-        calendar.setTime(date);   // assigns calendar to given date
-        int hour = calendar.get(Calendar.HOUR_OF_DAY); // gets hour in 24h format
-
-        if (hour < 6)
-            return R.drawable.night;
-        else if (hour < 8)
-            return R.drawable.morning;
-        else if (hour < 20)
-            return R.drawable.day;
-        else
-            return R.drawable.evening;
-    }
-
-    /* Button Callbacks */
-        /* Button Callbacks */
-    public void onButtonLeftClick(View view) {
-        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Oops...")
-                .setContentText("Look! A dialog!")
-                .show();
-    }
-
-    /**
-     * Menu Button Callbacks
-     */
     public void onMenuButtonPress(View view) {
         //TESTING METHOD- don't use this in production, spin it off to its own class
         FrameLayout mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
@@ -177,7 +156,5 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         }
 
         showingx = !showingx;
-
-
     }
 }
