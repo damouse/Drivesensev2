@@ -47,6 +47,7 @@ public class Concierge {
         newDemo.email = "Demo User";
         newDemo.loggedIn = true;
         newDemo.save();
+
         return newDemo;
     }
 
@@ -59,6 +60,10 @@ public class Concierge {
     }
 
     public static void logOut() {
+        if (currentUser == null)
+            return;
+
+        Log.i(TAG, "Logging " + currentUser.email + " out");
         if (currentUser.demoUser())
             return;
 

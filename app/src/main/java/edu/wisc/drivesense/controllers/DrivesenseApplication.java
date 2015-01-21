@@ -9,6 +9,6 @@ public class DrivesenseApplication extends Application {
 	    super.onCreate();
 
         //loads the demo user before anyone needs it. Loads the demo user on first run
-        Concierge.initializeConcierge();
+//        Concierge.initializeConcierge();
 	}
 }

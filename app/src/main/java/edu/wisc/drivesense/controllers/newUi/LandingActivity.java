@@ -184,6 +184,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         showingx = !showingx;
     }
 
+
+    /* TESTING and DEBUG */
     /**
      * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
      * All existing trips are dropped, new trip is loaded into the database.
@@ -201,11 +203,16 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             public void onReceive(Context context, Intent intent) {
                 BackgroundRecordingService.getInstance().localDataTester();
                 Log.d(TAG, "Finsihed local trip load. Press the 'Trips' button to see the loaded trip.");
+                stopServiceTEST();
 
             }
         }, intentFilter);
 
         startService(new Intent(this, BackgroundRecordingService.class));
 
+    }
+
+    private void stopServiceTEST() {
+        stopService(new Intent(this, BackgroundRecordingService.class));
     }
 }
