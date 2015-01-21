@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.scoring.common;
 
+import android.content.Context;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -64,6 +65,7 @@ public class DataReceiver {
     public TimestampQueue gravity = new TimestampQueue();
     public TimestampQueue gyroscope = new TimestampQueue();
     public TimestampQueue gps = new TimestampQueue();
+    public TimestampQueue rotationMatrix = new TimestampQueue();
 
     //The last (inputMemorySize) input results are remembered if needed. Measured in number of periods,
     // not milliseconds
@@ -71,16 +73,18 @@ public class DataReceiver {
     private TimestampQueue inputMemory;
 
     //processors-- These hold some relevant pieces of data as needed
-    private AccelerometerProcessor accelerometerProcessor = new AccelerometerProcessor();
+    private AccelerometerProcessor accelerometerProcessor;
 
 
     /* Boilerplate */
     /**
      * @param memory The number of past periods to remember
      */
-    public DataReceiver(int memory) {
+    public DataReceiver(int memory, Context context) {
         inputMemorySize = memory;
         inputMemory = new TimestampQueue();
+
+        accelerometerProcessor = new AccelerometerProcessor(context);
     }
 
 
@@ -98,6 +102,11 @@ public class DataReceiver {
 //                if (linearAccel != null)
 //                    acceleration.push(linearAccel);
                 acceleration.push(reading);
+
+                //calculate a rotation matrix for the new reading
+                if (magnet.size() != 0) {
+                    rotationMatrix.push(accelerometerProcessor.getRotationMatrix(reading, magnet.peek()));
+                }
                 break;
 
             case GYROSCOPE:
@@ -106,7 +115,6 @@ public class DataReceiver {
 
             case GRAVITY:
                 gravity.push(reading);
-                accelerometerProcessor.lastGravity = reading;
                 break;
 
             case MAGNETIC:

@@ -28,7 +28,10 @@ import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.dequeueBeforeTi
  * Loads local data (stored in the application directory) and feeds it into ScoreKeeper.
  */
 public class LocalDataTester {
+    private static final String TAG = "LocalDataTester";
+
     static boolean lock = false;
+    long maxTime = 500000;
 
     private TripRecorder recorder;
     private Context context;
@@ -67,57 +70,24 @@ public class LocalDataTester {
     }
 
     public void readAndLoadTestData(Context context) {
-        readAndLoad("magnet.txt", context, Reading.Type.MAGNETIC);
-        readAndLoad("gyro.txt", context, Reading.Type.GYROSCOPE);
-        readAndLoad("gravity.txt", context, Reading.Type.GRAVITY);
-        readAndLoad("gps.txt", context, Reading.Type.GPS);
-        readAndLoad("acceleration.txt", context, Reading.Type.ACCELERATION);
-    }
 
-    private static void readFile(String name, Context context, Reading.Type type) {
-        lock = false;
 
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
-            ArrayList<ReadingHolder> readings = new ArrayList<ReadingHolder>();
-            Reading lastReading = null;
+//        readAndLoad("magnet.txt", context, Reading.Type.MAGNETIC);
+//        readAndLoad("gyro.txt", context, Reading.Type.GYROSCOPE);
+//        readAndLoad("gravity.txt", context, Reading.Type.GRAVITY);
+//        readAndLoad("gps.txt", context, Reading.Type.GPS);
+//        readAndLoad("acceleration.txt", context, Reading.Type.ACCELERATION);
 
-            int counter = 0;
-            int maxItems = 100000;
+        TimestampQueue<Reading> allData = new TimestampQueue<Reading>();
+        allData.addQueue(read("magnet.txt", context, Reading.Type.MAGNETIC));
+        allData.addQueue(read("gyro.txt", context, Reading.Type.GYROSCOPE));
+        allData.addQueue(read("gravity.txt", context, Reading.Type.GRAVITY));
+        allData.addQueue(read("gps.txt", context, Reading.Type.GPS));
+        allData.addQueue(read("acceleration.txt", context, Reading.Type.ACCELERATION));
 
-            String line = reader.readLine();
-            while (line != null) {
-                Reading reading = new Reading(line, type);
-                ReadingHolder holder = new ReadingHolder(reading);
-
-                //exclude duplicates
-                if (lastReading != null && reading.timestamp != lastReading.timestamp)
-                    readings.add(holder);
-
-                lastReading = reading;
-                line = reader.readLine();
-
-                counter += 1;
-
-                if (counter >= maxItems && lock == false) {
-                    lock = true;
-                    new SaveAsyncTask() {
-                        @Override
-                        protected void onPostExecute(Boolean aBoolean) {
-                            lock = false;
-                        }
-                    }.execute(readings);
-                    counter = 0;
-                    ReadingHolder.saveInTx(readings);
-                    readings = new ArrayList<ReadingHolder>();
-                }
-            }
-
-            reader.close();
-        } catch (IOException e) {
-            System.out.println("Error reading file\n");
-            e.printStackTrace();
-        }
+        Log.d(TAG, "Sorting all data...");
+        allData.sort();
+        Log.d(TAG, "Feeding data...");
     }
 
     private void readAndLoad(String name, Context context, Reading.Type type) {
@@ -149,12 +119,94 @@ public class LocalDataTester {
             e.printStackTrace();
         }
     }
-}
 
-class SaveAsyncTask extends AsyncTask<List<ReadingHolder>, Integer, Boolean> {
-    @Override
-    protected Boolean doInBackground(List<ReadingHolder>... params) {
-        ReadingHolder.saveInTx(params[0]);
-        return true;
+    /* Read and Feed method */
+    /**
+     * Does not push the data to the receiver right away, returns a list of loaded readings
+     */
+    private TimestampQueue<Reading> read(String name, Context context, Reading.Type type) {
+        Log.d("LocalReader", "Starting load for " + name);
+        TimestampQueue<Reading> result = new TimestampQueue<Reading>();
+
+        try {
+            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
+            Reading lastReading = null;
+
+            String line = reader.readLine();
+            while (line != null) {
+                Reading reading = new Reading(line, type);
+
+                if (reading.timestamp > maxTime)
+                    break;
+
+                //exclude duplicates
+                if (lastReading != null && reading.timestamp != lastReading.timestamp)
+                    result.push(reading);
+
+                lastReading = reading;
+                line = reader.readLine();
+            }
+
+            reader.close();
+        } catch (IOException e) {
+            System.out.println("Error reading file\n");
+            e.printStackTrace();
+        }
+
+        return result;
     }
+
+    private void feed(TimestampQueue<Reading> data) {
+        for (Reading reading: data)
+            recorder.newReading(reading);
+    }
+
+
+    /* Orphaned Code */
+    private static void readFile(String name, Context context, Reading.Type type) {
+//        lock = false;
+//
+//        try {
+//            BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
+//            ArrayList<ReadingHolder> readings = new ArrayList<ReadingHolder>();
+//            Reading lastReading = null;
+//
+//            int counter = 0;
+//            int maxItems = 100000;
+//
+//            String line = reader.readLine();
+//            while (line != null) {
+//                Reading reading = new Reading(line, type);
+//                ReadingHolder holder = new ReadingHolder(reading);
+//
+//                //exclude duplicates
+//                if (lastReading != null && reading.timestamp != lastReading.timestamp)
+//                    readings.add(holder);
+//
+//                lastReading = reading;
+//                line = reader.readLine();
+//
+//                counter += 1;
+//
+//                if (counter >= maxItems && lock == false) {
+//                    lock = true;
+//                    new SaveAsyncTask() {
+//                        @Override
+//                        protected void onPostExecute(Boolean aBoolean) {
+//                            lock = false;
+//                        }
+//                    }.execute(readings);
+//                    counter = 0;
+//                    ReadingHolder.saveInTx(readings);
+//                    readings = new ArrayList<ReadingHolder>();
+//                }
+//            }
+//
+//            reader.close();
+//        } catch (IOException e) {
+//            System.out.println("Error reading file\n");
+//            e.printStackTrace();
+//        }
+    }
+
 }
