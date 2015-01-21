@@ -106,10 +106,6 @@ public class ResideMenu extends FrameLayout {
         initValue(activity);
         setShadowAdjustScaleXByOrientation();
         viewDecor.addView(this, 0);
-
-        //new init
-        setBackground(imageForTimeOfDay());
-        attachToActivity(activity);
     }
 
     private void initValue(Activity activity){
@@ -619,7 +615,7 @@ public class ResideMenu extends FrameLayout {
      * Choose a different background image based on the time of day
      * @return an image resource
      */
-    private int imageForTimeOfDay() {
+    public static int imageForTimeOfDay() {
         Date date = new Date();   // given date
         Calendar calendar = GregorianCalendar.getInstance();
         calendar.setTime(date);

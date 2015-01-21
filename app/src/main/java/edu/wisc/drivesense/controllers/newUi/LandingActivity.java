@@ -60,13 +60,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
         //creates the dragging menu
         resideMenu = new ResideMenu(this);
-        resideMenu.setMenuListener(menuListener);
+        resideMenu.setBackground(ResideMenu.imageForTimeOfDay());
+        resideMenu.attachToActivity(this);
+        resideMenu.addIgnoredView(findViewById(R.id.trips));
 
         //pull fragments
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
-
-//        resideMenu.addIgnoredView(findViewById(R.id.trips));
     }
 
     @Override
@@ -80,6 +80,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public boolean dispatchTouchEvent(MotionEvent ev) {
         return resideMenu.dispatchTouchEvent(ev);
     }
+
 
     /* Fragment Callbacks */
     public void onTripSelected(Trip trip) {
