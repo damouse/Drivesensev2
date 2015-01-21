@@ -37,7 +37,6 @@ import fr.castorflex.android.smoothprogressbar.SmoothProgressBar;
  * @author Damouse
  */
 public class MainActivity extends Activity implements Observer {
-    public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
     private static final String TAG = "MainActivity";
 
     //flag indicating state
@@ -104,7 +103,7 @@ public class MainActivity extends Activity implements Observer {
         //if the service is null it hasn't started yet. Start it and register for a calback
         if (BackgroundRecordingService.getInstance() == null) {
             statusBroadcastReceiver = new BackgroundStatusReceiver();
-            IntentFilter intentFilter = new IntentFilter(BACKGROUND_ACTION);
+            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
             registerReceiver(statusBroadcastReceiver, intentFilter);
 
             startService(new Intent(this, BackgroundRecordingService.class));
@@ -151,8 +150,8 @@ public class MainActivity extends Activity implements Observer {
         TripsListViewFragment fragmentList = (TripsListViewFragment)fragmentManager.findFragmentById(R.id.list);
         PinMapFragment fragmentMap = (PinMapFragment) fragmentManager.findFragmentById(R.id.map);
 
-        bengal = new Bengal(fragmentMap, fragmentList, this);
-        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
+//        bengal = new Bengal(fragmentMap, fragmentList, this);
+//        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
     }
 
     /**
@@ -176,9 +175,9 @@ public class MainActivity extends Activity implements Observer {
     public void toggleRecord(View view) {
         if (BackgroundRecordingService.getInstance().stateManager.getAutomaticRecording())
             return;
-
-        if (!Seatbelt.manualRecordingCheck(BackgroundRecordingService.getInstance().concierge.getCurrentUser(), this))
-            return;
+//
+//        if (!Seatbelt.manualRecordingCheck(BackgroundRecordingService.getInstance().concierge.getCurrentUser(), this))
+//            return;
 
         BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
         toggleRecordEffectsOn();
@@ -222,23 +221,6 @@ public class MainActivity extends Activity implements Observer {
         }
 
         displayingTrips = !displayingTrips;
-    }
-
-    /**
-     * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
-     * All existing trips are dropped, new trip is loaded into the database.
-     *
-     * Intentionally on the main thread so you cant break things while the load is running.
-     *
-     * You don't have to do this more than once-- the trip stays loaded.
-     */
-    public void onLoadLocal(View view) {
-        Log.d(TAG, "Starting local trip load. This will take a while.");
-
-        BackgroundRecordingService.getInstance().localDataTester();
-        bengal.load(BackgroundRecordingService.getInstance().concierge.getCurrentUser());
-
-        Log.d(TAG, "Finsihed local trip load. Press the 'Trips' button to see the loaded trip.");
     }
 
     /**
@@ -305,4 +287,7 @@ public class MainActivity extends Activity implements Observer {
             setupWorkers();
         }
     }
+
+
+
 }

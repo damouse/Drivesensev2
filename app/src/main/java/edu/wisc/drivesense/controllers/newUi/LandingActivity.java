@@ -1,7 +1,10 @@
 package edu.wisc.drivesense.controllers.newUi;
 
 import android.app.FragmentManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -20,6 +23,7 @@ import cn.pedant.SweetAlert.SuccessTickView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
+import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.Concierge;
 import edu.wisc.drivesense.controllers.PreferenceActivity;
 import edu.wisc.drivesense.model.Trip;
@@ -62,18 +66,11 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(ResideMenu.imageForTimeOfDay());
         resideMenu.attachToActivity(this);
-        resideMenu.addIgnoredView(findViewById(R.id.trips));
+//        resideMenu.addIgnoredView(findViewById(R.id.trips));
 
         //pull fragments
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-//        resideMenu.addIgnoredView(fragmentList.getView());
     }
 
     @Override
@@ -102,7 +99,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
     /* Stats Button Callbacks */
     public void onRightButtonClick(View view) {
-
+        //test data method
+        onLoadLocal();
     }
 
     public void onButtonLeftClick(View view) {
@@ -171,5 +169,30 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         }
 
         showingx = !showingx;
+    }
+
+    /**
+     * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
+     * All existing trips are dropped, new trip is loaded into the database.
+     *
+     * Intentionally on the main thread so you cant break things while the load is running.
+     *
+     * You don't have to do this more than once-- the trip stays loaded.
+     */
+    public void onLoadLocal() {
+        Log.d(TAG, "Starting local trip load. This will take a while.");
+
+        IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                BackgroundRecordingService.getInstance().localDataTester();
+                Log.d(TAG, "Finsihed local trip load. Press the 'Trips' button to see the loaded trip.");
+
+            }
+        }, intentFilter);
+
+        startService(new Intent(this, BackgroundRecordingService.class));
+
     }
 }
