@@ -45,12 +45,16 @@ public class Concierge {
         User newDemo = new User();
         newDemo.userId = -7;
         newDemo.email = "Demo User";
+        newDemo.loggedIn = true;
         newDemo.save();
         return newDemo;
     }
 
     /* Update Methods */
     public static User getCurrentUser() {
+        if (currentUser == null)
+            initializeConcierge();
+
         return currentUser;
     }
 

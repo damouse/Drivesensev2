@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.controllers.newUi;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -14,7 +15,7 @@ import edu.wisc.drivesense.views.PinMapFragment;
  * Should show a loading indicator as trips are loaded or as this activity waits for the
  * background service to load/settle.
  */
-public class RecordingTripActivity extends ActionBarActivity {
+public class RecordingTripActivity extends Activity {
     private static final String TAG = "RecordingActivity";
 
     private PinMapFragment fragmentMap;

@@ -1,6 +1,7 @@
 package edu.wisc.drivesense.businessLogic;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -81,6 +82,14 @@ public class TripRecorder  {
 
         //try a trip upload
         BackgroundRecordingService.getInstance().uploadTrips();
+
+        Intent update = new Intent(BackgroundRecordingService.TRIPS_UPDATE);
+
+        try {
+            BackgroundRecordingService.getInstance().sendBroadcast(update);
+        } catch (NullPointerException ex) {
+            Log.e(TAG, "Intent broadcast to the main activity failed.");
+        }
     }
 
     public Trip getTrip() {

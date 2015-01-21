@@ -63,6 +63,7 @@ import edu.wisc.drivesense.views.TaskbarNotifications;
 public class BackgroundRecordingService extends Service implements Observer {
     private static final String TAG = "BackgroundService";
     public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
+    public static final String TRIPS_UPDATE = "edu.wisc.drivesense.trips_update";
     private static BackgroundRecordingService instance = null; //singleton ivar
     public static final boolean DEBUG = false;
 

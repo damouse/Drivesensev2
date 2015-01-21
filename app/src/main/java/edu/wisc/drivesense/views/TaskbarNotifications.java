@@ -12,6 +12,7 @@ import android.support.v4.app.TaskStackBuilder;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.controllers.newUi.LandingActivity;
 
 /**
  * Created by Damouse on 12/16/2014.
@@ -44,10 +45,10 @@ public class TaskbarNotifications {
      * Update the top bar notification text as passed
      */
     public void updateServiceNotifcation(String status) {
-        Intent resultIntent = new Intent(context, MainActivity.class);
+        Intent resultIntent = new Intent(context, LandingActivity.class);
         TaskStackBuilder stackBuilder = TaskStackBuilder.create(context);
 
-        stackBuilder.addParentStack(MainActivity.class);
+        stackBuilder.addParentStack(LandingActivity.class);
         stackBuilder.addNextIntent(resultIntent);
         PendingIntent resultPendingIntent = stackBuilder.getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
 

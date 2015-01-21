@@ -6,6 +6,7 @@ import java.util.List;
 
 import android.app.Activity;
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.Bengal;
 import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.model.Trip;
@@ -14,7 +15,10 @@ import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.server.DrivesensePreferences;
 import android.app.ListFragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -84,6 +88,8 @@ public class TripsListViewFragment extends ListFragment  {
     public void setUser(User user) {
         trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
         tripsInScope = applyScope(trips);
+
+        Log.d(TAG, "Loaded " + tripsInScope.size() + " trips for user " + user.getId());
 
         //reload list
         listAdapter = new CustomListAdapter(context, this.tripsInScope);

@@ -71,6 +71,19 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         //pull fragments
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
+
+        //initialize table with trips
+        loadUser();
+
+        //register for updates to the saved trips
+        //TODO: unregister the receiver onPause
+        IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.TRIPS_UPDATE);
+        registerReceiver(new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                loadUser();
+            }
+        }, intentFilter);
     }
 
     @Override

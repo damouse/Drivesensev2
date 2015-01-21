@@ -1,5 +1,6 @@
 package edu.wisc.drivesense.controllers.newUi;
 
+import android.app.Activity;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,7 +20,7 @@ import edu.wisc.drivesense.views.PinMapFragment;
  *
  * Should show a spinner while map and trip are being loaded.
  */
-public class TripViewerActivity extends ActionBarActivity {
+public class TripViewerActivity extends Activity {
     private static final String TAG = "RecordingActivity";
 
     private PinMapFragment fragmentMap;
