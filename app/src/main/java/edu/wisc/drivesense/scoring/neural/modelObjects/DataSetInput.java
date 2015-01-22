@@ -20,6 +20,8 @@ public class DataSetInput extends TimestampSortable {
     public TimestampQueue<Reading> gravity;
     public TimestampQueue<Reading> magnet;
     public TimestampQueue<Reading> gps;
+    public TimestampQueue<Reading> rotationMatricies;
+
 
     /* Inputs after pre-processing
     * Preprocessing will affect all sensor values but will also create new, intermediate

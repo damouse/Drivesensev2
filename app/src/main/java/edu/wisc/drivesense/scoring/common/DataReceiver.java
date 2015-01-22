@@ -60,12 +60,12 @@ import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.timestampRangeF
  */
 public class DataReceiver {
     //queues for storing incomign data streams
-    public TimestampQueue acceleration = new TimestampQueue();
-    public TimestampQueue magnet = new TimestampQueue();
-    public TimestampQueue gravity = new TimestampQueue();
-    public TimestampQueue gyroscope = new TimestampQueue();
-    public TimestampQueue gps = new TimestampQueue();
-    public TimestampQueue rotationMatrix = new TimestampQueue();
+    public TimestampQueue<Reading> acceleration = new TimestampQueue<>();
+    public TimestampQueue<Reading> magnet = new TimestampQueue<>();
+    public TimestampQueue<Reading> gravity = new TimestampQueue<>();
+    public TimestampQueue<Reading> gyroscope = new TimestampQueue<>();
+    public TimestampQueue<Reading> gps = new TimestampQueue<>();
+    public TimestampQueue<Reading> rotationMatrix = new TimestampQueue<>();
 
     //The last (inputMemorySize) input results are remembered if needed. Measured in number of periods,
     // not milliseconds
@@ -73,18 +73,16 @@ public class DataReceiver {
     private TimestampQueue inputMemory;
 
     //processors-- These hold some relevant pieces of data as needed
-    private AccelerometerProcessor accelerometerProcessor;
+    private AccelerometerProcessor accelerometerProcessor = new AccelerometerProcessor();
 
 
     /* Boilerplate */
     /**
      * @param memory The number of past periods to remember
      */
-    public DataReceiver(int memory, Context context) {
+    public DataReceiver(int memory) {
         inputMemorySize = memory;
         inputMemory = new TimestampQueue();
-
-        accelerometerProcessor = new AccelerometerProcessor(context);
     }
 
 
@@ -101,11 +99,13 @@ public class DataReceiver {
 //
 //                if (linearAccel != null)
 //                    acceleration.push(linearAccel);
+
+                //save the raw values
                 acceleration.push(reading);
 
                 //calculate a rotation matrix for the new reading
                 if (magnet.size() != 0) {
-                    rotationMatrix.push(accelerometerProcessor.getRotationMatrix(reading, magnet.peek()));
+                    rotationMatrix.push(accelerometerProcessor.getRotationMatrix(reading, magnet.peekLast()));
                 }
                 break;
 
@@ -189,6 +189,7 @@ public class DataReceiver {
         inputSet.gravity = gravity.getBeforeTimestamp(periodStopTime);
         inputSet.magnet = magnet.getBeforeTimestamp(periodStopTime);
         inputSet.gps = gps.getBeforeTimestamp(periodStopTime);
+        inputSet.rotationMatricies = rotationMatrix.getBeforeTimestamp(periodStopTime);
 
         return inputSet;
     }

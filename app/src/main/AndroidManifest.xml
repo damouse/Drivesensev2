@@ -60,10 +60,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".controllers.PreferenceActivity"
             android:label="Settings"
             android:parentActivityName=".controllers.MainActivity" />
+
 
         <receiver android:name=".sensors.PowerListener" >
             <intent-filter>
@@ -71,6 +73,7 @@
                 <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
+
         <receiver
             android:name=".controllers.BootStarterReceiver"
             android:enabled="true"
@@ -80,6 +83,7 @@
                 <action android:name="Intent.ACTION_BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+
         <receiver android:name=".sensors.WifiListener" >
             <intent-filter>
                 <action android:name="android.net.wifi.supplicant.CONNECTION_CHANGE" />
@@ -88,21 +92,12 @@
         </receiver>
 
         <!-- Sugar specific setup (the ORM library) -->
-        <meta-data
-            android:name="DATABASE"
-            android:value="drivesense.db" />
-        <meta-data
-            android:name="VERSION"
-            android:value="16" />
-        <meta-data
-            android:name="QUERY_LOG"
-            android:value="false" />
-        <meta-data
-            android:name="DOMAIN_PACKAGE_NAME"
-            android:value="edu.wisc.drivesense.model" />
-        <meta-data
-            android:name="ubertesters_project_id"
-            android:value="3380798e-d65b-11e3-a44d-22000ac44c54" />
+        <meta-data android:name="DATABASE" android:value="drivesense.db" />
+        <meta-data android:name="VERSION" android:value="19" />
+        <meta-data android:name="QUERY_LOG" android:value="false" />
+        <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="edu.wisc.drivesense.model" />
+
+        <meta-data android:name="ubertesters_project_id" android:value="3380798e-d65b-11e3-a44d-22000ac44c54" />
 
         <service android:name=".businessLogic.BackgroundRecordingService" />
 
@@ -118,12 +113,11 @@
 
 
         <!-- Debug key: make active for local testing ON MAC -->
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />
+        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />-->
 
         <!-- Debug key: make active for local testing ON UBUNTU -->
-        <!-- <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/> -->
+         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>
+
         <activity
             android:name=".controllers.newUi.RecordingTripActivity"
             android:label="@string/title_activity_recording_trip" >

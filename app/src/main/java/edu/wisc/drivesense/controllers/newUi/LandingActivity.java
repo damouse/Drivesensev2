@@ -35,9 +35,11 @@ import edu.wisc.drivesense.views.newUi.SettingsFragment;
 import edu.wisc.drivesense.views.newUi.StatsFragment;
 import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenu;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
@@ -61,6 +63,11 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+
+        //TESTING
+        localTEST();
+//        Concierge.initializeConcierge();
+//        localTEST();
 
         //creates the dragging menu
         resideMenu = new ResideMenu(this);
@@ -214,5 +221,19 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
     private void stopServiceTEST() {
         stopService(new Intent(this, BackgroundRecordingService.class));
+    }
+
+    /**
+     * Miscellanious testing method
+     */
+    private void localTEST() {
+        List<User> users = User.find(User.class, "logged_in = '1'");
+        Log.e(TAG, "Number of users logged in: " + users.size());
+
+        users = User.find(User.class, "logged_in = ?", "1");
+        Log.e(TAG, "Number of users logged in: " + users.size());
+
+        List<User> demo = User.find(User.class, "backend_id = ?", "-7");
+        Log.e(TAG, "Number of demo users: " + demo.size());
     }
 }

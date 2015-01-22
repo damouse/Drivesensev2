@@ -2,6 +2,7 @@ package edu.wisc.drivesense.businessLogic;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -32,11 +33,8 @@ public class TripRecorder  {
 
     private static final boolean useNeuralNetork = false;
 
-    //on average, how many GPS coordinates to omit.
-    private static final double gpsLossRate = .1;
-
     //How long to wait between scoring attempts and how much data to hold
-    private int period;
+    private int period = 10000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 
@@ -47,6 +45,12 @@ public class TripRecorder  {
 
     private MappableEvent lastEvent;
 
+    //handles Receiver polling based on the period time
+    Handler timerHandler;
+    boolean recording;
+    Runnable timerRunnable;
+
+
     /**
      * Begins a new trip with the assigned analyst providing data.
      */
@@ -54,6 +58,7 @@ public class TripRecorder  {
         this.context = context;
 
         receiver = new DataReceiver(memorySize);
+        recording = true;
 
         trip = new Trip();
         trip.user = user;
@@ -63,11 +68,23 @@ public class TripRecorder  {
         trip.save();
 
         Log.d(TAG, "Recording trip: " + trip.name);
+
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                analyzePeriod();
+
+                if (recording)
+                    timerHandler.postDelayed(this, 1000);
+            }
+        };
     }
 
 
     /* Public Interface */
     public void endTrip() {
+        recording = false;
+
         trip.scoreAccels = trip.scoreAccels / trip.numAccels;
         trip.scoreBrakes = trip.scoreBrakes / trip.numBrakes;
         trip.scoreTurns = trip.scoreTurns / trip.numTurns;
@@ -83,6 +100,7 @@ public class TripRecorder  {
         //try a trip upload
         BackgroundRecordingService.getInstance().uploadTrips();
 
+        //declare that a trip has finished recording and can now be viewed
         Intent update = new Intent(BackgroundRecordingService.TRIPS_UPDATE);
 
         try {

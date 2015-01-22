@@ -14,12 +14,6 @@ import static edu.wisc.drivesense.scoring.neural.utils.Arrays.averageSeries;
  * Created by Damouse on 12/12/2014.
  */
 public class AccelerometerProcessor {
-    SensorManager sensorManager;
-
-    /* Boilerplate */
-    public AccelerometerProcessor(Context context) {
-         sensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);
-    }
 
     /* Processing */
     public static void processAcceleration(DataSetInput data) {
@@ -75,7 +69,7 @@ public class AccelerometerProcessor {
      */
     public Reading getRotationMatrix(Reading acceleration, Reading magnet) {
         float[] rotation = new float[9];
-        sensorManager.getRotationMatrix(rotation, null, acceleration.getFloatValues(), magnet.getFloatValues());
+        SensorManager.getRotationMatrix(rotation, null, acceleration.getFloatValues(), magnet.getFloatValues());
 
         return new Reading(rotation, acceleration.timestamp, Reading.Type.ROTATION_MATRIX);
     }

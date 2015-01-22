@@ -239,6 +239,7 @@ public class PinMapFragment extends Fragment implements LocationListener {
 
                     //TODO: careful again- what happens if the map goes away before the task completes?
                     addTripToMap(info, showPatterns);
+
                 }
             }.execute(trip);
 
@@ -276,23 +277,25 @@ public class PinMapFragment extends Fragment implements LocationListener {
             for (GroundOverlayOptions marker: trip.patterns)
                 map.addGroundOverlay(marker);
         }
+
+        //sortof temporary zoom
+        zoomToBounds(trip);
     }
 
-    private void zoomToBounds(List<Trip> trips) {
-//        if (zoom) {
-//            LatLngBounds.Builder builder = new LatLngBounds.Builder();
-//            builder.include(trip.marker1.getPosition());
-//            builder.include(trip.marker2.getPosition());
-//            LatLngBounds bounds = builder.build();
-//
-//            try {
-//                map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
-//            }
-//            catch (IllegalStateException ex) {
-//                Log.e(TAG, "Map view error!");
-//                ex.printStackTrace();
-//            }
-//        }
+    private void zoomToBounds(TripMapInformation trip) {
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
+        builder.include(trip.marker1.getPosition());
+        builder.include(trip.marker2.getPosition());
+        LatLngBounds bounds = builder.build();
+
+        try {
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+        }
+        catch (IllegalStateException ex) {
+            Log.e(TAG, "Map view error!");
+            ex.printStackTrace();
+        }
+
     }
 
 

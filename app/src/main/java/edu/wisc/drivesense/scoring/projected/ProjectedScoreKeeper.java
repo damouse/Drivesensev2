@@ -55,13 +55,11 @@ public class ProjectedScoreKeeper {
      * These events are scored (if they're patterns) with redundant GPS coordinates removed.
      */
     public TimestampQueue<DrivingPattern> getDrivingEvents(DataSetInput period) {
+//        rotationMatrix = PreProcess.calculateRotationMatricies(period, context).getContents();
 
-
-        rotationMatrix = PreProcess.calculateRotationMatricies(period, context).getContents();
-
+        rotationMatrix = period.rotationMatricies.getContents();
         projectSensors(period.acceleration, period.gyroscope);
         TimestampQueue<DrivingPattern> patterns = extractPatterns(period);
-
         getScores(patterns.getContents(), accelerometer_projected);
 
         Log.i(TAG, "Done");

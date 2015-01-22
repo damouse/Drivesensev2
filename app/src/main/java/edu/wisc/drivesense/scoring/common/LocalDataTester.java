@@ -20,6 +20,7 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 
+import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.completeTimestampRangeInDataSet;
 import static edu.wisc.drivesense.scoring.neural.utils.Timestamp.dequeueBeforeTimestamp;
 
 /**
@@ -31,7 +32,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
-    long maxTime = 500000;
+    long maxTime = 400000;
 
     private TripRecorder recorder;
     private Context context;
@@ -79,15 +80,25 @@ public class LocalDataTester {
 //        readAndLoad("acceleration.txt", context, Reading.Type.ACCELERATION);
 
         TimestampQueue<Reading> allData = new TimestampQueue<Reading>();
-        allData.addQueue(read("magnet.txt", context, Reading.Type.MAGNETIC));
-        allData.addQueue(read("gyro.txt", context, Reading.Type.GYROSCOPE));
-        allData.addQueue(read("gravity.txt", context, Reading.Type.GRAVITY));
-        allData.addQueue(read("gps.txt", context, Reading.Type.GPS));
-        allData.addQueue(read("acceleration.txt", context, Reading.Type.ACCELERATION));
+        ArrayList<TimestampQueue<Reading>> allQueus = new ArrayList<>();
+
+        allQueus.add(read("magnet.txt", context, Reading.Type.MAGNETIC));
+        allQueus.add(read("gyro.txt", context, Reading.Type.GYROSCOPE));
+        allQueus.add(read("gravity.txt", context, Reading.Type.GRAVITY));
+        allQueus.add(read("gps.txt", context, Reading.Type.GPS));
+        allQueus.add(read("acceleration.txt", context, Reading.Type.ACCELERATION));
+
+        long timestampRange[] = completeTimestampRangeInDataSet(allQueus);
+
+        for (TimestampQueue<Reading> queue: allQueus)
+            allData.addQueue(queue);
 
         Log.d(TAG, "Sorting all data...");
         allData.sort();
+        allData.trimInPlace(timestampRange[0], timestampRange[1]);
         Log.d(TAG, "Feeding data...");
+
+        feed(allData);
     }
 
     private void readAndLoad(String name, Context context, Reading.Type type) {
@@ -126,13 +137,14 @@ public class LocalDataTester {
      */
     private TimestampQueue<Reading> read(String name, Context context, Reading.Type type) {
         Log.d("LocalReader", "Starting load for " + name);
+        String line;
         TimestampQueue<Reading> result = new TimestampQueue<Reading>();
 
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
             Reading lastReading = null;
 
-            String line = reader.readLine();
+            line = reader.readLine();
             while (line != null) {
                 Reading reading = new Reading(line, type);
 

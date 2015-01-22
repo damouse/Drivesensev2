@@ -289,7 +289,8 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     /* TESTING */
     public void localDataTester() {
-        SugarDatabse.clearDatabase();
+        Trip.deleteAll(Trip.class);
+        MappableEvent.deleteAll(MappableEvent.class);
 
         //loadTestData();
         loadAndFeed();
