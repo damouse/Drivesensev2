@@ -17,7 +17,7 @@ android:keepScreenOn="true">
     android:clickable="false"
     android:weightSum="1.0">
 
-    <fragment android:name="edu.wisc.drivesense.views.PinMapFragment"
+    <fragment android:name="edu.wisc.drivesense.controllers.fragments.PinMapFragment"
         android:id="@+id/map"
         android:layout_weight="1.0"
         android:layout_width="match_parent"
@@ -47,7 +47,7 @@ android:keepScreenOn="true">
 
 
     <!--&lt;!&ndash; The table that holds all the trips &ndash;&gt;-->
-    <!--<fragment android:name="edu.wisc.drivesense.views.TripsListViewFragment"-->
+    <!--<fragment android:name="edu.wisc.drivesense.controllers.fragments.TripsListViewFragment"-->
         <!--android:layout_weight="1"-->
         <!--android:layout_height="0dp"-->
         <!--android:id="@+id/list"-->

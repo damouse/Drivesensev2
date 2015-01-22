@@ -16,7 +16,7 @@
         android:clickable="false"
         android:weightSum="1.0">
 
-        <fragment android:name="edu.wisc.drivesense.views.PinMapFragment"
+        <fragment android:name="edu.wisc.drivesense.controllers.fragments.PinMapFragment"
             android:id="@+id/map"
             android:layout_weight="1.0"
             android:layout_width="match_parent"

@@ -5,7 +5,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import edu.wisc.drivesense.sensors.SensorMonitor;
-import edu.wisc.drivesense.views.PinMapFragment;
+import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
 /**
  * Creates fake sensor updates. Hook this up to a map or the SensorMonitor to fake location updates.

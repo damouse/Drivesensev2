@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.views.newUi.resideMenu;
+package edu.wisc.drivesense.views.resideMenu;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,18 +7,14 @@ import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.*;
 import android.view.animation.AccelerateInterpolator;
-import android.view.animation.AnticipateInterpolator;
-import android.view.animation.BounceInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import com.nineoldandroids.animation.Animator;
 import com.nineoldandroids.animation.AnimatorSet;
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.view.ViewHelper;
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.views.newUi.MenuFragment;
 
 import java.util.*;
 

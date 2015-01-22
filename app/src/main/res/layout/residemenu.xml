@@ -33,7 +33,7 @@
 
             <fragment
                 android:id="@+id/menu"
-                android:name="edu.wisc.drivesense.views.newUi.MenuFragment"
+                android:name="edu.wisc.drivesense.controllers.fragments.MenuFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </LinearLayout>
@@ -57,7 +57,7 @@
 
             <fragment
                 android:id="@+id/settings"
-                android:name="edu.wisc.drivesense.views.newUi.SettingsFragment"
+                android:name="edu.wisc.drivesense.controllers.fragments.SettingsFragment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

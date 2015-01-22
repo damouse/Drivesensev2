@@ -1,14 +1,11 @@
-package edu.wisc.drivesense.controllers.newUi;
+package edu.wisc.drivesense.controllers.activities;
 
-import android.app.FragmentManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.Uri;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,20 +22,14 @@ import edu.wisc.drivesense.R;
 
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.Concierge;
-import edu.wisc.drivesense.controllers.PreferenceActivity;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
-import edu.wisc.drivesense.views.PinMapFragment;
-import edu.wisc.drivesense.views.TripsListViewFragment;
-import edu.wisc.drivesense.views.newUi.MenuFragment;
-import edu.wisc.drivesense.views.newUi.SettingsFragment;
-import edu.wisc.drivesense.views.newUi.StatsFragment;
-import edu.wisc.drivesense.views.newUi.resideMenu.ResideMenu;
+import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
+import edu.wisc.drivesense.controllers.fragments.MenuFragment;
+import edu.wisc.drivesense.controllers.fragments.SettingsFragment;
+import edu.wisc.drivesense.controllers.fragments.StatsFragment;
+import edu.wisc.drivesense.views.resideMenu.ResideMenu;
 
-import java.lang.reflect.Field;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 

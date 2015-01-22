@@ -7,14 +7,14 @@
 
     <fragment
         android:id="@+id/stats"
-        android:name="edu.wisc.drivesense.views.newUi.StatsFragment"
+        android:name="edu.wisc.drivesense.controllers.fragments.StatsFragment"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight=".4"/>
 
     <fragment
         android:id="@+id/trips"
-        android:name="edu.wisc.drivesense.views.TripsListViewFragment"
+        android:name="edu.wisc.drivesense.controllers.fragments.TripsListViewFragment"
         android:layout_width="match_parent"
         android:layout_height="0px"
         android:layout_weight=".6"/>

@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.views.newUi;
+package edu.wisc.drivesense.controllers.fragments;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -1,7 +1,6 @@
-package edu.wisc.drivesense.controllers.newUi;
+package edu.wisc.drivesense.controllers.activities;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -11,7 +10,7 @@ import java.util.List;
 
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.views.PinMapFragment;
+import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
 /**
  * Shows one or more trips on the map that have been completed and scored.

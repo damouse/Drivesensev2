@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.views.newUi;
+package edu.wisc.drivesense.controllers.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -9,7 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import android.widget.LinearLayout;
-import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.views.BitmapLoader;
 

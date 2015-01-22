@@ -1,13 +1,12 @@
-package edu.wisc.drivesense.controllers.newUi;
+package edu.wisc.drivesense.controllers.activities;
 
 import android.app.Activity;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.views.PinMapFragment;
+import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
 /**
  * Shows recording trips on the PinMapFregment. Adds patterns as they are recognized.

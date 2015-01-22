@@ -10,9 +10,8 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.TaskStackBuilder;
 
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.controllers.MainActivity;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
-import edu.wisc.drivesense.controllers.newUi.LandingActivity;
+import edu.wisc.drivesense.controllers.activities.LandingActivity;
 
 /**
  * Created by Damouse on 12/16/2014.
