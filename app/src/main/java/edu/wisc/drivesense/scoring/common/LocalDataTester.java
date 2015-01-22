@@ -169,8 +169,19 @@ public class LocalDataTester {
     }
 
     private void feed(TimestampQueue<Reading> data) {
-        for (Reading reading: data)
+        long lastLoad = data.peek().getTime();
+
+        for (Reading reading: data) {
+            if ((reading.getTime() - lastLoad) > recorder.period) {
+                recorder.analyzePeriod();
+                lastLoad = reading.getTime();
+            }
+
             recorder.newReading(reading);
+        }
+
+        //analyze the last period near the end of the trip. May break things.
+        recorder.analyzePeriod();
     }
 
 

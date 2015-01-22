@@ -302,8 +302,6 @@ public class BackgroundRecordingService extends Service implements Observer {
         LocalDataTester tester = new LocalDataTester(recorder, this);
 
         tester.readAndLoadTestData(this);
-
-        recorder.analyzePeriod();
         recorder.endTrip();
 
         Log.d(TAG, "Finished load");

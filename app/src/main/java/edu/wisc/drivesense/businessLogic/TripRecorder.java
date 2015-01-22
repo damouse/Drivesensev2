@@ -34,7 +34,7 @@ public class TripRecorder  {
     private static final boolean useNeuralNetork = false;
 
     //How long to wait between scoring attempts and how much data to hold
-    private int period = 10000; //in milliseconds
+    public int period = 10000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 
@@ -75,9 +75,12 @@ public class TripRecorder  {
                 analyzePeriod();
 
                 if (recording)
-                    timerHandler.postDelayed(this, 1000);
+                    timerHandler.postDelayed(this, period);
             }
         };
+
+        //comment this out when operating on local data
+        //timerHandler.postDelayed(timerRunnable, period);
     }
 
 
@@ -168,9 +171,6 @@ public class TripRecorder  {
         trip.save();
 
         Log.d(TAG, "Done");
-        //only do this if the map is active-- TODO: implement way of notifying Bengal of new coordinates
-        //if (true)
-        //    events.addAll(events);
     }
 
     public void newReading(Reading reading) {
