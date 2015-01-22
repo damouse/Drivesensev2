@@ -31,7 +31,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
-    long maxTime = 2000000;
+    long maxTime = 200000;
 
     private TripRecorder recorder;
     private Context context;
@@ -50,8 +50,6 @@ public class LocalDataTester {
     }
 
     public void readAndLoadTestData(Context context) {
-
-
 //        readAndLoad("magnet.txt", context, Reading.Type.MAGNETIC);
 //        readAndLoad("gyro.txt", context, Reading.Type.GYROSCOPE);
 //        readAndLoad("gravity.txt", context, Reading.Type.GRAVITY);
@@ -76,6 +74,9 @@ public class LocalDataTester {
         allData.sort();
         allData.trimInPlace(timestampRange[0], timestampRange[1]);
         Log.d(TAG, "Feeding data...");
+
+        for (Reading reading: allData)
+            Log.d(TAG, "Time: " + reading.timestamp + " type: " + reading.type);
 
         feed(allData);
     }
@@ -149,14 +150,19 @@ public class LocalDataTester {
 
     private void feed(TimestampQueue<Reading> data) {
         long lastLoad = data.peek().getTime();
+        int feedCounter = 0;
 
         for (Reading reading: data) {
             if ((reading.getTime() - lastLoad) > recorder.period) {
+                Log.d(TAG, "Fed " + feedCounter + " readings. Current time " + reading.getTime() + " last load: " + lastLoad);
+
                 recorder.analyzePeriod();
                 lastLoad = reading.getTime();
+                feedCounter = 0;
             }
 
             recorder.newReading(reading);
+            feedCounter++;
         }
 
         //analyze the last period near the end of the trip. May break things.

@@ -283,8 +283,8 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     /* TESTING */
     public void localDataTester() {
-//        Trip.deleteAll(Trip.class);
-//        MappableEvent.deleteAll(MappableEvent.class);
+        Trip.deleteAll(Trip.class);
+        MappableEvent.deleteAll(MappableEvent.class);
 
         //loadTestData();
         loadAndFeed();

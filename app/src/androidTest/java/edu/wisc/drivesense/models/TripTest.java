@@ -56,7 +56,6 @@ public class TripTest extends TestCase {
     @Test
     public void testTripPersistsData() {
         oneTrip.trip_id = 1;
-        oneTrip.name = "Test";
         oneTrip.timestamp = new Date().getTime();
         oneTrip.duration = 10;
         oneTrip.distance = 10;
@@ -68,7 +67,6 @@ public class TripTest extends TestCase {
         Trip loaded = Trip.findById(Trip.class, oneTrip.getId());
 
         assertEquals(oneTrip.trip_id, loaded.trip_id);
-        assertEquals(oneTrip.name, loaded.name);
         assertEquals(oneTrip.timestamp, loaded.timestamp);
         assertEquals(oneTrip.duration, loaded.duration);
         assertEquals(oneTrip.distance, loaded.distance);

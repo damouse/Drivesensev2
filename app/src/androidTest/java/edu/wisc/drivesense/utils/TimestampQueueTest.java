@@ -85,4 +85,44 @@ public class TimestampQueueTest extends TestCase {
         index = shortQueue.efficientTimeBound(1000000);
         assertEquals(9, index);
     }
+
+    public void testSortWorks() {
+        TimestampQueue<Reading> one = new TimestampQueue<Reading>();
+        TimestampQueue<Reading> two = new TimestampQueue<Reading>();
+        TimestampQueue<Reading> three = new TimestampQueue<Reading>();
+
+        double values[] = {0, 0, 0};
+        long startTime = 0;
+        long distance = 5;
+
+        for (int i = 0; i < 100; i++) {
+            Reading reading = new Reading(values, startTime + distance * i, Reading.Type.ACCELERATION);
+
+            one.push(reading);
+
+            reading.timestamp++;
+            two.push(reading);
+
+            reading.timestamp++;
+            three.push(reading);
+        }
+
+        TimestampQueue<Reading> result = new TimestampQueue<>();
+        result.addQueue(one);
+        result.addQueue(two);
+        result.addQueue(three);
+
+        result.sort();
+
+        Reading lastReading = null;
+        for (Reading reading: result) {
+            Log.d("TEST", "Time: " + reading.getTime());
+
+            if (lastReading != null) {
+                assertTrue(lastReading.timestamp <= reading.timestamp);
+            }
+
+            lastReading = reading;
+        }
+    }
 }

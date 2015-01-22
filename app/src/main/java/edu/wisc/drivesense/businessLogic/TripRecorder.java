@@ -35,7 +35,7 @@ public class TripRecorder  {
     private static final boolean useNeuralNetork = false;
 
     //How long to wait between scoring attempts and how much data to hold
-    public int period = 10000; //in milliseconds
+    public int period = 30000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 
@@ -161,7 +161,7 @@ public class TripRecorder  {
                 trip.distance += GpsThief.distance(lastEvent, event);
             }
 
-            Log.d(TAG, "Saving Patterns... ");
+//            Log.d(TAG, "Saving Patterns... ");
             lastEvent = event;
             event.trip = trip;
         }
@@ -196,10 +196,8 @@ public class TripRecorder  {
             Log.e(TAG, "Incomplete period.");
             return;
         }
-        else {
-            Log.i(TAG, "Scoring new period");
-        }
 
+        Log.i(TAG, "Scoring new period");
 
         if (useNeuralNetork) {
 

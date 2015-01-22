@@ -484,7 +484,7 @@ class TimestampComparator implements Comparator {
         if (one.getTime() > two.getTime())
             return 1;
 
-        if (one.getTime() > two.getTime())
+        if (one.getTime() < two.getTime())
             return -1;
 
         return 0;
