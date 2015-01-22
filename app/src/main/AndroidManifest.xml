@@ -113,10 +113,10 @@
 
 
         <!-- Debug key: make active for local testing ON MAC -->
-        <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />-->
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />
 
         <!-- Debug key: make active for local testing ON UBUNTU -->
-         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>
+         <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>-->
 
         <activity
             android:name=".controllers.newUi.RecordingTripActivity"

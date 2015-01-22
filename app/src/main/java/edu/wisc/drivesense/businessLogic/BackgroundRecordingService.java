@@ -12,22 +12,16 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import edu.wisc.drivesense.controllers.MainActivity;
+
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
-import edu.wisc.drivesense.model.SugarDatabse;
+
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.scoring.common.LocalDataTester;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 import edu.wisc.drivesense.sensors.TripListener;
 import edu.wisc.drivesense.sensors.WifiListener;
 import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.server.ConnectionManagerCallback;
-import edu.wisc.drivesense.server.DrivesensePreferences;
-import edu.wisc.drivesense.model.ReadingHolder;
 import edu.wisc.drivesense.utilities.Ticker;
 import edu.wisc.drivesense.sensors.PowerListener;
 import edu.wisc.drivesense.sensors.SensorMonitor;
@@ -289,8 +283,8 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     /* TESTING */
     public void localDataTester() {
-        Trip.deleteAll(Trip.class);
-        MappableEvent.deleteAll(MappableEvent.class);
+//        Trip.deleteAll(Trip.class);
+//        MappableEvent.deleteAll(MappableEvent.class);
 
         //loadTestData();
         loadAndFeed();

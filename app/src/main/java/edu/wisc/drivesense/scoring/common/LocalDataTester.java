@@ -15,7 +15,6 @@ import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.TripRecorder;
 import edu.wisc.drivesense.model.Reading;
 
-import edu.wisc.drivesense.model.ReadingHolder;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
@@ -32,7 +31,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
-    long maxTime = 400000;
+    long maxTime = 2000000;
 
     private TripRecorder recorder;
     private Context context;
@@ -40,26 +39,6 @@ public class LocalDataTester {
     public LocalDataTester(TripRecorder analyst, Context context) {
         this.context = context;
         this.recorder = analyst;
-    }
-
-    /**
-     * Loads the data from the test directory and feeds it into the BackgroundRecordingService
-     * method.
-     */
-    public void feedTestData() {
-        lock = false;
-        int limit = 10000;
-        int iterations = 10;
-
-        Log.d("Reader name " , ReadingHolder.getTableName(ReadingHolder.class));
-
-        for (int i = 0; i < iterations; i++) {
-            List<ReadingHolder> holders = ReadingHolder.findWithQuery(ReadingHolder.class, "SELECT * FROM READING_HOLDER LIMIT ?", "" + limit);
-            for (ReadingHolder holder: holders)
-                recorder.newReading(holder.getReading());
-
-            Log.d("Loader", "Iteration: " + i);
-        }
     }
 
     public void saveTestData(Context context) {

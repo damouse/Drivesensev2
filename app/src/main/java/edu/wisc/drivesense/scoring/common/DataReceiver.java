@@ -140,11 +140,11 @@ public class DataReceiver {
     public DataSetInput getProcessedPeriod() {
         DataSetInput inputSet = buildRawPeriod();
 
-        Log.d("Receiver period: ", inputSet.toString());
-
         //this could many any of a hundred things...
         if(!validatePeriod(inputSet))
             return null;
+
+        Log.d("Receiver period: ", inputSet.toString());
 
 //        //old processessing
 //        inputSet.preProcessedAcceleration = averageSeries(inputSet.acceleration);

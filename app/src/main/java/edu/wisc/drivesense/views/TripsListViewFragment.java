@@ -14,6 +14,8 @@ import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.server.DrivesensePreferences;
+import edu.wisc.drivesense.utilities.Utils;
+
 import android.app.ListFragment;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -158,26 +160,10 @@ public class TripsListViewFragment extends ListFragment  {
             }
 
             Trip current = getItem(position);
-            
-            //format date
-            SimpleDateFormat formatter = new SimpleDateFormat("EEE, MMMM dd, hh:mma");
 
-            holder.day.setText("This is a cell");
-
-//            holder.date.setText(formatter.format(current.date));
-//            holder.distance.setText(current.formattedDistance());
-//            holder.duration.setText(current.formattedDuration());
-//
-//            if (current.score == null)
-//            	holder.score.setText("X");
-//            else
-//            	holder.score.setText(Integer.toString(current.score.score));
-//
-//            if (current.uploaded)
-//            	setItemUpdated(holder.uploadStatus);
-//            else
-//            	holder.uploadStatus.setText("Trip has not been uploaded");
-
+            holder.day.setText(Utils.dayOfWeek(current.timestamp));
+            holder.time.setText(Utils.startEndTime(current.timestamp, current.duration));
+            holder.distance.setText(Utils.formatDistance(current.distance));
 
             return convertView;
         }

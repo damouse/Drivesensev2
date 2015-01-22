@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import edu.wisc.drivesense.model.DrivingPattern;
@@ -62,12 +63,10 @@ public class TripRecorder  {
 
         trip = new Trip();
         trip.user = user;
+        trip.timestamp = new Date().getTime();
         trip.save();
 
-        trip.name = "Trip #" + trip.getId();
-        trip.save();
-
-        Log.d(TAG, "Recording trip: " + trip.name);
+        Log.d(TAG, "Recording trip: " + trip.getId());
 
         timerRunnable = new Runnable() {
             @Override
@@ -96,7 +95,7 @@ public class TripRecorder  {
         trip.duration = Utils.convertToSeconds(lastEvent.timestamp - trip.timestamp);
         trip.scored = true;
 
-        Log.d(TAG, "Ended trip: " + trip.name);
+        Log.d(TAG, "Ended trip: " + trip.getId());
         trip.save();
         trip = null;
 
@@ -197,6 +196,10 @@ public class TripRecorder  {
             Log.e(TAG, "Incomplete period.");
             return;
         }
+        else {
+            Log.i(TAG, "Scoring new period");
+        }
+
 
         if (useNeuralNetork) {
 

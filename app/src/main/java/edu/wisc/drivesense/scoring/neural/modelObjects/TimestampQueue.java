@@ -285,18 +285,30 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
     /* Information */
     public T peek() {
+        if (headIndex() >= contents.size())
+            return null;
+
         return contents.get(headIndex());
     }
 
     public T peekLast() {
+        if (tailIndex() >= contents.size())
+            return null;
+
         return contents.get(tailIndex());
     }
 
     public long startTime() {
+        if (contents.size() == 0)
+            return -1;
+
         return peek().getTime();
     }
 
     public long endTime() {
+        if (contents.size() == 0)
+            return -1;
+
         return peekLast().getTime();
     }
 
@@ -351,6 +363,9 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      * Worst case scenario, lookups are N complex.
      */
     private int efficientTimeSearch(long time) {
+        if (contents.size() == 0)
+            return -1;
+
         //time is outside of bounds
         if (time < peek().getTime() || time > peekLast().getTime())
             return -1;
@@ -372,6 +387,9 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      * @return index of element closest to the passed timestamp, or -1 if it doesn't exist
      */
     public int efficientTimeBound(long time) {
+        if (contents.size() == 0)
+            return -1;
+
         if (time < peek().getTime())
             return 0;
 
@@ -421,6 +439,10 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
     private TimestampQueue<T> processBeforeTimestamp(long timestamp, boolean shouldRemove) {
         //get the starting point for the cut
         int closestIndex = efficientTimeBound(timestamp);
+
+        if (closestIndex == -1)
+            return null;
+
         T closestElement = contents.get(closestIndex);
 
         //Three cases for the returned closest index-- could be exactly the timestamp (which is fine),

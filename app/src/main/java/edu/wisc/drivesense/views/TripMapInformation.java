@@ -67,7 +67,7 @@ public class TripMapInformation {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("Trip name: " + trip.name);
+        sb.append("Trip name: " + trip.getId());
         sb.append(" start: " + marker1.toString());
         sb.append(" end: " + marker2.toString());
         sb.append(" coordinates: " + coordinates.size());
@@ -124,12 +124,12 @@ class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
         LatLng end = new LatLng(endReading.latitude, endReading.longitude);
     	
     	MarkerOptions marker1 = new MarkerOptions().title("Start")
-                .snippet(trip.name)
+                .snippet(trip.name())
                 .position(start)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_map));
 
     	MarkerOptions marker2 = new MarkerOptions().title("End")
-                .snippet(trip.name)
+                .snippet(trip.name())
                 .position(end)
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.stop));
 
