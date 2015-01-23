@@ -6,26 +6,36 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@color/red"
         android:gravity="center"
-        android:paddingBottom="50dp">
+        android:layout_marginBottom="50dp">
 
         <com.pkmmte.view.CircularImageView
-            android:layout_width="wrap_content"
+            android:id="@+id/imageUser"
+            android:layout_width="100dp"
+            android:layout_gravity="center"
             android:layout_height="100dp"
+            android:layout_marginBottom="20dp"
             android:src="@drawable/user_default"/>
 
         <TextView
+            style="@style/StockTextview"
+            android:id="@+id/textviewName"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
+            android:textSize="10dp"
+            android:textColor="@color/white"
+            android:layout_marginBottom="20dp"
             android:text="Default User"/>
 
         <Button
             style="@style/MenuButton"
+            android:textAllCaps="true"
             android:layout_height="20dp"
-            android:text="Log In " />
+            android:layout_marginBottom="20dp"
+            android:textSize="20dp"
+            android:text="@string/login_text" />
 
     </LinearLayout>
 
@@ -33,104 +43,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="vertical">
 
-        android:background="@color/green">
+        <fragment
+            android:id="@+id/optionAutomaticRecording"
+            android:name="edu.wisc.drivesense.controllers.fragments.MenuOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
-        <!--Start Menu Option-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal"
-            android:onClick="onMenuButtonPress">
-
-            <LinearLayout
-                android:layout_width="200dp"
-                android:orientation="vertical"
-                android:layout_height="match_parent">
-
-                <TextView
-                    style="@style/StockTextview"
-                    android:id="@+id/day"
-                    android:layout_width="match_parent"
-                    android:layout_weight=".5"
-                    android:layout_height="0dp"
-                    android:textSize="20dp"
-                    android:text="Button"/>
-
-                <TextView
-                    style="@style/StockTextview"
-                    android:id="@+id/time"
-                    android:layout_width="match_parent"
-                    android:layout_weight=".5"
-                    android:layout_height="0dp"
-                    android:text="Description"/>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:orientation="horizontal"
-                android:gravity="right">
-
-                <FrameLayout
-                    android:id="@+id/error_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/error_circle" />
-
-                    <ImageView
-                        android:id="@+id/error_x"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/error_center_x"
-                        android:scaleType="center" />
-
-                </FrameLayout>
-
-                <FrameLayout
-                    android:id="@+id/success_frame"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:visibility="gone">
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/success_bow" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="@drawable/success_circle" />
-
-                    <cn.pedant.SweetAlert.SuccessTickView
-                        android:id="@+id/success_tick"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent" />
-
-                </FrameLayout>
-
-                <!--<ImageView-->
-                    <!--android:id="@+id/error_x"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="match_parent"-->
-                    <!--android:contentDescription="@string/app_name"-->
-                    <!--android:src="@drawable/error_center_x"-->
-                    <!--android:scaleType="center" />-->
-
-            </LinearLayout>
-
-
-        </LinearLayout>
-        <!--End Menu Option-->
+        <fragment
+            android:id="@+id/optionUploading"
+            android:name="edu.wisc.drivesense.controllers.fragments.MenuOption"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
     </LinearLayout>

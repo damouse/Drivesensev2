@@ -1,84 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:orientation="horizontal"
-    android:onClick="onMenuButtonPress">
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="200dp"
+android:layout_height="60dp"
+android:orientation="horizontal"
+android:onClick="onMenuButtonPress">
 
-    <LinearLayout
-        android:layout_width="200dp"
-        android:orientation="vertical"
-        android:layout_height="match_parent">
+<LinearLayout
+    android:layout_width="160dp"
+    android:orientation="vertical"
+    android:layout_height="match_parent">
 
-        <TextView
-            style="@style/StockTextview"
-            android:id="@+id/title"
-            android:layout_width="match_parent"
-            android:layout_weight=".5"
-            android:layout_height="0dp"
-            android:textSize="20dp"
-            android:text="Button"/>
+    <TextView
+        style="@style/StockTextview"
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_weight=".5"
+        android:layout_height="0dp"
+        android:textSize="20dp"
+        android:text="Button"/>
 
-        <TextView
-            style="@style/StockTextview"
-            android:id="@+id/subtitle"
-            android:layout_width="match_parent"
-            android:layout_weight=".5"
-            android:layout_height="0dp"
-            android:text="Description"/>
+    <TextView
+        style="@style/StockTextview"
+        android:id="@+id/subtitle"
+        android:layout_width="match_parent"
+        android:layout_weight=".5"
+        android:layout_height="0dp"
+        android:text="Description"/>
 
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:gravity="right">
-
-        <FrameLayout
-            android:id="@+id/error_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/error_circle" />
-
-            <ImageView
-                android:id="@+id/error_x"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:contentDescription="@string/app_name"
-                android:src="@drawable/error_center_x"
-                android:scaleType="center" />
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/success_frame"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="gone">
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/success_bow" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/success_circle" />
-
-            <cn.pedant.SweetAlert.SuccessTickView
-                android:id="@+id/success_tick"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent" />
-
-        </FrameLayout>
-
-    </LinearLayout>
 </LinearLayout>
+
+<LinearLayout
+    android:layout_width="40dp"
+    android:layout_height="40dp"
+    android:orientation="horizontal"
+    android:layout_gravity="right|center">
+
+    <FrameLayout
+        android:id="@+id/error_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/error_circle" />
+
+        <ImageView
+            android:id="@+id/error_x"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/error_center_x"
+            android:scaleType="center" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/success_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone">
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/success_bow" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/success_circle" />
+
+        <cn.pedant.SweetAlert.SuccessTickView
+            android:id="@+id/success_tick"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+    </FrameLayout>
+
+    <!--<ImageView-->
+    <!--android:id="@+id/error_x"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:contentDescription="@string/app_name"-->
+    <!--android:src="@drawable/error_center_x"-->
+    <!--android:scaleType="center" />-->
+
+</LinearLayout>
+
+
+</LinearLayout>
+    <!--End Menu Option-->

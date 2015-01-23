@@ -31,5 +31,6 @@
     <string name="menu_button_three">SEE RECORDING TRIP</string>
     <string name="title_activity_recording_trip">RecordingTripActivity</string>
     <string name="title_activity_trip_viewer">TripViewerActivity</string>
+    <string name="login_text">Log In</string>
 
 </resources>
