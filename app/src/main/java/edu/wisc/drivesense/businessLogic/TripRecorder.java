@@ -1,27 +1,27 @@
 package edu.wisc.drivesense.businessLogic;
 
-import android.content.Context;
-import android.content.Intent;
-import android.os.Handler;
-import android.util.Log;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.os.Handler;
+        import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Date;
+        import java.util.List;
 
-import edu.wisc.drivesense.model.DrivingPattern;
-import edu.wisc.drivesense.model.MappableEvent;
-import edu.wisc.drivesense.model.Reading;
-import edu.wisc.drivesense.model.SugarDatabse;
-import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.model.User;
-import edu.wisc.drivesense.scoring.common.DataReceiver;
-import edu.wisc.drivesense.scoring.common.GpsThief;
-import edu.wisc.drivesense.scoring.common.ScoreKeeperDelegate;
-import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
-import edu.wisc.drivesense.scoring.projected.ProjectedScoreKeeper;
-import edu.wisc.drivesense.utilities.Utils;
+        import edu.wisc.drivesense.model.DrivingPattern;
+        import edu.wisc.drivesense.model.MappableEvent;
+        import edu.wisc.drivesense.model.Reading;
+        import edu.wisc.drivesense.model.SugarDatabse;
+        import edu.wisc.drivesense.model.Trip;
+        import edu.wisc.drivesense.model.User;
+        import edu.wisc.drivesense.scoring.common.DataReceiver;
+        import edu.wisc.drivesense.scoring.common.GpsThief;
+        import edu.wisc.drivesense.scoring.common.ScoreKeeperDelegate;
+        import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
+        import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
+        import edu.wisc.drivesense.scoring.projected.ProjectedScoreKeeper;
+        import edu.wisc.drivesense.utilities.Utils;
 
 /**
  * Created by Damouse on 12/16/2014.
@@ -35,7 +35,7 @@ public class TripRecorder  {
     private static final boolean useNeuralNetork = false;
 
     //How long to wait between scoring attempts and how much data to hold
-    public int period = 10000; //in milliseconds
+    public int period = 30000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 

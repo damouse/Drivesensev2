@@ -12,6 +12,10 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
 public class DrivingPattern extends TimestampSortable{
     public MappableEvent.Type type;
 
+    //seconds in which to merge patterns
+    //TODO: does this need to be in nanoseconds?
+    public static final long overlapWindow = 2000;
+
     public long start = -1;
     public long end = -1;
 
@@ -22,7 +26,11 @@ public class DrivingPattern extends TimestampSortable{
 
     public DrivingPattern() { }
 
-    //merge overlapping intervals into one interval. Score of the merged interval will be average of scores of the overlapping intervals
+    /**
+     * merge overlapping intervals into one interval. Score of the merged interval will be average of scores of the overlapping intervals
+     *
+     * Assumes the incoming list is orderd by increasing timestamp.
+     */
     public static ArrayList<DrivingPattern> reduceOverlapIntervals(ArrayList<DrivingPattern> intervals) {
         ArrayList<DrivingPattern> res = new ArrayList<DrivingPattern>();
         int sz = intervals.size();
@@ -34,7 +42,7 @@ public class DrivingPattern extends TimestampSortable{
 
         for (int i = 1; i < sz; ++i) {
             DrivingPattern cur = intervals.get(i);
-            if (cur.start <= last.end) {
+            if (cur.start <= last.end + overlapWindow) {
                 last.end = cur.end;
                 avg = avg + cur.score;
                 count++;

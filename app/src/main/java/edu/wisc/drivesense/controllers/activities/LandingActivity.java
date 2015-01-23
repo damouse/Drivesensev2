@@ -115,10 +115,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     }
 
     public void onButtonLeftClick(View view) {
-        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
-                .setTitleText("Oops...")
-                .setContentText("Look! A dialog!")
-                .show();
+//        new SweetAlertDialog(this, SweetAlertDialog.ERROR_TYPE)
+//                .setTitleText("Oops...")
+//                .setContentText("Look! A dialog!")
+//                .show();
+
+        //uploading test
+        
     }
 
 
