@@ -28,6 +28,7 @@ import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
 import edu.wisc.drivesense.controllers.fragments.MenuFragment;
 import edu.wisc.drivesense.controllers.fragments.SettingsFragment;
 import edu.wisc.drivesense.controllers.fragments.StatsFragment;
+import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.views.resideMenu.ResideMenu;
 
 import java.util.List;
@@ -121,7 +122,17 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 //                .show();
 
         //uploading test
-        
+
+        User user = Concierge.getCurrentUser();
+        List<Trip> trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
+
+        if (trips.size() == 0) {
+            Log.e(TAG, "Cant test upload, no trips found");
+            return;
+        }
+
+        ConnectionManager api = new ConnectionManager(this);
+        api.convertUploadTrip(trips.get(0), user, null);
     }
 
 

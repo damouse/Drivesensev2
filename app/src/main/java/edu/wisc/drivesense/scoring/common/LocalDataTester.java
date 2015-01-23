@@ -31,7 +31,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
-    long maxTime = 2000000;
+    long maxTime = 100000;
 
     private TripRecorder recorder;
     private Context context;
