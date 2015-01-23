@@ -57,7 +57,15 @@ public class MenuFragment extends Fragment {
         User user = Concierge.getCurrentUser();
 
         //Automatic or Manual Recording
-        optionAutomaticRecording.initialize("Test", "testest", true, new MenuOption.MenuOptionDelegate() {
+        optionAutomaticRecording.initialize("Automatic Recording", "Record when a trip starts automatically", true, new MenuOption.MenuOptionDelegate() {
+            @Override
+            public void onMenuOptionClick(String title, boolean newValue) {
+                Log.d(TAG, "Menu Button Pressed");
+            }
+        });
+
+        //Uploads
+        optionUploading.initialize("Uploading", "Upload trips to knowmydrive.com", true, new MenuOption.MenuOptionDelegate() {
             @Override
             public void onMenuOptionClick(String title, boolean newValue) {
                 Log.d(TAG, "Menu Button Pressed");

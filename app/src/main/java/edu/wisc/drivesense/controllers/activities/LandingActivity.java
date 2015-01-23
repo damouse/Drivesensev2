@@ -164,36 +164,36 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
     public void onMenuButtonPress(View view) {
         //TESTING METHOD- don't use this in production, spin it off to its own class
-        FrameLayout mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
-//        View mSuccessLeftMask = mSuccessFrame.findViewById(R.id.mask_left);
-//        View mSuccessRightMask = mSuccessFrame.findViewById(R.id.mask_right);
-        SuccessTickView mSuccessTick = (SuccessTickView)mSuccessFrame.findViewById(R.id.success_tick);
-        Animation mSuccessBowAnim = OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_bow_roate);
-
-        AnimationSet mSuccessLayoutAnimSet = (AnimationSet)OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_mask_layout);
-
-        FrameLayout mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
-        AnimationSet mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.error_x_in);
-        ImageView x = (ImageView) findViewById(R.id.error_x);
-
-        if(showingx) {
-            mSuccessFrame.setVisibility(View.VISIBLE);
-            mErrorFrame.setVisibility(View.GONE);
-
-            // initial rotate layout of success mask
-//            mSuccessLeftMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(0));
-//            mSuccessRightMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(1));
-//            mSuccessRightMask.startAnimation(mSuccessBowAnim);
-            mSuccessTick.startTickAnim();
-        }
-        else {
-            mSuccessFrame.setVisibility(View.GONE);
-            mErrorFrame.setVisibility(View.VISIBLE);
-
-            x.startAnimation(mErrorXInAnim);
-        }
-
-        showingx = !showingx;
+//        FrameLayout mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
+////        View mSuccessLeftMask = mSuccessFrame.findViewById(R.id.mask_left);
+////        View mSuccessRightMask = mSuccessFrame.findViewById(R.id.mask_right);
+//        SuccessTickView mSuccessTick = (SuccessTickView)mSuccessFrame.findViewById(R.id.success_tick);
+//        Animation mSuccessBowAnim = OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_bow_roate);
+//
+//        AnimationSet mSuccessLayoutAnimSet = (AnimationSet)OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_mask_layout);
+//
+//        FrameLayout mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
+//        AnimationSet mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.error_x_in);
+//        ImageView x = (ImageView) findViewById(R.id.error_x);
+//
+//        if(showingx) {
+//            mSuccessFrame.setVisibility(View.VISIBLE);
+//            mErrorFrame.setVisibility(View.GONE);
+//
+//            // initial rotate layout of success mask
+////            mSuccessLeftMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(0));
+////            mSuccessRightMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(1));
+////            mSuccessRightMask.startAnimation(mSuccessBowAnim);
+//            mSuccessTick.startTickAnim();
+//        }
+//        else {
+//            mSuccessFrame.setVisibility(View.GONE);
+//            mErrorFrame.setVisibility(View.VISIBLE);
+//
+//            x.startAnimation(mErrorXInAnim);
+//        }
+//
+//        showingx = !showingx;
     }
 
 
