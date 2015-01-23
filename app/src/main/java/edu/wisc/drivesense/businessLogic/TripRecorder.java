@@ -35,7 +35,7 @@ public class TripRecorder  {
     private static final boolean useNeuralNetork = false;
 
     //How long to wait between scoring attempts and how much data to hold
-    public int period = 30000; //in milliseconds
+    public int period = 10000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 

@@ -420,6 +420,12 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
         while (probableElement.getTime() != time) {
             currentIndex += direction;
+
+            //check to make sure you don't run off the end of the queues
+            //return the last valid index
+            if (currentIndex < 0 || currentIndex >= contents.size())
+                return currentIndex - direction;
+
             probableElement = contents.get(currentIndex);
             long newDifference = Math.abs(probableElement.getTime() - time);
 

@@ -31,7 +31,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
-    long maxTime = 200000;
+    long maxTime = 2000000;
 
     private TripRecorder recorder;
     private Context context;
@@ -74,9 +74,6 @@ public class LocalDataTester {
         allData.sort();
         allData.trimInPlace(timestampRange[0], timestampRange[1]);
         Log.d(TAG, "Feeding data...");
-
-        for (Reading reading: allData)
-            Log.d(TAG, "Time: " + reading.timestamp + " type: " + reading.type);
 
         feed(allData);
     }
