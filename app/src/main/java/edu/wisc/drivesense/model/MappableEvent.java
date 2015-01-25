@@ -35,10 +35,8 @@ public class MappableEvent extends SugarRecord<MappableEvent> {
     @Expose
     public double longitude;
 
-    @Expose
     public double latitude_end;
 
-    @Expose
     public double longitude_end;
 
     @Expose

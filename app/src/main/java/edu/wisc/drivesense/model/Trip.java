@@ -18,9 +18,14 @@ import com.orm.dsl.Ignore;
 public class Trip extends SugarRecord<Trip> {
     private static final String TAG = "Trip";
 
+    //The first timestamp is the time stored internally by the app.
+    //the second is the one used by the backend-- it also encapsulates timezone info
+    public long timestamp;
+
+    @Ignore
     @Expose
     @SerializedName("time_stamp")
-    public long timestamp;
+    public Date time_stamp;
 
     @Expose
     public int duration; //seconds
@@ -32,6 +37,7 @@ public class Trip extends SugarRecord<Trip> {
     public float scoreTurns;
 
     @Expose
+    @SerializedName("scoreBrakes")
     public float scoreBrakes;
 
     @Expose

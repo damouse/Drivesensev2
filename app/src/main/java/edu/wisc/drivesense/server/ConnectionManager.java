@@ -18,6 +18,7 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
@@ -214,6 +215,7 @@ public class ConnectionManager {
             User user = (User) params[1];
 
             trip.mappable_events = trip.getEvents();
+            trip.time_stamp = new Date(trip.timestamp);
 
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
