@@ -10,14 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 
-import cn.pedant.SweetAlert.OptAnimationLoader;
-import cn.pedant.SweetAlert.SuccessTickView;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
@@ -35,7 +28,7 @@ import java.util.List;
 
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
-        MenuFragment.OnFragmentInteractionListener, SettingsFragment.OnFragmentInteractionListener,
+        MenuFragment.MenuDelegate, SettingsFragment.OnFragmentInteractionListener,
         TripsListViewFragment.TripSelectedListener, StatsFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "LandingActivity";
@@ -103,13 +96,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     /**
      * Loads the currently logged in user into the list and the menu
      */
-    private void loadUser() {
+    public void loadUser() {
         User user = Concierge.getCurrentUser();
         fragmentList.setUser(user);
     }
 
 
-    /* Stats Button Callbacks */
+    /* Button Callbacks */
     public void onRightButtonClick(View view) {
         //test data method
         onLoadLocal();
@@ -161,40 +154,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 //      Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
         }
     };
-
-    public void onMenuButtonPress(View view) {
-        //TESTING METHOD- don't use this in production, spin it off to its own class
-//        FrameLayout mSuccessFrame = (FrameLayout)findViewById(R.id.success_frame);
-////        View mSuccessLeftMask = mSuccessFrame.findViewById(R.id.mask_left);
-////        View mSuccessRightMask = mSuccessFrame.findViewById(R.id.mask_right);
-//        SuccessTickView mSuccessTick = (SuccessTickView)mSuccessFrame.findViewById(R.id.success_tick);
-//        Animation mSuccessBowAnim = OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_bow_roate);
-//
-//        AnimationSet mSuccessLayoutAnimSet = (AnimationSet)OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.success_mask_layout);
-//
-//        FrameLayout mErrorFrame = (FrameLayout)findViewById(R.id.error_frame);
-//        AnimationSet mErrorXInAnim = (AnimationSet) OptAnimationLoader.loadAnimation(this, cn.pedant.SweetAlert.R.anim.error_x_in);
-//        ImageView x = (ImageView) findViewById(R.id.error_x);
-//
-//        if(showingx) {
-//            mSuccessFrame.setVisibility(View.VISIBLE);
-//            mErrorFrame.setVisibility(View.GONE);
-//
-//            // initial rotate layout of success mask
-////            mSuccessLeftMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(0));
-////            mSuccessRightMask.startAnimation(mSuccessLayoutAnimSet.getAnimations().get(1));
-////            mSuccessRightMask.startAnimation(mSuccessBowAnim);
-//            mSuccessTick.startTickAnim();
-//        }
-//        else {
-//            mSuccessFrame.setVisibility(View.GONE);
-//            mErrorFrame.setVisibility(View.VISIBLE);
-//
-//            x.startAnimation(mErrorXInAnim);
-//        }
-//
-//        showingx = !showingx;
-    }
 
 
     /* TESTING and DEBUG */
