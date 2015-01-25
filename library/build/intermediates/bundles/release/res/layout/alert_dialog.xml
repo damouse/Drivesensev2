@@ -157,4 +157,4 @@
             style="@style/dialog_blue_button"
             android:text="@string/dialog_ok" />
     </LinearLayout>
-</LinearLayout><!-- From: file:/home/damouse/development/android/drivesense/drivesense/library/src/main/res/layout/alert_dialog.xml -->
+</LinearLayout><!-- From: file:/Users/Xuan/Documents/Drivesensev2/library/src/main/res/layout/alert_dialog.xml -->

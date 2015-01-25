@@ -114,21 +114,14 @@ public class BitmapLoader {
      */
     public static int colorForScore(double score) {
 
-        return Color.rgb(132, 118, 26);
+        int percent = (int) Math.abs(100 - score);
 
-        //Xuan-- old code here. Think it works. Try it.
-//        int percent = (int) Math.abs(100 - score);
-//
-//        int r = ( (255 * percent) / 100 );
-//        int g = ( 255 * (100) ) / 100;
-//        int b = 0;
-//
-//        return ((r&0x0ff)<<16)|((g&0x0ff)<<8)|(b&0x0ff);
+        int r = 244 - 168 * percent/100;
+        int g = 67 +108 * percent/100;
+        int b = 54 + 26 * percent/100;
 
-        //commented out because we don't want a blue component for raw red-to-green
-//        blue = 0;
-//        green = 255 * sqrt( cos ( power * PI / 200 ));
-//        red = 255 * sqrt( sin ( power * PI / 200 ));
+        return Color.rgb(r, g, b);
+
     }
 
     int getTrafficlightColor(double value){
