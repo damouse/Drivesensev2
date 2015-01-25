@@ -1,10 +1,8 @@
 package edu.wisc.drivesense.views;
 
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.*;
 
-import android.graphics.Color;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import edu.wisc.drivesense.R;
@@ -88,21 +86,34 @@ public class BitmapLoader {
     /* Color Changing */
 
 
-//    private int[] colorBitmap(int color, Bitmap bitmap) {
-//        int pixels[] = null;
-//        int width = bitmap.getWidth();
-//        int height = bitmap.getHeight();
-//
-//        bitmap.getPixels(pixels, 0, 0, 0, 0, width, height);
-//
-//        for (int i = 0; i < width; i++) {
-//            for (int j = 0; j < height; j++) {
-//                if (pixels[i][j] == 0) {
-//
-//                }
-//            }
-//        }
-//    }
+    private Bitmap changeColor(Bitmap src, int color) {
+        int width = src.getWidth();
+        int height = src.getHeight();
+        int[] pixels = new int[width * height];
+        int replace = Color.rgb(0, 0, 0);
+
+        // get pixel array from source
+        src.getPixels(pixels, 0, width, 0, 0, width, height);
+
+        Bitmap bmOut = Bitmap.createBitmap(width, height, src.getConfig());
+
+        int pixel;
+
+        // iteration through pixels
+        for (int y = 0; y < height; ++y) {
+            for (int x = 0; x < width; ++x) {
+                // get current index in 2D-matrix
+                int index = y * width + x;
+                pixel = pixels[index];
+
+                if(pixel == replace){
+                    pixels[index] = color;
+                }
+            }
+        }
+        bmOut.setPixels(pixels, 0, width, 0, 0, width, height);
+        return bmOut;
+    }
 //
 
     /**
@@ -113,15 +124,13 @@ public class BitmapLoader {
      * @return a Color that ranged from red to green based on Score-- faded to be light, drawn from pastel palette
      */
     public static int colorForScore(double score) {
-
-        int percent = (int) Math.abs(100 - score);
+        int percent = (int) score;
 
         int r = 244 - 168 * percent/100;
         int g = 67 +108 * percent/100;
         int b = 54 + 26 * percent/100;
 
         return Color.rgb(r, g, b);
-
     }
 
     int getTrafficlightColor(double value){

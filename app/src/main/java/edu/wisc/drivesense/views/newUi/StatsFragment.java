@@ -116,6 +116,6 @@ public class StatsFragment extends Fragment {
 
     /* TESTING METHOD */
     public void setBackgroundColorTEST() {
-        layoutRoot.setBackgroundColor(BitmapLoader.colorForScore(50));
+        layoutRoot.setBackgroundColor(BitmapLoader.colorForScore(90));
     }
 }

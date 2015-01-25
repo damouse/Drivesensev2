@@ -36,4 +36,4 @@
         android:pivotY="50%"
         android:duration="60"
         android:startOffset="240"/>
-</set><!-- From: file:/Users/Xuan/Documents/Drivesensev2/library/src/main/res/anim/modal_in.xml -->
+</set><!-- From: file:/home/damouse/development/android/drivesense/drivesense/library/src/main/res/anim/modal_in.xml -->
