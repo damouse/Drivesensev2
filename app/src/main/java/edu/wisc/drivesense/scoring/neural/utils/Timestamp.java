@@ -3,6 +3,7 @@ package edu.wisc.drivesense.scoring.neural.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 
 
@@ -38,7 +39,7 @@ public class Timestamp {
      * @param data
      * @return
      */
-    public static long[] completeTimestampRangeInDataSet(ArrayList<TimestampQueue> set) {
+    public static long[] completeTimestampRangeInDataSet(ArrayList<TimestampQueue<Reading>> set) {
         long times[] = {0, Long.MAX_VALUE};
 
         for (TimestampQueue queue : set) {
@@ -59,7 +60,7 @@ public class Timestamp {
      * @param target
      * @return
      */
-    public static TimestampQueue dequeueBeforeTimestamp(List<TimestampQueue> target, long time) {
+    public static TimestampQueue dequeueBeforeTimestamp(List<TimestampQueue<Reading>> target, long time) {
         TimestampQueue result = new TimestampQueue();
 
         for (TimestampQueue queue : target)

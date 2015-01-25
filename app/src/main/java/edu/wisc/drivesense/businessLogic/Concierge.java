@@ -3,7 +3,6 @@ package edu.wisc.drivesense.businessLogic;
 import android.util.Log;
 
 import java.util.List;
-import java.util.Observable;
 
 import edu.wisc.drivesense.model.User;
 
@@ -15,14 +14,14 @@ import edu.wisc.drivesense.model.User;
  * <p/>
  * Loads the logged in user, informs
  */
-public class Concierge extends Observable {
+public class Concierge {
     private static final String TAG = "Concierge";
-    private User currentUser;
+    private static User currentUser;
 
 
-    public Concierge() {
+    public static void initializeConcierge() {
         currentUser = loadActiveUser();
-        Log.d(TAG, "Loaded user: " + currentUser.email);
+        Log.d(TAG, "Initializing: loaded user: " + currentUser.email);
     }
 
     /**
@@ -31,7 +30,7 @@ public class Concierge extends Observable {
      * @return
      */
     private static User getDemoUser() {
-        List<User> demo = User.find(User.class, "user_id = ?", "-7");
+        List<User> demo = User.find(User.class, "backend_id = ?", "-7");
 
         if (demo.size() == 1)
             return demo.get(0);
@@ -43,18 +42,29 @@ public class Concierge extends Observable {
         }
 
         User newDemo = new User();
-        newDemo.userId = -7;
+        newDemo.backendId = -7;
         newDemo.email = "Demo User";
+        newDemo.loggedIn = true;
         newDemo.save();
+
+        Log.i(TAG, "Created new Demo User");
+
         return newDemo;
     }
 
     /* Update Methods */
-    public User getCurrentUser() {
+    public static User getCurrentUser() {
+        if (currentUser == null)
+            initializeConcierge();
+
         return currentUser;
     }
 
-    public void logOut() {
+    public static void logOut() {
+        if (currentUser == null)
+            return;
+
+        Log.i(TAG, "Logging " + currentUser.email + " out");
         if (currentUser.demoUser())
             return;
 
@@ -64,15 +74,12 @@ public class Concierge extends Observable {
         currentUser = getDemoUser();
         currentUser.loggedIn = true;
         currentUser.save();
-
-        setChanged();
-        notifyObservers(currentUser);
     }
 
 
     /* User loading and management */
 
-    public void logIn(User user) {
+    public static void logIn(User user) {
         if (currentUser.loggedIn) {
             currentUser.loggedIn = false;
             currentUser.save();
@@ -82,16 +89,15 @@ public class Concierge extends Observable {
         currentUser.loggedIn = true;
         currentUser.save();
 
-        setChanged();
-        notifyObservers(currentUser);
+        Log.i(TAG, "Logged " + user.email + " in");
     }
 
     /**
      * If no users exist, create a demo user.
      * Else, check preferences for a saved user and load him
      */
-    public User loadActiveUser() {
-        List<User> users = User.find(User.class, "logged_in = ?", "true");
+    private static User loadActiveUser() {
+        List<User> users = User.find(User.class, "logged_in = ?", "1");
 
         if (users.size() == 1)
             return users.get(0);
@@ -100,7 +106,7 @@ public class Concierge extends Observable {
         if (users.size() == 0) {
             return getDemoUser();
         } else {
-            Log.e(TAG, "HCF-- MULTIPLE LOGGED IN USERS");
+            Log.e(TAG, "WARN-- MULTIPLE LOGGED IN USERS");
             for (User user : users)
                 user.logOut();
             return getDemoUser();

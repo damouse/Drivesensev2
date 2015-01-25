@@ -12,22 +12,16 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
-import edu.wisc.drivesense.controllers.MainActivity;
+
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
-import edu.wisc.drivesense.model.SugarDatabse;
+
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.scoring.common.LocalDataTester;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TrainingSet;
 import edu.wisc.drivesense.sensors.TripListener;
 import edu.wisc.drivesense.sensors.WifiListener;
 import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.server.ConnectionManagerCallback;
-import edu.wisc.drivesense.server.DrivesensePreferences;
-import edu.wisc.drivesense.model.ReadingHolder;
 import edu.wisc.drivesense.utilities.Ticker;
 import edu.wisc.drivesense.sensors.PowerListener;
 import edu.wisc.drivesense.sensors.SensorMonitor;
@@ -61,12 +55,13 @@ import edu.wisc.drivesense.views.TaskbarNotifications;
  * @author Damouse
  */
 public class BackgroundRecordingService extends Service implements Observer {
-    public static final boolean DEBUG = false;
     private static final String TAG = "BackgroundService";
+    public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
+    public static final String TRIPS_UPDATE = "edu.wisc.drivesense.trips_update";
     private static BackgroundRecordingService instance = null; //singleton ivar
+    public static final boolean DEBUG = false;
 
     public SensorMonitor monitor;
-    public Concierge concierge;
     public BackgroundState stateManager;
     public TripRecorder recorder;
 
@@ -108,7 +103,6 @@ public class BackgroundRecordingService extends Service implements Observer {
         listener = new TripListener();
         serverLogger = new ServerLogger(this);
         taskbar = new TaskbarNotifications(this);
-        concierge = new Concierge();
 
         stateManager = new BackgroundState();
         stateManager.addObserver(this);
@@ -116,7 +110,7 @@ public class BackgroundRecordingService extends Service implements Observer {
         initState();
 
         //Broadcast on start
-        Intent startupIntent = new Intent(MainActivity.BACKGROUND_ACTION);
+        Intent startupIntent = new Intent(BACKGROUND_ACTION);
 
         try {
             sendBroadcast(startupIntent);
@@ -144,7 +138,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     private void initState() {
         stateManager.addObserver(this);
         stateManager.setServiceOn(true);
-        User user = concierge.getCurrentUser();
+        User user = Concierge.getCurrentUser();
 
         stateManager.setGpsAvailable(monitor.gpsEnabled());
         stateManager.setPowered(PowerListener.isPluggedIn(this));
@@ -166,7 +160,7 @@ public class BackgroundRecordingService extends Service implements Observer {
                 return;
             }
 
-            recorder = new TripRecorder(concierge.getCurrentUser(), this);
+            recorder = new TripRecorder(Concierge.getCurrentUser(), this);
         } else if (!state && recording) {
             if (recorder == null) {
                 Log.e(TAG, "Can't end the trip, no trip is active!");
@@ -253,7 +247,7 @@ public class BackgroundRecordingService extends Service implements Observer {
      * TODO: move to Connection manager-- might have to call this from somewhere else.
      */
     public void uploadTrips() {
-        User user = concierge.getCurrentUser();
+        User user = Concierge.getCurrentUser();
 
         //TODO: optionally load over cellular with a user preference
         if (user.demoUser() || !WifiListener.isConnected(this))
@@ -289,8 +283,8 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     /* TESTING */
     public void localDataTester() {
-        SugarDatabse.clearDatabase();
-        concierge = new Concierge();
+        Trip.deleteAll(Trip.class);
+        MappableEvent.deleteAll(MappableEvent.class);
 
         //loadTestData();
         loadAndFeed();
@@ -298,12 +292,10 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     void loadAndFeed() {
         Log.d(TAG, "Starting file load...");
-        recorder = new TripRecorder(concierge.getCurrentUser(), this);
+        recorder = new TripRecorder(Concierge.getCurrentUser(), this);
         LocalDataTester tester = new LocalDataTester(recorder, this);
 
         tester.readAndLoadTestData(this);
-
-        recorder.analyzePeriod();
         recorder.endTrip();
 
         Log.d(TAG, "Finished load");

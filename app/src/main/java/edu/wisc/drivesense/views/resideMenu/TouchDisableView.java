@@ -1,6 +1,4 @@
-package edu.wisc.drivesense.views.newUi.resideMenu;
-
-
+package edu.wisc.drivesense.views.resideMenu;
 
 import android.content.Context;
 import android.util.AttributeSet;

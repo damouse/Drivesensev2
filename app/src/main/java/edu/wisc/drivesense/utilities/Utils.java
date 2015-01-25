@@ -1,5 +1,9 @@
 package edu.wisc.drivesense.utilities;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 /**
  * Basic Utils. Starting out as a migration of methods from existing code,
  * organization to follow.
@@ -12,7 +16,10 @@ public class Utils {
 
     /* Formatting */
     public static String formatDistance(double distance) {
-        return String.format("%.2f miles", distance);
+        if(distance < 5)
+            return String.format("%.2f miles", distance);
+        else
+            return String.format("%.0f miles", distance);
     }
 
     public static String formatDuration(int duration) {
@@ -39,4 +46,25 @@ public class Utils {
         return (int) miliseconds / 1000;
     }
 
+
+    /* Date */
+    public static String dayOfWeek(long timestamp) {
+        Date date = new Date(timestamp);
+        return new SimpleDateFormat("EEEE").format(date);
+    }
+
+    /**
+     * Given a start timestamp and a duration in seconds, return a string that represents the time
+     * as a range
+     */
+    public static String startEndTime(long timestamp, int seconds) {
+        String dateFormat = "hh:mma";
+        Date date = new Date(timestamp);
+        String start = new SimpleDateFormat(dateFormat).format(date);
+
+        date = new Date(timestamp + seconds);
+        String end = new SimpleDateFormat(dateFormat).format(date);
+
+        return start + "-" + end;
+    }
 }

@@ -8,7 +8,7 @@ import com.orm.SugarRecord;
  */
 public class User extends SugarRecord<User> {
     @Expose
-    public int userId;
+    public int backendId;
 
     @Expose
     public String email;
@@ -28,7 +28,7 @@ public class User extends SugarRecord<User> {
     private boolean automaticDelete;
 
     public User() {
-        userId = -1;
+        backendId = -1;
         email = "";
         authenticationToken = "";
         group_id = -1;
@@ -47,7 +47,7 @@ public class User extends SugarRecord<User> {
      * can be created without forcing a login. This user has no permissions and cannot upload.
      */
     public boolean demoUser() {
-        return userId == -7;
+        return backendId == -7;
     }
 
 
@@ -55,7 +55,7 @@ public class User extends SugarRecord<User> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
 
-        sb.append("id: " + userId);
+        sb.append("id: " + backendId);
         sb.append(" email: " + email);
         sb.append(" auth_token: " + authenticationToken);
         sb.append(" group_id: " + group_id);

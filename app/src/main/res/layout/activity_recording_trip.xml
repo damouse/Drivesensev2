@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:orientation="vertical"
+android:layout_width="fill_parent"
+android:layout_height="fill_parent"
+android:id="@+id/root_view"
+android:keepScreenOn="true">
+
+<!-- Map-->
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/animation_layout"
+    android:orientation="vertical"
+    android:clickable="false"
+    android:weightSum="1.0">
+
+    <fragment android:name="edu.wisc.drivesense.controllers.fragments.PinMapFragment"
+        android:id="@+id/map"
+        android:layout_weight="1.0"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"  />
+
+</LinearLayout>
+<!--End Map-->
+
+
+<!--I've commented this out as the table is no longer needed, but we may still need the -->
+<!--slidein functionality-->
+<!--Slidein Table-->
+<!--<LinearLayout-->
+    <!--android:orientation="vertical"-->
+    <!--android:clickable="false"-->
+    <!--android:id="@+id/slide_in_trips"-->
+    <!--android:layout_height="fill_parent"-->
+    <!--android:layout_alignParentBottom="true"-->
+    <!--android:layout_width="fill_parent"-->
+    <!--android:weightSum="2">-->
+
+    <!--<View-->
+        <!--android:layout_width="0dp"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@color/gray"/>-->
+
+
+    <!--&lt;!&ndash; The table that holds all the trips &ndash;&gt;-->
+    <!--<fragment android:name="edu.wisc.drivesense.controllers.fragments.TripsListViewFragment"-->
+        <!--android:layout_weight="1"-->
+        <!--android:layout_height="0dp"-->
+        <!--android:id="@+id/list"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_width="match_parent"/>-->
+
+<!--</LinearLayout>-->
+<!--End Slidin Table-->
+
+
+<!-- Here to allow the two slideins to overlap -->
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:focusable="false">
+
+    <!-- The recording slidein -->
+    <GridLayout
+        android:id="@+id/slide_in"
+        android:layout_width="match_parent"
+        android:layout_height="72dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:visibility="invisible"
+        android:columnCount="1" >
+
+        <edu.wisc.drivesense.views.OpenSansLightTextview
+            android:layout_column="0"
+            android:layout_gravity="left|top"
+            android:layout_row="0"
+            android:text="Trip Name"
+            android:layout_marginLeft="6dip"
+            android:layout_marginTop="6dip"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <edu.wisc.drivesense.views.OpenSansLightTextview
+            android:id="@+id/textview_name"
+            android:layout_column="0"
+            android:layout_gravity="right|top"
+            android:layout_row="0"
+            android:text="Sample Trip Name"
+            android:layout_marginRight="6dip"
+            android:layout_marginTop="6dip"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <edu.wisc.drivesense.views.OpenSansLightTextview
+            android:id="@+id/textview_duration"
+            android:layout_column="0"
+            android:layout_gravity="right|bottom"
+            android:layout_row="0"
+            android:layout_marginRight="6dip"
+            android:layout_marginBottom="6dip"
+            android:text="N seconds"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <edu.wisc.drivesense.views.OpenSansLightTextview
+            android:layout_column="0"
+            android:layout_gravity="left|bottom"
+            android:layout_marginLeft="6dip"
+            android:layout_marginBottom="6dip"
+            android:layout_row="0"
+            android:text="Duration"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    </GridLayout><!-- End recording slidein -->
+</RelativeLayout>
+</RelativeLayout>
+

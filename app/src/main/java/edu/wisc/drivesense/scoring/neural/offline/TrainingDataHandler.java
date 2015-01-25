@@ -37,12 +37,12 @@ public class TrainingDataHandler {
     }
 
     private static TrainingSet cleanData(TrainingSet data) {
-        ArrayList<TimestampQueue> allLists = data.getAllQueues();
-        long timestampRange[] = completeTimestampRangeInDataSet(allLists);
-
-        //remove values that lie outside the complete timestamp rane for each queue
-        for (TimestampQueue series : allLists)
-            series.trimInPlace(timestampRange[0], timestampRange[1]);
+//        ArrayList<TimestampQueue<Reading>> allLists = data.getAllQueues();
+//        long timestampRange[] = completeTimestampRangeInDataSet(allLists);
+//
+//        //remove values that lie outside the complete timestamp rane for each queue
+//        for (TimestampQueue series : allLists)
+//            series.trimInPlace(timestampRange[0], timestampRange[1]);
 
         return data;
     }
@@ -54,37 +54,37 @@ public class TrainingDataHandler {
      */
     public static TimestampQueue generateInputSeries(DataReceiver receiver, TrainingSet trainingSet) {
 //        ArrayList<TimestampQueue> allLists = TimestampQueue.queueListCopy(trainingSet.getAllQueues());
-        ArrayList<TimestampQueue> allLists = trainingSet.getAllQueues();
-        TimestampQueue<Reading> labels = new TimestampQueue<Reading>(trainingSet.labels);
+//        ArrayList<TimestampQueue<Reading>> allLists = trainingSet.getAllQueues();
+//        TimestampQueue<Reading> labels = new TimestampQueue<Reading>(trainingSet.labels);
         TimestampQueue<DataSetInput> periodizedData = new TimestampQueue<DataSetInput>();
-        TimestampQueue<Reading> periodizedReadings = new TimestampQueue<Reading>();
-
-        //the first and last timestamp in data where each series has values
-        long timestampRange[] = completeTimestampRangeInDataSet(allLists);
-
-        //the "10" as the last parameter used to read: receiver.period. I removed the period from receiver at some point,
-        //so this needs to be refactored to reflect that
-        for (long currentTime = timestampRange[0]; currentTime < timestampRange[1]; currentTime += 10) {
-            periodizedReadings = dequeueBeforeTimestamp(allLists, currentTime);
-
-            for (TimestampSortable reading : periodizedReadings) {
-                if (reading == null)
-                    continue;
-
-                receiver.newReading((Reading) reading);
-            }
-
-            TimestampQueue periodizedLabels = labels.dequeueBeforeTimestamp(currentTime);
-            double averagedLabels[] = roundValuesInArray(averageSeries(periodizedLabels));
-            DataSetInput period = receiver.getProcessedPeriod();
-
-            if (period != null) {
-                period.labels = averagedLabels;
-                periodizedData.push(period);
-            }
-        }
-
-        log("Finished generating input series");
+//        TimestampQueue<Reading> periodizedReadings = new TimestampQueue<Reading>();
+//
+//        //the first and last timestamp in data where each series has values
+//        long timestampRange[] = completeTimestampRangeInDataSet(allLists);
+//
+//        //the "10" as the last parameter used to read: receiver.period. I removed the period from receiver at some point,
+//        //so this needs to be refactored to reflect that
+//        for (long currentTime = timestampRange[0]; currentTime < timestampRange[1]; currentTime += 10) {
+//            periodizedReadings = dequeueBeforeTimestamp(allLists, currentTime);
+//
+//            for (TimestampSortable reading : periodizedReadings) {
+//                if (reading == null)
+//                    continue;
+//
+//                receiver.newReading((Reading) reading);
+//            }
+//
+//            TimestampQueue periodizedLabels = labels.dequeueBeforeTimestamp(currentTime);
+//            double averagedLabels[] = roundValuesInArray(averageSeries(periodizedLabels));
+//            DataSetInput period = receiver.getProcessedPeriod();
+//
+//            if (period != null) {
+//                period.labels = averagedLabels;
+//                periodizedData.push(period);
+//            }
+//        }
+//
+//        log("Finished generating input series");
         return periodizedData;
     }
 

@@ -1,4 +1,4 @@
-package edu.wisc.drivesense.views.newUi;
+package edu.wisc.drivesense.controllers.fragments;
 
 import android.app.Activity;
 import android.net.Uri;
@@ -8,24 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import android.widget.LinearLayout;
-import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
-import edu.wisc.drivesense.views.BitmapLoader;
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link StatsFragment.OnFragmentInteractionListener} interface
+ * {@link SettingsFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link StatsFragment#newInstance} factory method to
+ * Use the {@link SettingsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class StatsFragment extends Fragment {
-    private static final String TAG = "StatsFragment";
-
-    private LinearLayout layoutRoot;
-
+public class SettingsFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -43,11 +36,11 @@ public class StatsFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment StatsFragment.
+     * @return A new instance of fragment SettingsFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static StatsFragment newInstance(String param1, String param2) {
-        StatsFragment fragment = new StatsFragment();
+    public static SettingsFragment newInstance(String param1, String param2) {
+        SettingsFragment fragment = new SettingsFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -55,7 +48,7 @@ public class StatsFragment extends Fragment {
         return fragment;
     }
 
-    public StatsFragment() {
+    public SettingsFragment() {
         // Required empty public constructor
     }
 
@@ -69,11 +62,10 @@ public class StatsFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        layoutRoot = (LinearLayout) inflater.inflate(R.layout.fragment_stats, container, false);
-        setBackgroundColorTEST();
-        return layoutRoot;
+        return inflater.inflate(R.layout.fragment_settings, container, false);
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -89,7 +81,8 @@ public class StatsFragment extends Fragment {
         try {
             mListener = (OnFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString() + " must implement OnFragmentInteractionListener");
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
         }
     }
 
@@ -114,8 +107,4 @@ public class StatsFragment extends Fragment {
         public void onFragmentInteraction(Uri uri);
     }
 
-    /* TESTING METHOD */
-    public void setBackgroundColorTEST() {
-        layoutRoot.setBackgroundColor(BitmapLoader.colorForScore(90));
-    }
 }

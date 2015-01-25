@@ -19,12 +19,6 @@ public class Trip extends SugarRecord<Trip> {
     private static final String TAG = "Trip";
 
     @Expose
-    public int trip_id;
-
-    @Expose
-    public String name;
-
-    @Expose
     @SerializedName("time_stamp")
     public long timestamp;
 
@@ -47,6 +41,10 @@ public class Trip extends SugarRecord<Trip> {
     public float scoreLaneChanges;
 
     @Expose
+    @Ignore
+    public List<MappableEvent> mappable_events;
+
+    @Expose
     @SerializedName("scoreAverage")
     public int score;
 
@@ -63,7 +61,6 @@ public class Trip extends SugarRecord<Trip> {
 
     /* Constructors */
     public Trip() {
-        trip_id = -1;
         scored = false;
         uploaded = false;
         timestamp = new Date().getTime();
@@ -94,7 +91,6 @@ public class Trip extends SugarRecord<Trip> {
         StringBuilder sb = new StringBuilder();
 
         sb.append("id: " + id);
-        sb.append(" name: " + name);
         sb.append(" date: " + timestamp);
         sb.append(" distance: " + distance);
         sb.append(" duration: " + duration);
@@ -133,5 +129,9 @@ public class Trip extends SugarRecord<Trip> {
 
     public void setUploaded(boolean uploaded) {
         this.uploaded = uploaded;
+    }
+
+    public String name() {
+        return "Trip #" + getId();
     }
 }

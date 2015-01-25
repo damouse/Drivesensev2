@@ -16,17 +16,21 @@
     <!-- <string name="app_name">FragmentPreference</string> -->
     <!-- <string name="action_settings">Settings</string> -->
 
+
     <!-- Preference Activity -->
     <string name="title_activity_landing">LandingActivity</string>
     <string name="hello_world">Hello world!</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
-    <!--Settings-->
+    <!-- Settings -->
     <string name="settings_label">Settings</string>
 
-    <!--Menu-->
+    <!-- Menu -->
     <string name="menu_label">Menu</string>
-    <string name="menu_button_one">BUTTON ONE</string>
-    <string name="menu_button_two">BUTTON TWO</string>
-    <string name="menu_button_three">BUTTON THREE</string>
+    <string name="menu_button_two">START RECORDING</string>
+    <string name="menu_button_three">SEE RECORDING TRIP</string>
+    <string name="title_activity_recording_trip">RecordingTripActivity</string>
+    <string name="title_activity_trip_viewer">TripViewerActivity</string>
+    <string name="login_text">Log In</string>
+
 </resources>

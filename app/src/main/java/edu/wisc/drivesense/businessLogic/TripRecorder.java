@@ -1,24 +1,27 @@
 package edu.wisc.drivesense.businessLogic;
 
-import android.content.Context;
-import android.util.Log;
+        import android.content.Context;
+        import android.content.Intent;
+        import android.os.Handler;
+        import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
+        import java.util.ArrayList;
+        import java.util.Date;
+        import java.util.List;
 
-import edu.wisc.drivesense.model.DrivingPattern;
-import edu.wisc.drivesense.model.MappableEvent;
-import edu.wisc.drivesense.model.Reading;
-import edu.wisc.drivesense.model.SugarDatabse;
-import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.model.User;
-import edu.wisc.drivesense.scoring.common.DataReceiver;
-import edu.wisc.drivesense.scoring.common.GpsThief;
-import edu.wisc.drivesense.scoring.common.ScoreKeeperDelegate;
-import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
-import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
-import edu.wisc.drivesense.scoring.projected.ProjectedScoreKeeper;
-import edu.wisc.drivesense.utilities.Utils;
+        import edu.wisc.drivesense.model.DrivingPattern;
+        import edu.wisc.drivesense.model.MappableEvent;
+        import edu.wisc.drivesense.model.Reading;
+        import edu.wisc.drivesense.model.SugarDatabse;
+        import edu.wisc.drivesense.model.Trip;
+        import edu.wisc.drivesense.model.User;
+        import edu.wisc.drivesense.scoring.common.DataReceiver;
+        import edu.wisc.drivesense.scoring.common.GpsThief;
+        import edu.wisc.drivesense.scoring.common.ScoreKeeperDelegate;
+        import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
+        import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
+        import edu.wisc.drivesense.scoring.projected.ProjectedScoreKeeper;
+        import edu.wisc.drivesense.utilities.Utils;
 
 /**
  * Created by Damouse on 12/16/2014.
@@ -31,11 +34,8 @@ public class TripRecorder  {
 
     private static final boolean useNeuralNetork = false;
 
-    //on average, how many GPS coordinates to omit.
-    private static final double gpsLossRate = .1;
-
     //How long to wait between scoring attempts and how much data to hold
-    private int period;
+    public int period = 30000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 
@@ -46,6 +46,12 @@ public class TripRecorder  {
 
     private MappableEvent lastEvent;
 
+    //handles Receiver polling based on the period time
+    Handler timerHandler;
+    boolean recording;
+    Runnable timerRunnable;
+
+
     /**
      * Begins a new trip with the assigned analyst providing data.
      */
@@ -53,20 +59,34 @@ public class TripRecorder  {
         this.context = context;
 
         receiver = new DataReceiver(memorySize);
+        recording = true;
 
         trip = new Trip();
         trip.user = user;
+        trip.timestamp = new Date().getTime();
         trip.save();
 
-        trip.name = "Trip #" + trip.getId();
-        trip.save();
+        Log.d(TAG, "Recording trip: " + trip.getId());
 
-        Log.d(TAG, "Recording trip: " + trip.name);
+        timerRunnable = new Runnable() {
+            @Override
+            public void run() {
+                analyzePeriod();
+
+                if (recording)
+                    timerHandler.postDelayed(this, period);
+            }
+        };
+
+        //comment this out when operating on local data
+        //timerHandler.postDelayed(timerRunnable, period);
     }
 
 
     /* Public Interface */
     public void endTrip() {
+        recording = false;
+
         trip.scoreAccels = trip.scoreAccels / trip.numAccels;
         trip.scoreBrakes = trip.scoreBrakes / trip.numBrakes;
         trip.scoreTurns = trip.scoreTurns / trip.numTurns;
@@ -75,12 +95,21 @@ public class TripRecorder  {
         trip.duration = Utils.convertToSeconds(lastEvent.timestamp - trip.timestamp);
         trip.scored = true;
 
-        Log.d(TAG, "Ended trip: " + trip.name);
+        Log.d(TAG, "Ended trip: " + trip.getId());
         trip.save();
         trip = null;
 
         //try a trip upload
         BackgroundRecordingService.getInstance().uploadTrips();
+
+        //declare that a trip has finished recording and can now be viewed
+        Intent update = new Intent(BackgroundRecordingService.TRIPS_UPDATE);
+
+        try {
+            BackgroundRecordingService.getInstance().sendBroadcast(update);
+        } catch (NullPointerException ex) {
+            Log.e(TAG, "Intent broadcast to the main activity failed.");
+        }
     }
 
     public Trip getTrip() {
@@ -132,7 +161,7 @@ public class TripRecorder  {
                 trip.distance += GpsThief.distance(lastEvent, event);
             }
 
-            Log.d(TAG, "Saving Patterns... ");
+//            Log.d(TAG, "Saving Patterns... ");
             lastEvent = event;
             event.trip = trip;
         }
@@ -141,9 +170,6 @@ public class TripRecorder  {
         trip.save();
 
         Log.d(TAG, "Done");
-        //only do this if the map is active-- TODO: implement way of notifying Bengal of new coordinates
-        //if (true)
-        //    events.addAll(events);
     }
 
     public void newReading(Reading reading) {
@@ -170,6 +196,8 @@ public class TripRecorder  {
             Log.e(TAG, "Incomplete period.");
             return;
         }
+
+        Log.i(TAG, "Scoring new period");
 
         if (useNeuralNetork) {
 

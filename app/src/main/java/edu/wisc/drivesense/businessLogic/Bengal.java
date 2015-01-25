@@ -3,10 +3,7 @@ package edu.wisc.drivesense.businessLogic;
 import android.content.Context;
 import android.util.Log;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.SugarDatabse;
@@ -14,8 +11,8 @@ import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.server.ConnectionManagerCallback;
-import edu.wisc.drivesense.views.PinMapFragment;
-import edu.wisc.drivesense.views.TripsListViewFragment;
+import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
+import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
 
 /**
  * Created by Damouse on 12/19/2014.
