@@ -1,6 +1,7 @@
 package edu.wisc.drivesense.model;
 
 import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
 import com.orm.SugarRecord;
 
 /**
@@ -8,6 +9,7 @@ import com.orm.SugarRecord;
  */
 public class User extends SugarRecord<User> {
     @Expose
+    @SerializedName("id")
     public int backendId;
 
     @Expose

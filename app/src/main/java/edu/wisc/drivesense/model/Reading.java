@@ -11,7 +11,7 @@ import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampSortable;
  * sensor values.
  *
  * Expect values[] to contain [x, y, z] for a sensor, with the only major exception
- * being GPS, in which case they're [speed, lat, long]
+ * being gps, in which case they're [speed, lat, long]
  *
  * Oh, man. Huuuuge issue with timestamps not being accurate...
  * See here: https://code.google.com/p/android/issues/detail?id=78858

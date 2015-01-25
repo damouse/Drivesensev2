@@ -3,8 +3,6 @@ package edu.wisc.drivesense.views;
 import android.content.Context;
 import android.graphics.*;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.model.MappableEvent;
 
@@ -32,16 +30,16 @@ public class BitmapLoader {
     public Bitmap getBitmap(MappableEvent event) {
         Bitmap result = null;
 
-        if (event.type == MappableEvent.Type.ACCELERATION)
+        if (event.type == MappableEvent.Type.acceleration)
             result = getAccelerationBitmap();
 
-        else if (event.type == MappableEvent.Type.BRAKE)
+        else if (event.type == MappableEvent.Type.brake)
             result = getBrakeBitmap();
 
-        else if (event.type == MappableEvent.Type.TURN)
+        else if (event.type == MappableEvent.Type.turn)
             result = getTurnnBitmap();
 
-        else if (event.type == MappableEvent.Type.LANE_CHANGE)
+        else if (event.type == MappableEvent.Type.lanechange)
             result = getLaneChangeBitmap();
 
 

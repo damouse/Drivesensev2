@@ -42,10 +42,10 @@ public class Trip extends SugarRecord<Trip> {
 
     @Expose
     @Ignore
+    @SerializedName("mappable_events_attributes")
     public List<MappableEvent> mappable_events;
 
     @Expose
-    @SerializedName("scoreAverage")
     public int score;
 
     public User user;
@@ -95,7 +95,7 @@ public class Trip extends SugarRecord<Trip> {
         sb.append(" distance: " + distance);
         sb.append(" duration: " + duration);
 
-        sb.append(" GPS: " + gpsCount);
+        sb.append(" gps: " + gpsCount);
 
         sb.append("\nnumber of total patterns: " + patternCount);
 

@@ -8,9 +8,7 @@ import java.util.Date;
 import java.util.List;
 
 import edu.wisc.drivesense.model.MappableEvent;
-import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.model.User;
 
 /**
  * Created by Damouse on 12/16/2014.
@@ -60,7 +58,7 @@ public class MappableEventTest extends TestCase {
     @Test
     public void testTripPersistsData() {
         event.timestamp = new Date().getTime();
-        event.type = MappableEvent.Type.ACCELERATION;
+        event.type = MappableEvent.Type.acceleration;
         event.score = 1;
 
         event.save();

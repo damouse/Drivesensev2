@@ -10,7 +10,6 @@ import edu.wisc.drivesense.model.DrivingPattern;
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Reading;
 
-import edu.wisc.drivesense.scoring.common.GpsThief;
 import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
 import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
 import edu.wisc.drivesense.scoring.projected.patterns.BrakeExtraction;
@@ -52,7 +51,7 @@ public class ProjectedScoreKeeper {
     /**
      * Returns an array list of the driving events that occured in this period.
      *
-     * These events are scored (if they're patterns) with redundant GPS coordinates removed.
+     * These events are scored (if they're patterns) with redundant gps coordinates removed.
      */
     public TimestampQueue<DrivingPattern> getDrivingEvents(DataSetInput period) {
 //        rotationMatrix = PreProcess.calculateRotationMatricies(period, context).getContents();
@@ -123,19 +122,19 @@ public class ProjectedScoreKeeper {
     private static void getScores(ArrayList<DrivingPattern> patterns, List<Reading> accelerometer) {
         Log.i(TAG, "Scoring...");
         for (DrivingPattern pattern : patterns) {
-            if (pattern.type == MappableEvent.Type.BRAKE) {
+            if (pattern.type == MappableEvent.Type.brake) {
                 double temp = PatternEvaluation.evaluate_brake(pattern, accelerometer);
                 pattern.score = (100 - (1.0 - temp) / 0.006);
 
                 if (pattern.score < 60.0) pattern.score = 60.0;
                 pattern.score = (pattern.score / 4.0 - 15.0) * 10.0;
-            } else if (pattern.type == MappableEvent.Type.ACCELERATION) {
+            } else if (pattern.type == MappableEvent.Type.acceleration) {
                 double temp = PatternEvaluation.evaluate_acceleration(pattern, accelerometer);
                 pattern.score = (100 - (1.0 - temp) / 0.006);
-            } else if (pattern.type == MappableEvent.Type.TURN) {
+            } else if (pattern.type == MappableEvent.Type.turn) {
                 double temp = PatternEvaluation.evaluate_turn(pattern, accelerometer);
                 pattern.score = (100 - (1.0 - temp) / 0.006);
-            } else if (pattern.type == MappableEvent.Type.LANE_CHANGE) {
+            } else if (pattern.type == MappableEvent.Type.lanechange) {
                 double temp = PatternEvaluation.evaluate_lanechange(pattern, accelerometer);
                 pattern.score = (100 - (1.0 - temp) / 0.006);
             }

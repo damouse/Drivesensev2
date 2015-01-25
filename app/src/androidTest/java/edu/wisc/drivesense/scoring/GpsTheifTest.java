@@ -34,9 +34,9 @@ public class GpsTheifTest extends TestCase {
         b = new MappableEvent();
         c = new MappableEvent();
 
-        a.type = MappableEvent.Type.GPS;
-        b.type = MappableEvent.Type.GPS;
-        c.type = MappableEvent.Type.GPS;
+        a.type = MappableEvent.Type.gps;
+        b.type = MappableEvent.Type.gps;
+        c.type = MappableEvent.Type.gps;
 
         //patterns
 //        for (int i = 0; i < n; i++) {
@@ -145,7 +145,7 @@ public class GpsTheifTest extends TestCase {
         b.longitude = -89.400558 - coordinateIncrement;
         c.longitude = -89.400558 - coordinateIncrement * 2;
 
-        b.type = MappableEvent.Type.ACCELERATION;
+        b.type = MappableEvent.Type.acceleration;
 
         ArrayList<MappableEvent> points = new ArrayList<MappableEvent>();
         points.add(a);
@@ -155,7 +155,7 @@ public class GpsTheifTest extends TestCase {
         List<MappableEvent> result = GpsThief.ramerDouglasPeuckerFunction(points);
         assertEquals(3, result.size());
 
-        b.type = MappableEvent.Type.GPS;
+        b.type = MappableEvent.Type.gps;
     }
 
     void reset() {

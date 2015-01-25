@@ -25,7 +25,7 @@ public class Seatbelt {
 
     /**
      * Given a user, check to make sure recording is cleared to occur-- ensure the device is
-     * powered, GPS is on, a gyroscope exists, etc. If any of these checks fail, return false
+     * powered, gps is on, a gyroscope exists, etc. If any of these checks fail, return false
      * and show an alert.
      *
      * @param user the active user
@@ -54,7 +54,7 @@ public class Seatbelt {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         allClear = allClear && locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
 
-        //check for Accelerometer and GPS presence
+        //check for Accelerometer and gps presence
 
         return allClear;
     }

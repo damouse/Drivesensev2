@@ -43,8 +43,8 @@ import android.widget.Toast;
 /**
  * A wrapper class for the map that takes up most of the main screen of the application. 
  * 
- * Relies on SensorMonitor for GPS updates to consolidate the objects that have to 
- * listen for GPS updates.
+ * Relies on SensorMonitor for gps updates to consolidate the objects that have to
+ * listen for gps updates.
  * 
  * Display's the users location, traces along the map when recording, displays the saved
  * trips when in display mode.

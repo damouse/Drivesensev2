@@ -88,9 +88,9 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
 /* Sensor Callbacks */
 
     /**
-     * Reports GPS position
+     * Reports gps position
      * <p/>
-     * If listening, stores the last GPS coordinate where the displacement was at least 20 meteres.
+     * If listening, stores the last gps coordinate where the displacement was at least 20 meteres.
      * <p/>
      * If this location is updated, inform the service we are likely moving
      * <p/>
@@ -107,7 +107,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
 //
 //        switch (event.sensor.getType()) {
 //            case Sensor.TYPE_ACCELEROMETER:
-//                type = ReadingType.ACCELERATION;
+//                type = ReadingType.acceleration;
 //                break;
 //
 //            case Sensor.TYPE_GYROSCOPE:

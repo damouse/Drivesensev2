@@ -71,7 +71,7 @@ public class BrakeExtraction {
                     in_deceleration = false;
 
                     interDec.end = accelerometer.get(i - 1).timestamp;
-                    interDec.type = MappableEvent.Type.BRAKE;
+                    interDec.type = MappableEvent.Type.brake;
                     decelerations.add(interDec);
                 }
             }
@@ -82,7 +82,7 @@ public class BrakeExtraction {
 		 * if all the points are static*/
         if (null != interDec && interDec.end == -1) {
             interDec.end = accelerometer.get(sz - 1).timestamp;
-            interDec.type = MappableEvent.Type.BRAKE;
+            interDec.type = MappableEvent.Type.brake;
             decelerations.add(interDec);
         }
         return decelerations;
@@ -126,13 +126,13 @@ public class BrakeExtraction {
                 if (in_acceleration) {
                     in_acceleration = false;
                     interAcc.end = accelerometer.get(i - 1).timestamp;
-                    interAcc.type = MappableEvent.Type.ACCELERATION;
+                    interAcc.type = MappableEvent.Type.acceleration;
                     intervals.add(interAcc);
                 }
             }
             if (null != interAcc && interAcc.end == -1) {
                 interAcc.end = accelerometer.get(sz - 1).timestamp;
-                interAcc.type = MappableEvent.Type.ACCELERATION;
+                interAcc.type = MappableEvent.Type.acceleration;
                 intervals.add(interAcc);
             }
         }

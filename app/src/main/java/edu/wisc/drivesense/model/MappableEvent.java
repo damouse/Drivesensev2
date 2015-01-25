@@ -9,24 +9,23 @@ import com.orm.SugarRecord;
 /**
  * The only model object that gets put on the map either on the app or on the site.
  *
- * Created from GPS coordinates or nothing.
+ * Created from gps coordinates or nothing.
  */
 public class MappableEvent extends SugarRecord<MappableEvent> {
     public static enum Type {
-        ACCELERATION,
-        BRAKE,
-        TURN,
-        LANE_CHANGE,
-        STOP,
-        GPS,
-        UNSET
+        acceleration,
+        brake,
+        turn,
+        lanechange,
+        stop,
+        gps,
+        unset
     }
 
     @Expose
     @SerializedName("time_stamp")
     public long timestamp;
 
-    @Expose
     @SerializedName("time_stamp_end")
     public long timestampEnd;
 
@@ -46,6 +45,7 @@ public class MappableEvent extends SugarRecord<MappableEvent> {
     public double speed;
 
     @Expose
+    @SerializedName("pattern_type")
     public Type type;
 
     @Expose
@@ -59,7 +59,7 @@ public class MappableEvent extends SugarRecord<MappableEvent> {
         latitude = 0;
         longitude = 0;
         speed = 0;
-        type = Type.UNSET;
+        type = Type.unset;
         score = 0;
     }
 
@@ -75,7 +75,7 @@ public class MappableEvent extends SugarRecord<MappableEvent> {
         latitude = gps.values[1];
         longitude = gps.values[2];
 
-        type = Type.GPS;
+        type = Type.gps;
     }
 
     public MappableEvent(Reading gps_start, Reading gps_end, DrivingPattern pattern) {

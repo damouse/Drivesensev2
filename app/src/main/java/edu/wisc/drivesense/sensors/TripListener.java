@@ -87,7 +87,7 @@ public class TripListener {
 
     /* Orphaned Code */
     /**
-     * If GPS points stop coming in for a given amount of time, assume the trip has ended.
+     * If gps points stop coming in for a given amount of time, assume the trip has ended.
      *
      * onLocationChanged sets the silenceBroken flag, this method unsets it. If this method
      * should run and see the flag unset, assume the location has not been updated since the last
@@ -98,7 +98,7 @@ public class TripListener {
         @Override
         //posts location updates every second for 2 minutes
         public void run() {
-        Log.d(TAG, "No GPS updates received, advising trip end");
+        Log.d(TAG, "No gps updates received, advising trip end");
         BackgroundRecordingService.getInstance().stateManager.adviseTripEnd();
         }
     };

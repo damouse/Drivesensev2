@@ -4,7 +4,7 @@ public class Constants {
 
     public static final double kEarthGravity = 9.80665; /*m^2/s*/
 
-    /*for GPS*/
+    /*for gps*/
     public static final double kSmallEPSILON = 1e-8;
     public static final double kEarthRadius = 6371 * 1000; /*m*/
 
@@ -49,7 +49,7 @@ public class Constants {
     public static final String kAccelerometer = "ACCELEROMETER";
     public static final String kGravity = "GRAVITY";
     public static final String kLight = "LIGHT";
-    public static final String kGPS = "GPS";
+    public static final String kGPS = "gps";
     
 
     /*====================database related======================================================*/

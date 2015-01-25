@@ -49,7 +49,7 @@ import edu.wisc.drivesense.views.TaskbarNotifications;
  * - Power state (connected, disconnected)
  * <p/>
  * TODO
- * Check for GPS avaliability
+ * Check for gps avaliability
  * Check saved trips for minimum length and duration before committing
  *
  * @author Damouse
@@ -178,7 +178,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     }
 
     private void setRecordingAndListenening(boolean rec, boolean listen) {
-        //turn check if GPS needs to be turned on or off
+        //turn check if gps needs to be turned on or off
         if (rec) {
             monitor.startCollecting();
         } else {

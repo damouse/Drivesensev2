@@ -39,7 +39,7 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
             LatLng coord = new LatLng(reading.latitude, reading.longitude);
             info.addCoordinate(coord);
 
-            if (reading.type != MappableEvent.Type.GPS) {
+            if (reading.type != MappableEvent.Type.gps) {
                 info.patterns.add(createOverlay(reading, coord));
             }
         }
@@ -75,16 +75,16 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
         marker.snippet("Score: " + event.score);
         marker.icon(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));
 
-        if (event.type == MappableEvent.Type.ACCELERATION)
+        if (event.type == MappableEvent.Type.acceleration)
             marker.title("Acceleration");
 
-        else if (event.type == MappableEvent.Type.BRAKE)
+        else if (event.type == MappableEvent.Type.brake)
             marker.title("Brake");
 
-        else if (event.type == MappableEvent.Type.TURN)
+        else if (event.type == MappableEvent.Type.turn)
             marker.title("Turn");
 
-        else if (event.type == MappableEvent.Type.LANE_CHANGE)
+        else if (event.type == MappableEvent.Type.lanechange)
             marker.title("Lane Change");
 
         else

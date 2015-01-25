@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import edu.wisc.drivesense.views.BitmapLoader;
 
 public class TripsListViewFragment extends ListFragment  {
 	private static final String TAG = "TripsListViewFragment";
@@ -146,6 +147,7 @@ public class TripsListViewFragment extends ListFragment  {
             holder.day.setText(Utils.dayOfWeek(current.timestamp));
             holder.time.setText(Utils.startEndTime(current.timestamp, current.duration));
             holder.distance.setText(Utils.formatDistance(current.distance));
+            holder.cell.setBackgroundColor(BitmapLoader.colorForScore(current.score));
 
             return convertView;
         }

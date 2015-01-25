@@ -17,7 +17,7 @@ import edu.wisc.drivesense.utilities.Utils;
 /**
  * Created by Damouse on 12/15/2014.
  * <p/>
- * Comes in the night and steals all of your GPS coordinates!
+ * Comes in the night and steals all of your gps coordinates!
  * <p/>
  * Or at least the ones that arent needed.
  */
@@ -29,7 +29,7 @@ public class GpsThief {
      * Given the current chunk of data and a window X into the past, make the gps coordinates more sparse
      * using a RamerDouglasPeucker function with an epsilon measured in miles.
      *
-     * More specifically, removes GPS points that deviate from a straight line at least epsilon.
+     * More specifically, removes gps points that deviate from a straight line at least epsilon.
      *
      * Assumes all relevant arrays are sorted
      */
@@ -45,7 +45,7 @@ public class GpsThief {
     }
 
     /**
-     * Find closest GPS coordinate to each pattern, create a mappable event, and remove that gps coordinate
+     * Find closest gps coordinate to each pattern, create a mappable event, and remove that gps coordinate
      *
      * Assumes there are enough coordinates to actually perform the mapping accurately. May not be true.
      *
@@ -94,7 +94,7 @@ public class GpsThief {
             MappableEvent event = events.get(i);
 
             //break early if a pattern is found-- we want to split on it no matter what
-            if (event.type != MappableEvent.Type.GPS) {
+            if (event.type != MappableEvent.Type.gps) {
                 dmax = Double.MAX_VALUE;
                 index = i;
                 break;

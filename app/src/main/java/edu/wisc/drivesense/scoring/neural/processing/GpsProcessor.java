@@ -11,7 +11,7 @@ import static edu.wisc.drivesense.scoring.neural.processing.GeneralProcessor.nor
 public class GpsProcessor {
     //1 m/s = this many miles per hour
     public static final double MPH_PER_MS = 2.23694;
-    //how many past GPS readings should we search through to determine speed and bearing?
+    //how many past gps readings should we search through to determine speed and bearing?
     public static int memoryWindow = 1;
     //Speed is normalized to the range [-1, 1]. Theses variables determine the range of the
     //incoming speed values in MPH.
@@ -21,10 +21,10 @@ public class GpsProcessor {
     private static double angleNormalization = 45;
 
     /**
-     * Main entry point for GPS preprocessing. Calcualtes GPS speed and angle.
+     * Main entry point for gps preprocessing. Calcualtes gps speed and angle.
      * <p/>
-     * Requires a window of the last chunk of readings to determine GPS speed difference. This is
-     * to account for the fact that GPS updates may occur less frequently than the period sampling size--
+     * Requires a window of the last chunk of readings to determine gps speed difference. This is
+     * to account for the fact that gps updates may occur less frequently than the period sampling size--
      * you may get more
      *
      * @return
@@ -35,7 +35,7 @@ public class GpsProcessor {
     }
 
     /**
-     * Returns the change in speed over the GPS coordinates as a double.
+     * Returns the change in speed over the gps coordinates as a double.
      *
      * @return
      */
@@ -58,7 +58,7 @@ public class GpsProcessor {
     }
 
     /**
-     * Calculate the bearing for this set of GPS coordinates.
+     * Calculate the bearing for this set of gps coordinates.
      */
     private static double calculateBearing(TimestampQueue memory, double[] currentGpsValues) {
         if (memory.size() == 0)

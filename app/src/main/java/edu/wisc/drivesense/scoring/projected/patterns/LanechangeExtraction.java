@@ -84,7 +84,7 @@ public class LanechangeExtraction {
                         if (isLanechange(gyroscope, new_pattern)) {
                             new_pattern.start = new_pattern.start - 1000;
                             new_pattern.end = new_pattern.end + 1000;
-                            new_pattern.type = MappableEvent.Type.LANE_CHANGE;
+                            new_pattern.type = MappableEvent.Type.lanechange;
                             patterns.add(new_pattern);
                         }
                         new_pattern = null;
@@ -98,7 +98,7 @@ public class LanechangeExtraction {
             if (isLanechange(gyroscope, new_pattern)) {
                 new_pattern.start = new_pattern.start - 1000;
                 new_pattern.end = new_pattern.end + 1000;
-                new_pattern.type = MappableEvent.Type.LANE_CHANGE;
+                new_pattern.type = MappableEvent.Type.lanechange;
                 patterns.add(new_pattern);
             }
             new_pattern = null;
@@ -162,7 +162,7 @@ public class LanechangeExtraction {
                         if (isLanechangeByAccelerometer(accelerometer, new_pattern)) {
                             new_pattern.start = new_pattern.start - 1000;
                             new_pattern.end = new_pattern.end + 1000;
-                            new_pattern.type = MappableEvent.Type.LANE_CHANGE;
+                            new_pattern.type = MappableEvent.Type.lanechange;
                             patterns.add(new_pattern);
                         }
                         new_pattern = null;
@@ -176,7 +176,7 @@ public class LanechangeExtraction {
             if (isLanechangeByAccelerometer(accelerometer, new_pattern)) {
                 new_pattern.start = new_pattern.start - 1000;
                 new_pattern.end = new_pattern.end + 1000;
-                new_pattern.type = MappableEvent.Type.LANE_CHANGE;
+                new_pattern.type = MappableEvent.Type.lanechange;
                 patterns.add(new_pattern);
             }
             new_pattern = null;

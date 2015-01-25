@@ -5,19 +5,16 @@ package edu.wisc.drivesense.businessLogic;
         import android.os.Handler;
         import android.util.Log;
 
-        import java.util.ArrayList;
         import java.util.Date;
         import java.util.List;
 
         import edu.wisc.drivesense.model.DrivingPattern;
         import edu.wisc.drivesense.model.MappableEvent;
         import edu.wisc.drivesense.model.Reading;
-        import edu.wisc.drivesense.model.SugarDatabse;
         import edu.wisc.drivesense.model.Trip;
         import edu.wisc.drivesense.model.User;
         import edu.wisc.drivesense.scoring.common.DataReceiver;
         import edu.wisc.drivesense.scoring.common.GpsThief;
-        import edu.wisc.drivesense.scoring.common.ScoreKeeperDelegate;
         import edu.wisc.drivesense.scoring.neural.modelObjects.DataSetInput;
         import edu.wisc.drivesense.scoring.neural.modelObjects.TimestampQueue;
         import edu.wisc.drivesense.scoring.projected.ProjectedScoreKeeper;
@@ -137,22 +134,22 @@ public class TripRecorder  {
 
         //not async! be careful
         for (MappableEvent event: events) {
-            if (event.type == MappableEvent.Type.ACCELERATION) {
+            if (event.type == MappableEvent.Type.acceleration) {
                 trip.scoreAccels += event.score;
                 trip.numAccels++;
             }
 
-            if (event.type == MappableEvent.Type.BRAKE) {
+            if (event.type == MappableEvent.Type.brake) {
                 trip.scoreBrakes += event.score;
                 trip.numBrakes++;
             }
 
-            if (event.type == MappableEvent.Type.TURN) {
+            if (event.type == MappableEvent.Type.turn) {
                 trip.scoreTurns += event.score;
                 trip.numTurns++;
             }
 
-            if (event.type == MappableEvent.Type.LANE_CHANGE) {
+            if (event.type == MappableEvent.Type.lanechange) {
                 trip.scoreLaneChanges += event.score;
                 trip.numLaneChanges++;
             }
@@ -208,7 +205,7 @@ public class TripRecorder  {
         }
 
         List<MappableEvent> events = GpsThief.getSparseCoordinates(period.gps, patterns);
-        Log.i(TAG, "New Period- GPS coordinates-  " + period.gps.size() + " Patterns: " + patterns.size());
+        Log.i(TAG, "New Period- gps coordinates-  " + period.gps.size() + " Patterns: " + patterns.size());
         newPatterns(events);
     }
 }

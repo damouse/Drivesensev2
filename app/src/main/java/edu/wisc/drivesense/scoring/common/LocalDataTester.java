@@ -53,8 +53,8 @@ public class LocalDataTester {
 //        readAndLoad("magnet.txt", context, Reading.Type.MAGNETIC);
 //        readAndLoad("gyro.txt", context, Reading.Type.GYROSCOPE);
 //        readAndLoad("gravity.txt", context, Reading.Type.GRAVITY);
-//        readAndLoad("gps.txt", context, Reading.Type.GPS);
-//        readAndLoad("acceleration.txt", context, Reading.Type.ACCELERATION);
+//        readAndLoad("gps.txt", context, Reading.Type.gps);
+//        readAndLoad("acceleration.txt", context, Reading.Type.acceleration);
 
         TimestampQueue<Reading> allData = new TimestampQueue<Reading>();
         ArrayList<TimestampQueue<Reading>> allQueus = new ArrayList<>();

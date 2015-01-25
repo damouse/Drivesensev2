@@ -88,7 +88,7 @@ public class TurnExtraction {
                 if (inTurn) {
                     inTurn = false;
                     new_pattern.end = gyroscope.get(i - 1).timestamp;
-                    new_pattern.type = MappableEvent.Type.TURN;
+                    new_pattern.type = MappableEvent.Type.turn;
                     if (isTurn(gyroscope, new_pattern)) {
                         patterns.add(new_pattern);
                     }
@@ -98,7 +98,7 @@ public class TurnExtraction {
         }
         if (null != new_pattern) {
             new_pattern.end = gyroscope.get(sz - 1).timestamp;
-            new_pattern.type = MappableEvent.Type.TURN;
+            new_pattern.type = MappableEvent.Type.turn;
             if (isTurn(gyroscope, new_pattern)) {
                 patterns.add(new_pattern);
             }
@@ -146,7 +146,7 @@ public class TurnExtraction {
                 if (inTurn) {
                     inTurn = false;
                     new_pattern.end = accelerometer.get(i - 1).timestamp;
-                    new_pattern.type = MappableEvent.Type.TURN;
+                    new_pattern.type = MappableEvent.Type.turn;
                     if (new_pattern.end - new_pattern.start >= 2000) {
                         patterns.add(new_pattern);
                     }
@@ -156,7 +156,7 @@ public class TurnExtraction {
         }
         if (null != new_pattern) {
             new_pattern.end = accelerometer.get(sz - 1).timestamp;
-            new_pattern.type = MappableEvent.Type.TURN;
+            new_pattern.type = MappableEvent.Type.turn;
             if (new_pattern.end - new_pattern.start >= 2000) {
                 patterns.add(new_pattern);
             }

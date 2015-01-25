@@ -209,7 +209,7 @@ public class BackgroundState extends Observable {
             if (!(powered || automaticUnpoweredRecording))
                 stateString = "Waiting for device power...";
             else if (!gpsAvailable)
-                stateString = "Waiting for GPS to be turned on...";
+                stateString = "Waiting for gps to be turned on...";
             else
                 stateString = "Waiting for sensors...";
         }
