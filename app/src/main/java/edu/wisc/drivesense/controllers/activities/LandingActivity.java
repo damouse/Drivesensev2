@@ -28,7 +28,7 @@ import java.util.List;
 
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
-        MenuFragment.MenuDelegate, SettingsFragment.OnFragmentInteractionListener,
+        MenuFragment.MenuDelegate,
         TripsListViewFragment.TripSelectedListener, StatsFragment.OnFragmentInteractionListener {
 
     private static final String TAG = "LandingActivity";
@@ -99,6 +99,14 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void loadUser() {
         User user = Concierge.getCurrentUser();
         fragmentList.setUser(user);
+    }
+
+    /**
+     * Called when the user changes a setting. Some of these may require a change in UI state
+     * or turning on the background service
+     */
+    public void userStateChanged() {
+        //TODO: implement
     }
 
 

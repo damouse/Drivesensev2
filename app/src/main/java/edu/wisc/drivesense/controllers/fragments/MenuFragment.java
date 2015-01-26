@@ -66,21 +66,24 @@ public class MenuFragment extends Fragment {
      * Populate the menu options from the saved Demo user. Each line is a seperate line in the
      * menu and a different option for the user
      */
-    private void setOptions(User user) {
-
+    private void setOptions(final User user) {
         //Automatic or Manual Recording
-        optionAutomaticRecording.initialize("Automatic Recording", "Record when a trip starts", true, new MenuOption.MenuOptionDelegate() {
+        optionAutomaticRecording.initialize("Automatic Recording", "Record when a trip starts", user.isAutomaticRecording(), new MenuOption.MenuOptionDelegate() {
             @Override
             public void onMenuOptionClick(String title, boolean newValue) {
-                Log.d(TAG, "Menu Button Pressed");
+                user.setAutomaticRecording(newValue);
+                user.save();
+                delegate.userStateChanged();
             }
         });
 
         //Uploads
-        optionUploading.initialize("Uploading", "Upload trips to knowmydrive.com", true, new MenuOption.MenuOptionDelegate() {
+        optionUploading.initialize("Uploading", "Upload trips to knowmydrive.com", user.isAutomaticUploading(), new MenuOption.MenuOptionDelegate() {
             @Override
             public void onMenuOptionClick(String title, boolean newValue) {
-                Log.d(TAG, "Menu Button Pressed");
+                user.setAutomaticUploading(newValue);
+                user.save();
+                delegate.userStateChanged();
             }
         });
     }
@@ -227,5 +230,6 @@ public class MenuFragment extends Fragment {
     /* Activity Callbacks */
     public interface MenuDelegate {
         public void loadUser();
+        public void userStateChanged();
     }
 }

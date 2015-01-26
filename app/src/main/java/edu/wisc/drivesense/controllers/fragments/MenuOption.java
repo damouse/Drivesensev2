@@ -84,6 +84,15 @@ public class MenuOption extends Fragment {
         setVisibility();
     }
 
+    /**
+     * Sets the orientation of this menu line to be Right instead of the default left.
+     *
+     * This changes the justification of the text and the position of the drawable
+     */
+    public void setRightOrientation() {
+
+    }
+
 
     /* Animation and Management */
     private class ButtonListner implements View.OnClickListener {
