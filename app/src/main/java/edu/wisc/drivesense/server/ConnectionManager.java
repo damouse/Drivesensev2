@@ -50,8 +50,6 @@ public class ConnectionManager {
      * Issue login api call. Does not perform the logging in (as it pertains to the models)
      */
     public void logIn(String email, String password, final ConnectionManagerCallback callback) {
-        AsyncHttpClient client = new AsyncHttpClient();
-
         JsonObject json = new JsonObject();
         json.addProperty("user_email", email);
         json.addProperty("user_password", password);
@@ -283,4 +281,12 @@ public class ConnectionManager {
             delegate.onConnectionFailed("something has gone wrong");
         }
     }
+
+
+    /* Callback interface */
+    public interface ConnectionManagerCallback {
+        public void onConnectionCompleted(Object... result);
+        public void onConnectionFailed(String message);
+    }
+
 }

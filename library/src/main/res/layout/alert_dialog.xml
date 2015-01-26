@@ -101,23 +101,6 @@
     </FrameLayout>
 
     <FrameLayout
-        android:id="@+id/login_frame"
-        android:layout_width="53dp"
-        android:layout_height="53dp"
-        android:layout_marginTop="5dp"
-        android:visibility="gone">
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@drawable/warning_circle" />
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
-
-    <FrameLayout
         android:id="@+id/progress_dialog"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -156,6 +139,30 @@
         android:visibility="gone" />
 
     <LinearLayout
+        android:id="@+id/login_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <EditText
+            android:id="@+id/edittextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Email"/>
+
+        <EditText
+            android:id="@+id/edittextPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/stock"
         android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -173,5 +180,31 @@
             android:id="@+id/confirm_button"
             style="@style/dialog_blue_button"
             android:text="@string/dialog_ok" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/login_buttons"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/buttonLogin"
+            style="@style/dialog_blue_button"
+            android:background="@drawable/gray_button_background"
+            android:layout_marginRight="10dp"
+            android:text="Login" />
+
+        <Button
+            android:id="@+id/buttonRegister"
+            style="@style/dialog_blue_button"
+            android:text="Register" />
+
+        <Button
+            android:id="@+id/buttonCancel"
+            style="@style/dialog_blue_button"
+            android:text="Cancel" />
     </LinearLayout>
 </LinearLayout>

@@ -10,9 +10,12 @@ import android.view.ViewGroup;
 
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.Concierge;
 import edu.wisc.drivesense.model.User;
+import edu.wisc.drivesense.server.ConnectionManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -49,12 +52,12 @@ public class MenuFragment extends Fragment {
         optionAutomaticRecording = (MenuOption) getFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
         optionUploading = (MenuOption) getFragmentManager().findFragmentById(R.id.optionUploading);
 
-        setOptions(user);
-        setLogin(user);
-
         buttonLogin = (Button) result.findViewById(R.id.login);
         buttonLogin.setOnClickListener(new ButtonListner());
         textviewName = (TextView) result.findViewById(R.id.textviewName);
+
+        setOptions(user);
+        setLogin(user);
 
         return result;
     }
@@ -126,17 +129,100 @@ public class MenuFragment extends Fragment {
         @Override
         public void onClick(View arg0) {
             if (user.demoUser()) {
+                showLoginDialog();
+            }
+            else {
                 Concierge.logOut();
                 user = Concierge.getCurrentUser();
                 setLogin(user);
                 delegate.loadUser();
             }
-            else {
-
-            }
         }
     }
 
+
+    /* Login  */
+    private void showLoginDialog() {
+        new SweetAlertDialog(getActivity(), SweetAlertDialog.LOGIN_TYPE)
+            .setTitleText("Log In")
+            .setContentText("Log in or Register")
+            .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    //do nothing on cancel
+                }
+            })
+            .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    login(sweetAlertDialog);
+                }
+            })
+            .setRegisterClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                @Override
+                public void onClick(SweetAlertDialog sweetAlertDialog) {
+                    register(sweetAlertDialog);
+                }
+            })
+            .show();
+    }
+
+    private boolean sanitize(String email, String password) {
+        if (email.equals("") || password.equals("")) {
+            Toast.makeText(getActivity(), "Email or Password was blank", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
+    }
+
+    private void login(final SweetAlertDialog dialog) {
+        String email = dialog.getEmail();
+        String password = dialog.getPassword();
+
+        if (!sanitize(email, password))
+            return;
+
+        ConnectionManager api = new ConnectionManager(getActivity());
+        api.logIn(email, password, new ConnectionManager.ConnectionManagerCallback() {
+            @Override
+            public void onConnectionCompleted(Object... result) {
+                User user = (User) result[0];
+                Concierge.logIn(user);
+                dialog.dismissWithAnimation();
+                setLogin(user);
+            }
+
+            @Override
+            public void onConnectionFailed(String message) {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void register(final SweetAlertDialog dialog) {
+        String email = dialog.getEmail();
+        String password = dialog.getPassword();
+
+        if (!sanitize(email, password))
+            return;
+
+        ConnectionManager api = new ConnectionManager(getActivity());
+        api.register(email, password, new ConnectionManager.ConnectionManagerCallback() {
+            @Override
+            public void onConnectionCompleted(Object... result) {
+                User user = (User) result[0];
+                Concierge.logIn(user);
+                dialog.dismissWithAnimation();
+                setLogin(user);
+            }
+
+            @Override
+            public void onConnectionFailed(String message) {
+                Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
 
     /* Activity Callbacks */
     public interface MenuDelegate {

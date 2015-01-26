@@ -12,10 +12,7 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.view.animation.Transformation;
-import android.widget.Button;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.widget.*;
 
 import com.pnikosis.materialishprogress.ProgressWheel;
 
@@ -42,6 +39,7 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private FrameLayout mErrorFrame;
     private FrameLayout mSuccessFrame;
     private FrameLayout mProgressFrame;
+    private LinearLayout mLoginFrame;
     private SuccessTickView mSuccessTick;
     private ImageView mErrorX;
     private View mSuccessLeftMask;
@@ -55,6 +53,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private OnSweetClickListener mCancelClickListener;
     private OnSweetClickListener mConfirmClickListener;
     private boolean mCloseFromCancel;
+
+    //new additions
+    private LinearLayout layoutStockButtons;
+    private LinearLayout layoutLoginButtons;
+    private OnSweetClickListener registerClickListener;
+    private EditText editextEmail;
+    private EditText editextPassword;
 
     public static final int NORMAL_TYPE = 0;
     public static final int ERROR_TYPE = 1;
@@ -158,6 +163,13 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mConfirmButton.setOnClickListener(this);
         mCancelButton.setOnClickListener(this);
 
+        //new Additions
+        layoutLoginButtons = (LinearLayout) findViewById(R.id.login_buttons);
+        layoutStockButtons = (LinearLayout) findViewById(R.id.stock);
+        mLoginFrame = (LinearLayout) findViewById(R.id.login_frame);
+        editextEmail = (EditText) findViewById(R.id.edittextEmail);
+        editextPassword = (EditText) findViewById(R.id.edittextPassword);
+
         setTitleText(mTitleText);
         setContentText(mContentText);
         setCancelText(mCancelText);
@@ -220,6 +232,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
                 case PROGRESS_TYPE:
                     mProgressFrame.setVisibility(View.VISIBLE);
                     mConfirmButton.setVisibility(View.GONE);
+                    break;
+                case LOGIN_TYPE:
+                    mLoginFrame.setVisibility(View.VISIBLE);
+                    layoutLoginButtons.setVisibility(View.VISIBLE);
+                    layoutStockButtons.setVisibility(View.GONE);
                     break;
             }
             if (!fromCreate) {
@@ -334,6 +351,11 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         return this;
     }
 
+    public SweetAlertDialog setRegisterClickListener (OnSweetClickListener listener) {
+        registerClickListener = listener;
+        return this;
+    }
+
     protected void onStart() {
         mDialogView.startAnimation(mModalInAnim);
         playAnimation();
@@ -362,22 +384,37 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
 
     @Override
     public void onClick(View v) {
-        if (v.getId() == R.id.cancel_button) {
+        if (v.getId() == R.id.cancel_button || v.getId() == R.id.buttonCancel) {
             if (mCancelClickListener != null) {
                 mCancelClickListener.onClick(SweetAlertDialog.this);
             } else {
                 dismissWithAnimation();
             }
-        } else if (v.getId() == R.id.confirm_button) {
+        } else if (v.getId() == R.id.confirm_button || v.getId() == R.id.buttonLogin) {
             if (mConfirmClickListener != null) {
                 mConfirmClickListener.onClick(SweetAlertDialog.this);
             } else {
                 dismissWithAnimation();
             }
         }
+        else if (v.getId() == R.id.buttonRegister) {
+            if (registerClickListener != null) {
+                registerClickListener.onClick(SweetAlertDialog.this);
+            }
+        }
+
     }
 
     public ProgressHelper getProgressHelper () {
         return mProgressHelper;
+    }
+
+    /* New Methods */
+    public String getEmail() {
+        return editextEmail.getText().toString();
+    }
+
+    public String getPassword() {
+        return editextPassword.getText().toString();
     }
 }
