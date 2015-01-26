@@ -60,7 +60,7 @@ public class TripRecorder  {
 
         trip = new Trip();
         trip.user = user;
-        trip.timestamp = new Date().getTime();
+        trip.timestamp = 0;
         trip.save();
 
         Log.d(TAG, "Recording trip: " + trip.getId());
@@ -155,13 +155,16 @@ public class TripRecorder  {
             }
 
             if (lastEvent != null) {
-                trip.distance += GpsThief.distance(lastEvent, event);
+                trip.distance += GpsThief.distance(lastEvent, event) / Utils.MILES_TO_FEET;
             }
 
-//            Log.d(TAG, "Saving Patterns... ");
             lastEvent = event;
             event.trip = trip;
         }
+
+        //the first pattern marks the start time of the trip
+        if (trip.timestamp == 0)
+            trip.timestamp = events.get(0).timestamp;
 
         MappableEvent.saveInTx(events);
         trip.save();

@@ -43,6 +43,7 @@ public class BitmapLoader {
             result = getLaneChangeBitmap();
 
 
+        result = changeColor(result, colorForScore(event.score));
         //color based on score
         return result;
     }
