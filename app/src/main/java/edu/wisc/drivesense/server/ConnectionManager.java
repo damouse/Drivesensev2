@@ -59,7 +59,7 @@ public class ConnectionManager {
             public void onSuccess(int statusCode, Header[] headers, byte[] rawResponse) {
                 String response = new String(rawResponse);
 
-                Gson gson = new Gson();
+                Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().create();
                 User user = gson.fromJson(response, User.class);
 
                 if (callback != null)
@@ -256,8 +256,16 @@ public class ConnectionManager {
         @Override
         public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
             String response = null;
-            if (errorResponse != null)
-                response = new String(errorResponse);
+            if (errorResponse != null) {
+                try {
+                    JSONObject json = new JSONObject(new String(errorResponse));
+                    response = json.getString("response");
+                }
+                catch (Exception exception) {
+                    Log.e(TAG, "An error occured parsing the return string");
+                    response = null;
+                }
+            }
 
             if (LOG_CONNECTIONS) {
 

@@ -8,6 +8,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:paddingBottom="50dp"
         android:gravity="center">
 
         <com.pkmmte.view.CircularImageView
@@ -23,9 +24,8 @@
             android:id="@+id/textviewName"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:textSize="10dp"
+            android:textSize="10sp"
             android:textColor="@color/white"
-            android:layout_marginBottom="10dp"
             android:text="Default User"/>
 
         <Button
@@ -34,7 +34,7 @@
             android:textAllCaps="true"
             android:layout_height="20dp"
             android:layout_marginBottom="20dp"
-            android:textSize="20dp"
+            android:textSize="20sp"
             android:text="@string/login_text" />
 
     </LinearLayout>
