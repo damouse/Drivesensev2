@@ -25,7 +25,6 @@ import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.server.DrivesensePreferences;
 
 /**

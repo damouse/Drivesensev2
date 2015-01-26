@@ -226,7 +226,6 @@ public class MenuFragment extends Fragment {
 
     /* Activity Callbacks */
     public interface MenuDelegate {
-        // TODO: Update argument type and name
         public void loadUser();
     }
 }

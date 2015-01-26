@@ -10,7 +10,6 @@ import edu.wisc.drivesense.model.SugarDatabse;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.server.ConnectionManagerCallback;
 import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
 
@@ -66,19 +65,19 @@ public class Bengal {
     }
 
     public void upload(Trip trip) {
-        ConnectionManager api = new ConnectionManager(context);
-        api.convertUploadTrip(trip, activeUser, new ConnectionManagerCallback() {
-            @Override
-            public void onConnectionCompleted(Object... result) {
-                //refresh trip list
-                refresh();
-            }
-
-            @Override
-            public void onConnectionFailed(String message) {
-                //show alert with message contents
-            }
-        });
+//        ConnectionManager api = new ConnectionManager(context);
+//        api.convertUploadTrip(trip, activeUser, new ConnectionManagerCallback() {
+//            @Override
+//            public void onConnectionCompleted(Object... result) {
+//                //refresh trip list
+//                refresh();
+//            }
+//
+//            @Override
+//            public void onConnectionFailed(String message) {
+//                //show alert with message contents
+//            }
+//        });
     }
 
     public void load(User user) {

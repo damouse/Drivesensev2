@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -19,6 +20,8 @@ import com.pnikosis.materialishprogress.ProgressWheel;
 import java.util.List;
 
 public class SweetAlertDialog extends Dialog implements View.OnClickListener {
+    private final static String TAG = "SweetAlert";
+
     private View mDialogView;
     private AnimationSet mModalInAnim;
     private AnimationSet mModalOutAnim;
@@ -60,6 +63,9 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
     private OnSweetClickListener registerClickListener;
     private EditText editextEmail;
     private EditText editextPassword;
+    private Button buttonLogin;
+    private Button buttonRegister;
+    private Button buttonCancel;
 
     public static final int NORMAL_TYPE = 0;
     public static final int ERROR_TYPE = 1;
@@ -169,6 +175,12 @@ public class SweetAlertDialog extends Dialog implements View.OnClickListener {
         mLoginFrame = (LinearLayout) findViewById(R.id.login_frame);
         editextEmail = (EditText) findViewById(R.id.edittextEmail);
         editextPassword = (EditText) findViewById(R.id.edittextPassword);
+        buttonCancel = (Button) findViewById(R.id.buttonCancel);
+        buttonRegister = (Button) findViewById(R.id.buttonRegister);
+        buttonLogin = (Button) findViewById(R.id.buttonLogin);
+        buttonCancel.setOnClickListener(this);
+        buttonLogin.setOnClickListener(this);
+        buttonRegister.setOnClickListener(this);
 
         setTitleText(mTitleText);
         setContentText(mContentText);

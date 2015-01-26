@@ -200,6 +200,7 @@
         <Button
             android:id="@+id/buttonRegister"
             style="@style/dialog_blue_button"
+            android:layout_marginRight="10dp"
             android:text="Register" />
 
         <Button

@@ -52,7 +52,7 @@ public class ConnectionManager {
     public void logIn(String email, String password, final ConnectionManagerCallback callback) {
         JsonObject json = new JsonObject();
         json.addProperty("user_email", email);
-        json.addProperty("user_password", password);
+        json.addProperty("password", password);
 
         createAndPostRequest("mobile_login", json.toString(), new AsyncHTTPResponseCallback(callback) {
             @Override
@@ -277,8 +277,10 @@ public class ConnectionManager {
 
 
             //pull the response message out of the return and pass it back up to the caller
-
-            delegate.onConnectionFailed("something has gone wrong");
+            if (response == null)
+                delegate.onConnectionFailed("something has gone wrong");
+            else
+                delegate.onConnectionFailed(response);
         }
     }
 
