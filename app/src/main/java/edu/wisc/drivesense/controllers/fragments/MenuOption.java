@@ -1,18 +1,15 @@
 package edu.wisc.drivesense.controllers.fragments;
 
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import cn.pedant.SweetAlert.OptAnimationLoader;
 import cn.pedant.SweetAlert.SuccessTickView;
 import edu.wisc.drivesense.R;
@@ -22,8 +19,11 @@ import edu.wisc.drivesense.R;
  *
  * Class is a custom implementation of a "settings" line as found in a preference
  * fragment. Adds a custom checkbox for toggling state with animations.
+ *
+ * The init function sets up this option.
  */
 public class MenuOption extends Fragment {
+    private static final String TAG = "MenuOption";
     private TextView textviewTitle;
     private TextView textviewSubtitle;
 
@@ -71,6 +71,7 @@ public class MenuOption extends Fragment {
     }
 
     public void initialize(String title, String subtitle, boolean set, MenuOptionDelegate callback) {
+//        Log.d(TAG, "Title: " + title + " state: " + set);
         this.title = title;
         this.subtitle = subtitle;
 
@@ -98,14 +99,14 @@ public class MenuOption extends Fragment {
     private class ButtonListner implements View.OnClickListener {
         @Override
         public void onClick(View arg0) {
+//            Log.d(TAG, "isSet: " + isSet);
+            isSet = !isSet;
             setVisibility();
 
             if(isSet)
                 iconError.startAnimation(errorAnimation);
             else
                 iconSuccess.startTickAnim();
-
-            isSet = !isSet;
 
             if(delegate != null)
                 delegate.onMenuOptionClick(title, isSet);
@@ -114,13 +115,12 @@ public class MenuOption extends Fragment {
 
     private void setVisibility() {
         if(isSet) {
-            frameSuccess.setVisibility(View.GONE);
-            frameError.setVisibility(View.VISIBLE);
-        }
-        else {
-
             frameSuccess.setVisibility(View.VISIBLE);
             frameError.setVisibility(View.GONE);
+        }
+        else {
+            frameSuccess.setVisibility(View.GONE);
+            frameError.setVisibility(View.VISIBLE);
         }
     }
 }

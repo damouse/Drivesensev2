@@ -93,7 +93,7 @@
 
         <!-- Sugar specific setup (the ORM library) -->
         <meta-data android:name="DATABASE" android:value="drivesense.db" />
-        <meta-data android:name="VERSION" android:value="20" />
+        <meta-data android:name="VERSION" android:value="21" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="edu.wisc.drivesense.model" />
 
@@ -115,7 +115,7 @@
         <!-- Debug key: make active for local testing ON MAC -->
         <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />-->
 
-        <!-- Debug key: make active for local testing ON UBUNTU -->
+        <!-- Debug key: make active for local testing ON WINDOWS -->
          <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>
 
         <activity

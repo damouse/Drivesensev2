@@ -23,11 +23,11 @@ public class User extends SugarRecord<User> {
     public boolean loggedIn;
 
     //preferences
-    private boolean automaticRecording;
-    private boolean automaticUnpoweredRecording;
-    private boolean automaticUploading;
-    private boolean automaticUploadOffWifi;
-    private boolean automaticDelete;
+    public boolean automaticRecording;
+    public boolean automaticUnpoweredRecording;
+    public boolean automaticUploading;
+    public boolean automaticUploadOffWifi;
+    public boolean automaticDelete;
 
     public User() {
         backendId = -1;

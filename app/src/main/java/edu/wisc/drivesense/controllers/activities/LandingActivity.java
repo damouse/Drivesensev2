@@ -4,23 +4,21 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
-import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-
+import android.widget.Button;
 import edu.wisc.drivesense.R;
-
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.Concierge;
-import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.model.User;
-import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
 import edu.wisc.drivesense.controllers.fragments.MenuFragment;
 import edu.wisc.drivesense.controllers.fragments.SettingsFragment;
 import edu.wisc.drivesense.controllers.fragments.StatsFragment;
+import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
+import edu.wisc.drivesense.model.Trip;
+import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.views.resideMenu.ResideMenu;
 
@@ -28,8 +26,7 @@ import java.util.List;
 
 
 public class LandingActivity extends FragmentActivity implements View.OnClickListener,
-        MenuFragment.MenuDelegate,
-        TripsListViewFragment.TripSelectedListener, StatsFragment.OnFragmentInteractionListener {
+        MenuFragment.MenuDelegate, TripsListViewFragment.TripSelectedListener {
 
     private static final String TAG = "LandingActivity";
 
@@ -38,6 +35,9 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private StatsFragment fragmentStats;
     private SettingsFragment fragmentSettings;
     private MenuFragment fragmentMenu;
+
+    private Button buttonStatsLeft;
+    private Button buttonStatsRight;
 
     //TEMP TESTING
     boolean showingx = true;
@@ -49,23 +49,24 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
-        //TESTING
+        //TODO: TESTING
         localTEST();
-//        Concierge.initializeConcierge();
-//        localTEST();
 
         //creates the dragging menu
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(ResideMenu.imageForTimeOfDay());
         resideMenu.attachToActivity(this);
-//        resideMenu.addIgnoredView(findViewById(R.id.trips));
+        //resideMenu.addIgnoredView(findViewById(R.id.trips));
 
-        //pull fragments
+        //pull views
         fragmentList = (TripsListViewFragment) getFragmentManager().findFragmentById(R.id.trips);
         fragmentStats = (StatsFragment) getFragmentManager().findFragmentById(R.id.stats);
+        buttonStatsLeft = (Button) findViewById(R.id.buttonStatsLeft);
+        buttonStatsRight = (Button) findViewById(R.id.buttonStatsRight);
 
         //initialize table with trips
         loadUser();
+        displayLastTrip();
 
         //register for updates to the saved trips
         //TODO: unregister the receiver onPause
@@ -112,23 +113,28 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
     /* Button Callbacks */
     public void onRightButtonClick(View view) {
-        //test data method
         onLoadLocal();
     }
 
     public void onButtonLeftClick(View view) {
-        //uploading test
+        uploadingTest();
+    }
 
+
+    /* Changes in Trip State */
+    /**
+     * Updates the stats fragment with the most recent trip
+     */
+    public void displayLastTrip() {
         User user = Concierge.getCurrentUser();
         List<Trip> trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
 
-        if (trips.size() == 0) {
-            Log.e(TAG, "Cant test upload, no trips found");
-            return;
+        if(trips.size() == 0)
+            fragmentStats.setTrip(null);
+        else {
+            //TODO: get most recent trip
+            fragmentStats.setTrip(trips.get(0));
         }
-
-        ConnectionManager api = new ConnectionManager(this);
-        api.convertUploadTrip(trips.get(0), user, null);
     }
 
 
@@ -137,11 +143,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onClick(View view) {
         Log.d("Menu", "Touch");
 //        resideMenu.closeMenu();
-    }
-
-    @Override
-    public void onFragmentInteraction(Uri uri) {
-        Log.d(TAG, "Something happened in a fragment");
     }
 
     private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
@@ -202,5 +203,18 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
         List<User> demo = User.find(User.class, "backend_id = ?", "-7");
         Log.e(TAG, "Number of demo users: " + demo.size());
+    }
+
+    private void uploadingTest() {
+        User user = Concierge.getCurrentUser();
+        List<Trip> trips = Trip.find(Trip.class, "user = ?", "" + user.getId());
+
+        if (trips.size() == 0) {
+            Log.e(TAG, "Cant test upload, no trips found");
+            return;
+        }
+
+        ConnectionManager api = new ConnectionManager(this);
+        api.convertUploadTrip(trips.get(0), user, null);
     }
 }
