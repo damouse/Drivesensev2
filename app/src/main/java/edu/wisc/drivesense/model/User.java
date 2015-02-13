@@ -23,11 +23,11 @@ public class User extends SugarRecord<User> {
     public boolean loggedIn;
 
     //preferences
-    public boolean automaticRecording;
-    public boolean automaticUnpoweredRecording;
-    public boolean automaticUploading;
-    public boolean automaticUploadOffWifi;
-    public boolean automaticDelete;
+    private boolean automaticRecording;
+    private boolean automaticUnpoweredRecording;
+    private boolean automaticUploading;
+    private boolean automaticUploadOffWifi;
+    private boolean automaticDelete;
 
     public User() {
         backendId = -1;
@@ -85,8 +85,7 @@ public class User extends SugarRecord<User> {
     }
 
     public void setAutomaticRecording(boolean automaticRecording) {
-        if (!demoUser())
-            this.automaticRecording = automaticRecording;
+        this.automaticRecording = automaticRecording;
     }
 
     public boolean isAutomaticUnpoweredRecording() {
@@ -94,8 +93,7 @@ public class User extends SugarRecord<User> {
     }
 
     public void setAutomaticUnpoweredRecording(boolean automaticUnpoweredRecording) {
-        if (!demoUser())
-            this.automaticUnpoweredRecording = automaticUnpoweredRecording;
+        this.automaticUnpoweredRecording = automaticUnpoweredRecording;
     }
 
     public boolean isAutomaticUploading() {
@@ -121,7 +119,6 @@ public class User extends SugarRecord<User> {
     }
 
     public void setAutomaticDelete(boolean automaticDelete) {
-        if (!demoUser())
-            this.automaticDelete = automaticDelete;
+        this.automaticDelete = automaticDelete;
     }
 }

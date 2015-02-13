@@ -39,13 +39,6 @@
         android:theme="@android:style/Theme.Holo.Light"
         tools:replace="icon" >
 
-        <!-- <activity -->
-        <!-- android:name=".controllers.MainActivity" -->
-        <!-- android:label="@string/app_name" > -->
-        <!-- <intent-filter> -->
-        <!-- <action android:name="android.intent.action.MAIN" /> -->
-
-
         <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
         <!-- </intent-filter> -->
         <!-- </activity> -->
@@ -53,6 +46,8 @@
         <activity
             android:name=".controllers.activities.LandingActivity"
             android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/AppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -62,10 +57,18 @@
         </activity>
 
         <activity
-            android:name=".controllers.activities.PreferenceActivity"
-            android:label="Settings"
-            android:parentActivityName=".controllers.activities.MainActivity" />
+            android:name=".controllers.activities.RecordingTripActivity"
+            android:label="@string/title_activity_recording_trip"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
 
+        <activity
+            android:name=".controllers.activities.TripViewerActivity"
+            android:label="@string/title_activity_trip_viewer"
+            android:screenOrientation="portrait"
+            android:configChanges="keyboardHidden|orientation|screenSize">
+        </activity>
 
         <receiver android:name=".sensors.PowerListener" >
             <intent-filter>
@@ -93,7 +96,7 @@
 
         <!-- Sugar specific setup (the ORM library) -->
         <meta-data android:name="DATABASE" android:value="drivesense.db" />
-        <meta-data android:name="VERSION" android:value="21" />
+        <meta-data android:name="VERSION" android:value="22" />
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="edu.wisc.drivesense.model" />
 
@@ -117,16 +120,6 @@
 
         <!-- Debug key: make active for local testing ON WINDOWS -->
          <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>
-
-        <activity
-            android:name=".controllers.activities.RecordingTripActivity"
-            android:label="@string/title_activity_recording_trip" >
-        </activity>
-        <activity
-            android:name=".controllers.activities.TripViewerActivity"
-            android:label="@string/title_activity_trip_viewer" >
-        </activity>
-
     </application>
 
 </manifest>

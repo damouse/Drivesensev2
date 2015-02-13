@@ -1486,10 +1486,13 @@ containing a value of this type.
         public static final int always=0x7f07000f;
         public static final int beginning=0x7f07000a;
         public static final int bottom=0x7f070019;
-        public static final int cancel_button=0x7f070051;
+        public static final int buttonCancel=0x7f07005a;
+        public static final int buttonLogin=0x7f070058;
+        public static final int buttonRegister=0x7f070059;
+        public static final int cancel_button=0x7f070055;
         public static final int checkbox=0x7f07002e;
         public static final int collapseActionView=0x7f070011;
-        public static final int confirm_button=0x7f070052;
+        public static final int confirm_button=0x7f070056;
         public static final int content_text=0x7f070050;
         public static final int custom_image=0x7f070045;
         public static final int decor_content_parent=0x7f070034;
@@ -1498,6 +1501,8 @@ containing a value of this type.
         public static final int disableHome=0x7f070009;
         public static final int dropdown=0x7f070016;
         public static final int edit_query=0x7f070038;
+        public static final int edittextEmail=0x7f070052;
+        public static final int edittextPassword=0x7f070053;
         public static final int end=0x7f07000c;
         public static final int error_frame=0x7f070046;
         public static final int error_x=0x7f070047;
@@ -1511,6 +1516,8 @@ containing a value of this type.
         public static final int listMode=0x7f070001;
         public static final int list_item=0x7f07002a;
         public static final int loading=0x7f070044;
+        public static final int login_buttons=0x7f070057;
+        public static final int login_frame=0x7f070051;
         public static final int mask_left=0x7f07004a;
         public static final int mask_right=0x7f070049;
         public static final int middle=0x7f07000b;
@@ -1537,6 +1544,7 @@ containing a value of this type.
         public static final int showHome=0x7f070005;
         public static final int showTitle=0x7f070007;
         public static final int split_action_bar=0x7f070021;
+        public static final int stock=0x7f070054;
         public static final int submit_area=0x7f070041;
         public static final int success_frame=0x7f070048;
         public static final int success_tick=0x7f07004b;

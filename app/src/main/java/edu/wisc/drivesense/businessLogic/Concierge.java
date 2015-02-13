@@ -60,6 +60,11 @@ public class Concierge {
         return currentUser;
     }
 
+    public static User reloadUser() {
+        initializeConcierge();
+        return currentUser;
+    }
+
     public static void logOut() {
         if (currentUser == null)
             return;

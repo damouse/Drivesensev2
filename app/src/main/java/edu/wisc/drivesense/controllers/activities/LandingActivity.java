@@ -22,6 +22,7 @@ import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
 import edu.wisc.drivesense.views.resideMenu.ResideMenu;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 
