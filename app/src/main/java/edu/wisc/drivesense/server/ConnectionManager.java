@@ -215,6 +215,11 @@ public class ConnectionManager {
             trip.mappable_events = trip.getEvents();
             trip.time_stamp = new Date(trip.timestamp);
 
+            for (MappableEvent event: trip.mappable_events) {
+                event.time_stamp = new Date(event.timestamp);
+                event.time_stamp_end = new Date(event.timestampEnd);
+            }
+
             Gson gson = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
             JsonObject json = new JsonObject();

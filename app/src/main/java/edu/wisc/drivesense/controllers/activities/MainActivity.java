@@ -102,7 +102,7 @@ public class MainActivity extends Activity implements Observer {
         //if the service is null it hasn't started yet. Start it and register for a calback
         if (BackgroundRecordingService.getInstance() == null) {
             statusBroadcastReceiver = new BackgroundStatusReceiver();
-            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
+            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_STARTED);
             registerReceiver(statusBroadcastReceiver, intentFilter);
 
             startService(new Intent(this, BackgroundRecordingService.class));

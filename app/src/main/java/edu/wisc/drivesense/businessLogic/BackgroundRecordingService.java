@@ -1,6 +1,5 @@
 package edu.wisc.drivesense.businessLogic;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
@@ -10,7 +9,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
-import android.os.AsyncTask;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -24,10 +22,10 @@ import edu.wisc.drivesense.scoring.common.LocalDataTester;
 import edu.wisc.drivesense.sensors.TripListener;
 import edu.wisc.drivesense.sensors.WifiListener;
 import edu.wisc.drivesense.server.ConnectionManager;
-import edu.wisc.drivesense.utilities.Ticker;
 import edu.wisc.drivesense.sensors.PowerListener;
 import edu.wisc.drivesense.sensors.SensorMonitor;
 import edu.wisc.drivesense.server.ServerLogger;
+import edu.wisc.drivesense.utilities.BroadcastHelper;
 import edu.wisc.drivesense.views.TaskbarNotifications;
 
 /**
@@ -58,8 +56,9 @@ import edu.wisc.drivesense.views.TaskbarNotifications;
  */
 public class BackgroundRecordingService extends Service implements Observer {
     private static final String TAG = "BackgroundService";
-    public static final String BACKGROUND_ACTION = "edu.wisc.drivesense.background_status";
+    public static final String BACKGROUND_STARTED = "edu.wisc.drivesense.background_status";
     public static final String TRIPS_UPDATE = "edu.wisc.drivesense.trips_update";
+    public static final String STATE_UPDATE = "edu.wisc.drivesense.state_update";
     private static BackgroundRecordingService instance = null; //singleton ivar
     public static final boolean DEBUG = false;
 
@@ -108,14 +107,7 @@ public class BackgroundRecordingService extends Service implements Observer {
         initState();
 
         //Broadcast on start
-        Intent startupIntent = new Intent(BACKGROUND_ACTION);
-
-        try {
-            sendBroadcast(startupIntent);
-        } catch (NullPointerException ex) {
-            Log.e(TAG, "Intent broadcast to the main activity failed.");
-        }
-
+        BroadcastHelper.sendBroadcast(BACKGROUND_STARTED, this);
     }
 
     @Override
@@ -142,7 +134,7 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     public static void checkAndStart(Context context) {
         if (BackgroundRecordingService.getInstance() == null) {
-            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
+            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_STARTED);
             context.startService(new Intent(context, BackgroundRecordingService.class));
             Log.i(TAG, "Starting background service...");
         }
@@ -255,6 +247,7 @@ public class BackgroundRecordingService extends Service implements Observer {
                 setRecordingAndListenening(false, true);
 
             taskbar.updateServiceNotifcation(stateManager.getStateString());
+            BroadcastHelper.sendBroadcast(STATE_UPDATE, this);
         }
     }
 

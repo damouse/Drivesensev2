@@ -52,12 +52,13 @@ public class Seatbelt {
     public static String cantRecordMessage(Context context, User user) {
         LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            return "No GPS";
+            return "GPS is turned off.";
         }
 
         boolean isPowered = PowerListener.isPluggedIn(context);
         if (user.isAutomaticRecording() && !isPowered && !user.isAutomaticUnpoweredRecording()) {
-            return "Not Powered";
+            return "Your device is not connected to power. Please connect it or turn on 'Unpowered Recording' in the " +
+                    "settings (slide from right to open settings.)";
         }
 
         return null;
@@ -81,7 +82,7 @@ public class Seatbelt {
 
 
     /* Notifications */
-    private static void notifyUser(String message, Context context) {
+    public static void notifyUser(String message, Context context) {
         if (showAlert) {
             new SweetAlertDialog(context, SweetAlertDialog.ERROR_TYPE)
                     .setTitleText("Oops...")

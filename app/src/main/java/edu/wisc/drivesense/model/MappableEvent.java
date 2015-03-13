@@ -4,6 +4,9 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 import com.orm.SugarRecord;
+import com.orm.dsl.Ignore;
+
+import java.util.Date;
 
 
 /**
@@ -23,10 +26,13 @@ public class MappableEvent extends SugarRecord<MappableEvent> {
     }
 
     @Expose
-    @SerializedName("time_stamp")
+    @Ignore
+    public Date time_stamp;
     public long timestamp;
 
-    @SerializedName("time_stamp_end")
+    @Expose
+    @Ignore
+    public Date time_stamp_end;
     public long timestampEnd;
 
     @Expose

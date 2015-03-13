@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.businessLogic.BackgroundState;
@@ -22,9 +23,8 @@ import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
+import edu.wisc.drivesense.utilities.BroadcastHelper;
 import edu.wisc.drivesense.views.resideMenu.ResideMenu;
-
-import java.lang.reflect.Field;
 import java.util.List;
 
 
@@ -42,8 +42,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private Button buttonStatsLeft;
     private Button buttonStatsRight;
 
-    //TEMP TESTING
-    boolean showingx = true;
+    BroadcastReceiver tripsUpdatedReceiver;
+    BroadcastReceiver stateUpdateReceiver;
 
 
     /* Boilerplate and Init */
@@ -51,9 +51,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
-
-        //TODO: TESTING
-        localTEST();
 
         //creates the drawer menu
         resideMenu = new ResideMenu(this);
@@ -70,25 +67,36 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         //initialize table with trips
         loadUser();
         displayLastTrip();
+    }
 
-        //register for updates to the saved trips
-        //TODO: unregister the receiver onPause
-        IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.TRIPS_UPDATE);
-        registerReceiver(new BroadcastReceiver() {
+    @Override
+    protected void onPause() {
+        super.onPause();
+        BackgroundRecordingService.checkAndDestroy(this);
+        BroadcastHelper.unregisterReceiver(tripsUpdatedReceiver, this);
+        BroadcastHelper.unregisterReceiver(stateUpdateReceiver, this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        BackgroundRecordingService.checkAndStart(this);
+        setButtonStates();
+
+        //notify us of changes in trips (when new trips are added, for example)
+        tripsUpdatedReceiver = BroadcastHelper.registerForBroadcast(BackgroundRecordingService.TRIPS_UPDATE, this, new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
                 loadUser();
             }
-        }, intentFilter);
+        });
 
-        //start the background service if needed
-        BackgroundRecordingService.checkAndStart(this);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        BackgroundRecordingService.checkAndDestroy(this);
+        stateUpdateReceiver = BroadcastHelper.registerForBroadcast(BackgroundRecordingService.STATE_UPDATE, this, new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                backgroundStateChanged();
+            }
+        });
     }
 
     @Override
@@ -121,6 +129,17 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * The background is started or stopped here.
      */
     public void userStateChanged() {
+        User user = Concierge.getCurrentUser();
+
+        //update BackgroundState with any change in state
+        if (BackgroundRecordingService.getInstance() != null) {
+            BackgroundState background = BackgroundRecordingService.getInstance().stateManager;
+            background.setAutomaticRecording(user.isAutomaticRecording());
+            background.setAutomaticUnpoweredRecording(user.isAutomaticUnpoweredRecording());
+        }
+    }
+
+    private void backgroundStateChanged() {
         setButtonStates();
     }
 
@@ -135,7 +154,24 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * @param view
      */
     public void onRightButtonClick(View view) {
-//        onLoadLocal();
+        if (false) {
+            onLoadLocal();
+            return;
+        }
+
+        User user = Concierge.getCurrentUser();
+        BackgroundState.State currentState = BackgroundState.getState();
+
+        String message = Seatbelt.cantRecordMessage(this, user);
+        if (message != null) {
+            Seatbelt.notifyUser("Can't record now! " + message, this);
+        }
+
+        //show access to the recording trip
+        if (BackgroundRecordingService.getInstance().recording()) {
+            Intent intent = new Intent(LandingActivity.this, RecordingTripActivity.class);
+            LandingActivity.this.startActivity(intent);
+        }
 
         setButtonStates();
     }
@@ -150,7 +186,53 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * @param view
      */
     public void onButtonLeftClick(View view) {
-//        uploadingTest();
+        if (false) {
+            uploadingTest();
+            return;
+        }
+
+        User user = Concierge.getCurrentUser();
+        boolean recording = BackgroundRecordingService.getInstance().recording();
+
+        if (user.isAutomaticRecording()) {
+            SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
+                    .setTitleText("Automatic Recording is on!")
+                    .showCancelButton(true);
+
+            if (recording) {
+                String message = "You are currently recording a trip using Automatic Recording. KnowMyDrive " +
+                        "will automatically stop recording when the trip ends.";
+
+                dialog.setContentText(message)
+                        .setConfirmText("Stop Recording")
+                        .setCancelText("Let trip end automatically")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                BackgroundRecordingService.getInstance().stateManager.adviseTripStart();
+                            }
+                        })
+                        .show();
+            }
+            else {
+                String message = "You are currently recording a trip using Automatic Recording. KnowMyDrive " +
+                        "will automatically start recording when it detects driving.";
+
+                dialog.setContentText(message)
+                        .setConfirmText("Start recording anyway")
+                        .setCancelText("Let recording start automatically")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                BackgroundRecordingService.getInstance().stateManager.adviseTripEnd();
+                            }
+                        })
+                        .show();
+            }
+        }
+        else {
+            BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
+        }
 
         setButtonStates();
     }
@@ -164,21 +246,24 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             return;
         }
 
-        String rightMessage = "";
+        String rightMessage;
         String leftMessage = "START RECORDING";
         if (currentState == BackgroundState.State.AUTOMATIC_RECORDING || currentState == BackgroundState.State.MANUAL_RECORDING) {
             rightMessage = "SEE RECORDING TRIP";
             leftMessage = "STOP RECORDING";
         }
-
-        if (currentState == BackgroundState.State.AUTOMATIC_STOP_LISTEN)
+        else if (currentState == BackgroundState.State.AUTOMATIC_STOP_LISTEN) {
             rightMessage = "LISTENING FOR TRIP START";
-
-        //At this point we are either in STOP_WAIT or MANUAL_LISTEN-- check if errors appear
-        rightMessage = Seatbelt.cantRecordMessage(this, user);
-        if (rightMessage == null) {
-            //null message means everything is good to go-- we have to be in MANUAL_LISTEN
-            rightMessage = "READY TO RECORD";
+        }
+        else {
+            //At this point we are either in STOP_WAIT or MANUAL_LISTEN-- check if errors appear
+            rightMessage = Seatbelt.cantRecordMessage(this, user);
+            if (rightMessage == null) {
+                //null message means everything is good to go-- we have to be in MANUAL_LISTEN
+                rightMessage = "READY TO RECORD";
+            } else {
+                rightMessage = "SENSORS TURNED OFF";
+            }
         }
 
         buttonStatsRight.setText(rightMessage);
@@ -202,7 +287,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         }
     }
 
-
     /* TESTING and DEBUG */
     /**
      * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
@@ -215,7 +299,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onLoadLocal() {
         Log.d(TAG, "Starting local trip load. This will take a while.");
 
-        IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
+        IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_STARTED);
         registerReceiver(new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
