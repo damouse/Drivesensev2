@@ -298,5 +298,4 @@ public class ConnectionManager {
         public void onConnectionCompleted(Object... result);
         public void onConnectionFailed(String message);
     }
-
 }

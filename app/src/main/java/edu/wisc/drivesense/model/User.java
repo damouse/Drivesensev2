@@ -22,7 +22,7 @@ public class User extends SugarRecord<User> {
     public Boolean admin;
     public boolean loggedIn;
 
-    //preferences
+    //preferences- Move these to preferences and not as part of the database?
     private boolean automaticRecording;
     private boolean automaticUnpoweredRecording;
     private boolean automaticUploading;

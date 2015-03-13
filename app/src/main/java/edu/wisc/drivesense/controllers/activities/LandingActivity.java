@@ -12,7 +12,9 @@ import android.view.View;
 import android.widget.Button;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.businessLogic.Concierge;
+import edu.wisc.drivesense.businessLogic.Seatbelt;
 import edu.wisc.drivesense.controllers.fragments.MenuFragment;
 import edu.wisc.drivesense.controllers.fragments.SettingsFragment;
 import edu.wisc.drivesense.controllers.fragments.StatsFragment;
@@ -53,7 +55,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         //TODO: TESTING
         localTEST();
 
-        //creates the dragging menu
+        //creates the drawer menu
         resideMenu = new ResideMenu(this);
         resideMenu.setBackground(ResideMenu.imageForTimeOfDay());
         resideMenu.attachToActivity(this);
@@ -78,6 +80,15 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
                 loadUser();
             }
         }, intentFilter);
+
+        //start the background service if needed
+        BackgroundRecordingService.checkAndStart(this);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BackgroundRecordingService.checkAndDestroy(this);
     }
 
     @Override
@@ -93,7 +104,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         LandingActivity.this.startActivity(intent);
     }
 
-
     /* User Login and Logout */
     /**
      * Loads the currently logged in user into the list and the menu
@@ -101,24 +111,78 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void loadUser() {
         User user = Concierge.getCurrentUser();
         fragmentList.setUser(user);
+        setButtonStates();
     }
 
     /**
-     * Called when the user changes a setting. Some of these may require a change in UI state
-     * or turning on the background service
+     * Called when the user changes a setting in the menus. The important setting here is
+     * AutomaticRecording-- start the service is this is called here
+     *
+     * The background is started or stopped here.
      */
     public void userStateChanged() {
-        //TODO: implement
+        setButtonStates();
     }
 
 
-    /* Button Callbacks */
+    /* Button Callbacks and Management */
+    /**
+     * This button has two states: start recording or stop recording.
+     *
+     * If we are actively recording, ask for confirmation before starting or stopping.
+     *
+     * This call will trigger sensor warnings if they are disabled.
+     * @param view
+     */
     public void onRightButtonClick(View view) {
-        onLoadLocal();
+//        onLoadLocal();
+
+        setButtonStates();
     }
 
+    /**
+     * Button displays the current state.
+     *
+     * If recording, show the recording trip.
+     * If not recording, say WHY: listening, waiting for trip to start, or missing sensors.
+     *
+     * Show alert if this is the case.
+     * @param view
+     */
     public void onButtonLeftClick(View view) {
-        uploadingTest();
+//        uploadingTest();
+
+        setButtonStates();
+    }
+
+    private void setButtonStates() {
+        User user = Concierge.getCurrentUser();
+        BackgroundState.State currentState = BackgroundState.getState();
+
+        if (currentState == BackgroundState.State.UNINITIALIZED) {
+            Log.w(TAG, "There is no background state. Cannot set buttons");
+            return;
+        }
+
+        String rightMessage = "";
+        String leftMessage = "START RECORDING";
+        if (currentState == BackgroundState.State.AUTOMATIC_RECORDING || currentState == BackgroundState.State.MANUAL_RECORDING) {
+            rightMessage = "SEE RECORDING TRIP";
+            leftMessage = "STOP RECORDING";
+        }
+
+        if (currentState == BackgroundState.State.AUTOMATIC_STOP_LISTEN)
+            rightMessage = "LISTENING FOR TRIP START";
+
+        //At this point we are either in STOP_WAIT or MANUAL_LISTEN-- check if errors appear
+        rightMessage = Seatbelt.cantRecordMessage(this, user);
+        if (rightMessage == null) {
+            //null message means everything is good to go-- we have to be in MANUAL_LISTEN
+            rightMessage = "READY TO RECORD";
+        }
+
+        buttonStatsRight.setText(rightMessage);
+        buttonStatsLeft.setText(leftMessage);
     }
 
 
@@ -137,28 +201,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             fragmentStats.setTrip(trips.get(0));
         }
     }
-
-
-    /* ORPHANED AND TEMP-- these method will be moved to their respective fragments */
-    @Override
-    public void onClick(View view) {
-        Log.d("Menu", "Touch");
-//        resideMenu.closeMenu();
-    }
-
-    private ResideMenu.OnMenuListener menuListener = new ResideMenu.OnMenuListener() {
-        @Override
-        public void openMenu() {
-            Log.d(TAG, "Menu Opened");
-//            Toast.makeText(getApplication().getApplicationContext(), "Menu is opened!", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        public void closeMenu() {
-            Log.d(TAG, "Menu closed");
-//      Toast.makeText(getApplication().getApplicationContext(), "Menu is closed!", Toast.LENGTH_SHORT).show();
-        }
-    };
 
 
     /* TESTING and DEBUG */
@@ -217,5 +259,10 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
         ConnectionManager api = new ConnectionManager(this);
         api.convertUploadTrip(trips.get(0), user, null);
+    }
+
+    @Override
+    public void onClick(View v) {
+        Log.e(TAG, "Unknown view was touched! " + v.toString());
     }
 }

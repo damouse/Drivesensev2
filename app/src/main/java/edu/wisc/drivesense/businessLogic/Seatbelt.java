@@ -44,6 +44,26 @@ public class Seatbelt {
     }
 
     /**
+     * Returns null if recording is cleared, else returns a string that announces the missing
+     * sensors or state (no power, no sensors, etc)
+     *
+     * @return
+     */
+    public static String cantRecordMessage(Context context, User user) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return "No GPS";
+        }
+
+        boolean isPowered = PowerListener.isPluggedIn(context);
+        if (user.isAutomaticRecording() && !isPowered && !user.isAutomaticUnpoweredRecording()) {
+            return "Not Powered";
+        }
+
+        return null;
+    }
+
+    /**
      * Same as the above method, but for automatic recording.
      */
     public static boolean automaticRecordingCheck(User user, Context context) {

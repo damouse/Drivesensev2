@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
 /**
@@ -28,6 +29,12 @@ public class RecordingTripActivity extends Activity {
 
         fragmentMap = (PinMapFragment) getFragmentManager().findFragmentById(R.id.map);
         synchronizeBackground();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BackgroundRecordingService.checkAndDestroy(this);
     }
 
     @Override

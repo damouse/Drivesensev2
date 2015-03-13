@@ -29,6 +29,7 @@ public class BackgroundState extends Observable {
         UNINITIALIZED
     }
 
+    private static final String TAG = "BackgroundState";
     private static State state = State.UNINITIALIZED;
     private String stateString = "";
 
@@ -119,6 +120,7 @@ public class BackgroundState extends Observable {
 
         //done establishing state, notify observers only if the state changed
         if (oldState != state) {
+            Log.i(TAG, "Changed state from " + oldState + " to " + state);
             setStateMessage();
             setChanged();
             notifyObservers(state);

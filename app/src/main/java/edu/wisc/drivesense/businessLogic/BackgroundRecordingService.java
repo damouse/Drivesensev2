@@ -6,7 +6,9 @@ import java.util.Observable;
 import java.util.Observer;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.os.IBinder;
@@ -67,7 +69,6 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     boolean recording;
     boolean listening;
-    boolean firstLoad = true;
 
     private PowerListener power;
     private TripListener listener;
@@ -75,9 +76,6 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     //taskbar status
     private TaskbarNotifications taskbar;
-
-    //testing
-    private Ticker ticker;
 
 
     /* Boilerplate */
@@ -130,6 +128,24 @@ public class BackgroundRecordingService extends Service implements Observer {
         unregisterReceiver(power);
         stateManager.deleteObserver(this);
         stateManager.setServiceOn(false);
+    }
+
+    /**
+     * Make the service check its state and turn itself off if needed
+     */
+    public static void checkAndDestroy(Context context) {
+        if (BackgroundRecordingService.getInstance() != null && BackgroundState.getState() == BackgroundState.State.MANUAL_LISTEN) {
+            context.stopService(new Intent(context, BackgroundRecordingService.class));
+            Log.i(TAG, "Stopping background service...");
+        }
+    }
+
+    public static void checkAndStart(Context context) {
+        if (BackgroundRecordingService.getInstance() == null) {
+            IntentFilter intentFilter = new IntentFilter(BackgroundRecordingService.BACKGROUND_ACTION);
+            context.startService(new Intent(context, BackgroundRecordingService.class));
+            Log.i(TAG, "Starting background service...");
+        }
     }
 
     /**

@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import java.util.List;
 
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
@@ -37,6 +38,12 @@ public class TripViewerActivity extends Activity {
         trip = loadTrip();
         fragmentMap = (PinMapFragment) getFragmentManager().findFragmentById(R.id.map);
         fragmentMap.showTrip(trip);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        BackgroundRecordingService.checkAndDestroy(this);
     }
 
 
