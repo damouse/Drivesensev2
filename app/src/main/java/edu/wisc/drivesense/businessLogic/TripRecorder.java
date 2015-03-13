@@ -7,6 +7,7 @@ package edu.wisc.drivesense.businessLogic;
 
         import java.util.Date;
         import java.util.List;
+        import java.util.Observable;
 
         import edu.wisc.drivesense.model.DrivingPattern;
         import edu.wisc.drivesense.model.MappableEvent;
@@ -26,7 +27,7 @@ package edu.wisc.drivesense.businessLogic;
  * Holds a recording trip and any active readings from that trip, as well as
  * receiving callbacks from the analyst
  */
-public class TripRecorder  {
+public class TripRecorder extends Observable {
     private static final String TAG = "TripRecorder";
 
     private static final boolean useNeuralNetork = false;
@@ -168,6 +169,10 @@ public class TripRecorder  {
 
         MappableEvent.saveInTx(events);
         trip.save();
+
+        //update listening observers
+        setChanged();
+        notifyObservers(events);
 
         Log.d(TAG, "Done");
     }

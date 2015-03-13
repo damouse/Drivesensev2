@@ -15,7 +15,7 @@ import edu.wisc.drivesense.model.Trip;
 
 /* Background task for creating polylines-- consider caching for performance*/
 public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformation> {
-    private final static String TAG = "TripMapInfo";
+    private final static String TAG = "CalculateMapInfo";
     private Trip trip;
     private BitmapLoader loader;
 
@@ -40,7 +40,7 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
             info.addCoordinate(coord);
 
             if (reading.type != MappableEvent.Type.gps) {
-                info.patterns.add(createOverlay(reading, coord));
+                info.patterns.add(createOverlay(reading, coord, loader));
             }
         }
 
@@ -67,33 +67,32 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
         return info;
     }
 
+//    public static  MarkerOptions createMarker(MappableEvent event, LatLng coordinate) {
+//        MarkerOptions marker = new MarkerOptions();
+//
+//        marker.position(coordinate);
+//        marker.snippet("Score: " + event.score);
+//        marker.icon(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));
+//
+//        if (event.type == MappableEvent.Type.acceleration)
+//            marker.title("Acceleration");
+//
+//        else if (event.type == MappableEvent.Type.brake)
+//            marker.title("Brake");
+//
+//        else if (event.type == MappableEvent.Type.turn)
+//            marker.title("Turn");
+//
+//        else if (event.type == MappableEvent.Type.lanechange)
+//            marker.title("Lane Change");
+//
+//        else
+//            return null;
+//
+//        return marker;
+//    }
 
-    private MarkerOptions createMarker(MappableEvent event, LatLng coordinate) {
-        MarkerOptions marker = new MarkerOptions();
-
-        marker.position(coordinate);
-        marker.snippet("Score: " + event.score);
-        marker.icon(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));
-
-        if (event.type == MappableEvent.Type.acceleration)
-            marker.title("Acceleration");
-
-        else if (event.type == MappableEvent.Type.brake)
-            marker.title("Brake");
-
-        else if (event.type == MappableEvent.Type.turn)
-            marker.title("Turn");
-
-        else if (event.type == MappableEvent.Type.lanechange)
-            marker.title("Lane Change");
-
-        else
-            return null;
-
-        return marker;
-    }
-
-    private GroundOverlayOptions createOverlay(MappableEvent event, LatLng coordinate) {
+    public static  GroundOverlayOptions createOverlay(MappableEvent event, LatLng coordinate, BitmapLoader loader) {
         GroundOverlayOptions marker = new GroundOverlayOptions().zIndex(1)
                 .position(coordinate, 50, 50)
                 .image(BitmapDescriptorFactory.fromBitmap(loader.getBitmap(event)));

@@ -7,9 +7,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
 
@@ -20,7 +23,7 @@ import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
  *
  * Should show a spinner while map and trip are being loaded.
  */
-public class TripViewerActivity extends Activity {
+public class TripViewerActivity extends Activity implements Observer {
     private static final String TAG = "RecordingActivity";
 
     private PinMapFragment fragmentMap;
@@ -80,5 +83,12 @@ public class TripViewerActivity extends Activity {
         }
 
         return result.get(0);
+    }
+
+    @Override
+    public void update(Observable observable, Object data) {
+        List<MappableEvent> events = (List<MappableEvent>) data;
+
+
     }
 }

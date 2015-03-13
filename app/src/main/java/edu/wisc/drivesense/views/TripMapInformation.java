@@ -57,13 +57,6 @@ public class TripMapInformation {
 		line.add(coord);
 	}
 
-    void setMarker1(LatLng coordinate) {
-        marker1 = new MarkerOptions()
-                        .title("Start")
-                        .position(coordinate)
-                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.car_map));
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
 

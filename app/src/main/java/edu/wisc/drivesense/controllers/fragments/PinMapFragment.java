@@ -25,6 +25,7 @@ import edu.wisc.drivesense.businessLogic.Bengal;
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.utilities.SensorSimulator;
+import edu.wisc.drivesense.views.AddCalculateMapInfo;
 import edu.wisc.drivesense.views.BitmapLoader;
 import edu.wisc.drivesense.views.CalculateMapInfo;
 import edu.wisc.drivesense.views.TripMapInformation;
@@ -65,7 +66,6 @@ import android.widget.Toast;
 public class PinMapFragment extends Fragment implements LocationListener {
 	private static final String TAG = "PinMapFragment";
 
-    private Bengal delegate;
 	private GoogleMap map;
     private BitmapLoader bitmapLoader;
     private TripMapInformation recordingTrip;
@@ -74,7 +74,7 @@ public class PinMapFragment extends Fragment implements LocationListener {
     private List<TripMapInformation> tripsCache;
 	private List<AsyncTask> processing;
 
-	private boolean displaying;
+	private boolean displaying = false;
     private boolean displayingAllTrips = false;
 
 	
@@ -137,10 +137,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
 		client.disconnect();
 	}
 
-    public void setDelegate(Bengal bengal) {
-        delegate = bengal;
-    }
-
 	  
     /* Public Interface */
     /**
@@ -164,8 +160,8 @@ public class PinMapFragment extends Fragment implements LocationListener {
     }
 
     /**
-     * Show just one trip on the map, with patterns
-     * TODO: this method matches the above method-- refactor it
+     * Show just one trip on the map, with patterns. All other trips are removed from the
+     * map, but not discarded.
      */
     public void showTrip(Trip trip) {
         map.setMyLocationEnabled(false);
@@ -182,14 +178,15 @@ public class PinMapFragment extends Fragment implements LocationListener {
     }
 
     public void showRecordingTrip(Trip trip) {
+        map.clear();
         map.setMyLocationEnabled(true);
 
         new CalculateMapInfo(bitmapLoader) {
             protected void onPostExecute(TripMapInformation info) {
                 if (info != null) {
                     recordingTrip = info;
-
-                    //reload map
+                    recordingTrip.marker2 = null;
+                    addTripToMap(recordingTrip, true);
                 }
             }
         }.execute(trip);
@@ -200,18 +197,20 @@ public class PinMapFragment extends Fragment implements LocationListener {
         if (recordingTrip == null) {
             Log.e(TAG, "WARN: Update recording trip called while there is no recordingTrip!");
             return;
-        }
+            }
 
-//        recordingTrip.addCoordinate(coordinate);
-//
-//        //do not update the map with the recording trip if the map is busy displaying trips
-//        if (displaying) return;
-//        map.addPolyline(recordingTrip.line);
-//
-//        if (recordingTrip.marker1 == null) {
-//            recordingTrip.setMarker1(coordinate);
-//            map.addMarker(recordingTrip.marker1);
-//        }
+            recordingTrip.trip.mappable_events = events;
+
+            new AddCalculateMapInfo(bitmapLoader) {
+                protected void onPostExecute(TripMapInformation info) {
+                    Log.d(TAG, "Finished trip process, adding to map.");
+                    if (info == null) {
+                        Log.e(TAG, "Received a null tripInfo from the processor!");
+                    }
+
+                recordingTrip.coordinates.addAll(info.coordinates);
+            }
+        }.execute(recordingTrip);
     }
 
 
@@ -256,8 +255,8 @@ public class PinMapFragment extends Fragment implements LocationListener {
 
     /**
      * Add the passed info to the map, drawing it on the screen.
-     * @param trip trip to be added to the map
-     */
+    * @param trip trip to be added to the map
+    */
     private void addTripToMap(TripMapInformation trip, boolean showPatterns) {
         if (trip.line == null || trip.marker1 == null)
             return;
@@ -270,12 +269,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
         if (trip.marker2 != null)
             map.addMarker(trip.marker2);
 
-//        if (showPatterns) {
-//            for (MarkerOptions marker: trip.patterns)
-//                map.addMarker(marker);
-//        }
-
-        //alternative
         if (showPatterns) {
             for (GroundOverlayOptions marker: trip.patterns)
                 map.addGroundOverlay(marker);
@@ -333,17 +326,4 @@ public class PinMapFragment extends Fragment implements LocationListener {
             map.animateCamera(CameraUpdateFactory.zoomTo(15));
         }
 	}
-
-
-/* Misc Android Callbacks */
-//	@Override
-//	public void onConnected(Bundle arg0) {
-//		LocationRequest locationrequest = new LocationRequest();
-//		locationrequest.setInterval(3);
-//
-//        client.requestLocationUpdates(locationrequest, this);
-//	}
-//
-//	@Override
-//	public void onDisconnected() { }
 }
