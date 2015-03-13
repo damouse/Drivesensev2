@@ -19,7 +19,7 @@ public class SensorSimulator {
 
     //the counter variables for figuring out time
     int counter = 0;
-    private int maxCounter;
+    private int maxCounter = 360;
     private int iteration = 0;
 
     //the location coordinates
@@ -76,30 +76,34 @@ public class SensorSimulator {
         }
     };
 
-    public SensorSimulator() {
-
-    }
-
     /*
      * Starts updating the class that called this method with location updates for the
      * given amount of time.
      */
-    public void startSendingLocations(Object receiver, int time) {
-        shouldUpdateLocation = true;
-        maxCounter = time;
-
+    public void startSendingLocations(Object receiver) {
         if (receiver instanceof PinMapFragment)
             pinMap = (PinMapFragment) receiver;
         if (receiver instanceof SensorMonitor)
             sensorMonitor = (SensorMonitor)receiver;
 
-        timerHandler.postDelayed(timerRunnable, 0);
+        //only call the timer code if this method has not yet been called
+        if (!shouldUpdateLocation) {
+            shouldUpdateLocation = true;
+            timerHandler.postDelayed(timerRunnable, 0);
+        }
     }
 
-    public void stopSendingLocations() {
-        shouldUpdateLocation = false;
-        counter = 0;
-        iteration++;
+    public void stopSendingLocations(Object receiver) {
+        if (receiver instanceof PinMapFragment)
+            pinMap = null;
+        if (receiver instanceof SensorMonitor)
+            sensorMonitor = null;
+
+        if (sensorMonitor == null && pinMap == null) {
+            shouldUpdateLocation = false;
+            counter = 0;
+            iteration++;
+        }
     }
 
 
@@ -117,6 +121,7 @@ public class SensorSimulator {
 
             ret.setLatitude(lat);
             ret.setLongitude(lon);
+            ret.setTime(System.currentTimeMillis());
 
             lastLat = lat;
             lastLong = lon;
@@ -126,7 +131,7 @@ public class SensorSimulator {
             ret.setLongitude(lastLong);
         }
 
-        Log.d(TAG, "Pushing new location: " + ret.toString());
+//        Log.d(TAG, "Pushing new location: " + ret.toString());
 
         return ret;
     }

@@ -61,8 +61,6 @@ public class TripMapInformation {
         StringBuilder sb = new StringBuilder();
 
         sb.append("Trip name: " + trip.getId());
-        sb.append(" start: " + marker1.toString());
-        sb.append(" end: " + marker2.toString());
         sb.append(" coordinates: " + coordinates.size());
         sb.append(" patterns: " + patterns.size());
 

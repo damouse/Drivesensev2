@@ -23,7 +23,7 @@ import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
  *
  * Should show a spinner while map and trip are being loaded.
  */
-public class TripViewerActivity extends Activity implements Observer {
+public class TripViewerActivity extends Activity {
     private static final String TAG = "RecordingActivity";
 
     private PinMapFragment fragmentMap;
@@ -83,12 +83,5 @@ public class TripViewerActivity extends Activity implements Observer {
         }
 
         return result.get(0);
-    }
-
-    @Override
-    public void update(Observable observable, Object data) {
-        List<MappableEvent> events = (List<MappableEvent>) data;
-
-
     }
 }

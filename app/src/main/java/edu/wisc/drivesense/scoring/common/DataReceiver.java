@@ -224,6 +224,7 @@ public class DataReceiver {
         gravity.dequeueBeforeTimestamp(time);
         magnet.dequeueBeforeTimestamp(time);
         gps.dequeueBeforeTimestamp(time);
+        rotationMatrix.dequeueBeforeTimestamp(time);
     }
 
     /* Saving Previous Results-- Input Memory */

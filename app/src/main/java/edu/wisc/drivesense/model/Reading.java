@@ -30,7 +30,6 @@ public class Reading extends TimestampSortable {
         ROTATION_MATRIX
     }
 
-
     public long timestamp;
     public double[] values;
     public int dimension;

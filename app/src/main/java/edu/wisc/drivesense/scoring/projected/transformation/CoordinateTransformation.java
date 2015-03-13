@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import android.util.Log;
 import edu.wisc.drivesense.model.DrivingPattern;
 import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.scoring.projected.processing.*;
@@ -193,6 +194,10 @@ public class CoordinateTransformation {
             PairDouble xy = raw_xys.get(i);
             if (slope > 0 ^ xy.x * perpendicular_slope > xy.y)
                 rightnum++;
+        }
+
+        if (raw_xys.size() == 0) {
+            Log.e("CoordinateTransformatio", "Insufficient Data Error!");
         }
 
         int y_indicator = (rightnum / raw_xys.size() > Constants.PERCENT_) ? 1 : -1;

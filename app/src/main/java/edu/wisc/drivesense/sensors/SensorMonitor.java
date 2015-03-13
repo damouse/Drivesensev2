@@ -16,6 +16,9 @@ import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.utilities.SensorSimulator;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Records sensor data, creates Reading objects, and sends them back to the ModelManager
  *
@@ -30,20 +33,33 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
 
     //Sensors
     private SensorManager sensorManager;
-    private Sensor acceleromenter;
-    private Sensor gyroscope;
-    private Sensor compass;
+    private List<Sensor> sensors;
     private LocationManager locationManager;
+
+    //In milliseconds, how long to wait before accepting a new value.
+    private double minSamplingPeriod = 180;
+
+    private double lastAccelTime = 0;
+    private double lastGyroTime = 0;
+    private double lastMagnetTime = 0;
+    private double lastGravityTime = 0;
+
+    int a = 0;
+    int gy = 0;
+    int m = 0;
+    int gr = 0;
 
 
     /* Boilerplate*/
     public SensorMonitor(BackgroundRecordingService manager) {
-
-        //init sensors
+        Log.d(TAG, "Sensor Monitor Init");
         sensorManager = (SensorManager) manager.getSystemService(Context.SENSOR_SERVICE);
-        acceleromenter = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-        gyroscope = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
-        compass = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+
+        sensors = new ArrayList<>();
+        sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
+        sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE));
+        sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
+        sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY));
 
         if (BackgroundRecordingService.DEBUG) simulator = new SensorSimulator();
         else {
@@ -56,16 +72,19 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     /* Public Methods*/
     // Begin collecting data from sensors.
     public void startCollecting() {
+        Log.d(TAG, "Starting collection");
+
         //start sensors
         startCollectingGPS();
 
-        sensorManager.registerListener(this, acceleromenter, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, gyroscope, SensorManager.SENSOR_DELAY_NORMAL);
-        sensorManager.registerListener(this, compass, SensorManager.SENSOR_DELAY_NORMAL);
+        for (Sensor sensor: sensors) {
+            if (sensor != null)
+                sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL);
+        }
     }
 
     public void startCollectingGPS() {
-        if (BackgroundRecordingService.DEBUG) simulator.startSendingLocations(this, 15);
+        if (BackgroundRecordingService.DEBUG) simulator.startSendingLocations(this);
         else locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, this);
     }
 
@@ -77,7 +96,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     }
 
     public void stopCollectingGPS() {
-        if (BackgroundRecordingService.DEBUG) simulator.stopSendingLocations();
+        if (BackgroundRecordingService.DEBUG) simulator.stopSendingLocations(this);
         else {
             locationManager.removeUpdates(this);
 //            locationManager.removeGpsStatusListener(this);
@@ -103,42 +122,64 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
 
     @Override
     public void onSensorChanged(SensorEvent event) {
-//        ReadingType type = null;
-//
-//        switch (event.sensor.getType()) {
-//            case Sensor.TYPE_ACCELEROMETER:
-//                type = ReadingType.acceleration;
-//                break;
-//
-//            case Sensor.TYPE_GYROSCOPE:
-//                type = ReadingType.GYROSCOPE;
-//                break;
-//
-//            case Sensor.TYPE_MAGNETIC_FIELD:
-//                type = ReadingType.MAGNETIC;
-//                break;
-//
-//            default:
-//                Log.d(TAG, "Received sensor reading of unknown type.");
-//                break;
-//        }
-//
-//        //sad and unfortunate casting here...
-//        double[] values = new double[event.values.length];
-//        for (int i = 0; i < event.values.length; i++)
-//            values[i] = (double) event.values[i];
-//
-//        BackgroundRecordingService.getInstance().newReading(new Reading(values, event.timestamp, type));
+        Reading.Type type;
+
+//        Log.d(TAG, "Reported Timestamp: " + event.timestamp + " Real Time: " + System.currentTimeMillis());
+//        return;
+
+        switch (event.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+//                Log.d(TAG, "Accel " + event.values[0] + ", " + event.values[1] + ", " + event.values[2] + " time: " + event.timestamp);
+                type = Reading.Type.ACCELERATION;
+
+                double diff = milisecondDifference(event, lastAccelTime);
+                if (milisecondDifference(event, lastAccelTime) < minSamplingPeriod)
+                    return;
+
+                lastAccelTime = event.timestamp;
+                a++;
+                break;
+
+            case Sensor.TYPE_GYROSCOPE:
+                type = Reading.Type.GYROSCOPE;
+                gy++;
+                break;
+
+            case Sensor.TYPE_MAGNETIC_FIELD:
+                type = Reading.Type.MAGNETIC;
+                m++;
+                break;
+
+            case Sensor.TYPE_GRAVITY:
+                type = Reading.Type.GRAVITY;
+                gr++;
+                break;
+
+            default:
+                Log.e(TAG, "Received sensor reading of unknown type.");
+                return;
+        }
+
+        double[] values = new double[event.values.length];
+        for (int i = 0; i < event.values.length; i++)
+            values[i] = (double) event.values[i];
+
+        BackgroundRecordingService.getInstance().newReading(new Reading(values, System.currentTimeMillis(), type));
     }
 
+    public double milisecondDifference(SensorEvent event, double nanosecondsEarlier) {
+        return (event.timestamp - nanosecondsEarlier) / 1000000;
+    }
 
     /* Stock Callbacks */
     @Override
     public void onProviderDisabled(String provider) {
+        Log.i(TAG, "Provider disabled:  " + provider);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
+        Log.i(TAG, "Provider enabled:  " + provider);
     }
 
     @Override
@@ -162,5 +203,18 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     @Override
     public void onGpsStatusChanged(int event) {
         BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(event == GpsStatus.GPS_EVENT_STARTED);
+    }
+
+
+    //TESTING
+    public void readCounts() {
+        Log.w(TAG, "Accel: " + a + " Gyro: " + gy + " Magnetic: " + m + " Gravity: " + gr);
+    }
+
+    public void clearCounts() {
+        a = 0;
+        m = 0;
+        gr = 0;
+        gy = 0;
     }
 }

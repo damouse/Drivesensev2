@@ -118,6 +118,9 @@ public class BackgroundState extends Observable {
         else if (state == State.UNINITIALIZED)
             transitionUninitialized();
 
+ //        if (oldState == State.MANUAL_RECORDING && state == State.MANUAL_LISTEN) {
+//            Log.d(TAG, "Hay brah");
+//        }
         //done establishing state, notify observers only if the state changed
         if (oldState != state) {
             Log.i(TAG, "Changed state from " + oldState + " to " + state);
@@ -174,7 +177,7 @@ public class BackgroundState extends Observable {
             else
                 state = State.AUTOMATIC_STOP_WAIT;
         }
-        else if (!gpsAvailable || !manualTrigger || adviseTripStop)
+        else if (!gpsAvailable || manualTrigger || adviseTripStop)
             state = State.MANUAL_LISTEN;
     }
 

@@ -7,9 +7,7 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.GoogleApiClient.OnConnectionFailedListener;
-import com.google.android.gms.common.GooglePlayServicesClient.ConnectionCallbacks;
 import com.google.android.gms.location.LocationListener;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -17,14 +15,11 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
-import edu.wisc.drivesense.businessLogic.Bengal;
 import edu.wisc.drivesense.model.MappableEvent;
 import edu.wisc.drivesense.model.Trip;
-import edu.wisc.drivesense.utilities.SensorSimulator;
 import edu.wisc.drivesense.views.AddCalculateMapInfo;
 import edu.wisc.drivesense.views.BitmapLoader;
 import edu.wisc.drivesense.views.CalculateMapInfo;
@@ -120,21 +115,27 @@ public class PinMapFragment extends Fragment implements LocationListener {
 			public void onConnectionFailed(ConnectionResult arg0) { }
 		};
 		
-		client = new GoogleApiClient.Builder(context)
-                .addApi(LocationServices.API)
-                .build();
+		client = new GoogleApiClient.Builder(context).addApi(LocationServices.API).build();
 	}
 	
 	@Override
 	public void onResume() {
 		super.onResume();
-		client.connect();
+
+        if (BackgroundRecordingService.DEBUG)
+            BackgroundRecordingService.getInstance().monitor.simulator.startSendingLocations(this);
+        else
+		    client.connect();
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		client.disconnect();
+
+        if (BackgroundRecordingService.DEBUG)
+            BackgroundRecordingService.getInstance().monitor.simulator.stopSendingLocations(this);
+        else
+            client.disconnect();
 	}
 
 	  
@@ -180,6 +181,8 @@ public class PinMapFragment extends Fragment implements LocationListener {
     public void showRecordingTrip(Trip trip) {
         map.clear();
         map.setMyLocationEnabled(true);
+        displayingAllTrips = false;
+        displaying = true;
 
         new CalculateMapInfo(bitmapLoader) {
             protected void onPostExecute(TripMapInformation info) {
@@ -208,7 +211,8 @@ public class PinMapFragment extends Fragment implements LocationListener {
                         Log.e(TAG, "Received a null tripInfo from the processor!");
                     }
 
-                recordingTrip.coordinates.addAll(info.coordinates);
+                    map.clear();
+                    addTripToMap(recordingTrip, true);
             }
         }.execute(recordingTrip);
     }
@@ -249,7 +253,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
             //processor.execute(trip);
         }
 
-
         //TODO: zoom to the added trips
     }
 
@@ -273,9 +276,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
             for (GroundOverlayOptions marker: trip.patterns)
                 map.addGroundOverlay(marker);
         }
-
-        //sortof temporary zoom
-        zoomToBounds(trip);
     }
 
     private void zoomToBounds(TripMapInformation trip) {

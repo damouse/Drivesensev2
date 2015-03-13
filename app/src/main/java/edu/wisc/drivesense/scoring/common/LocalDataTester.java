@@ -31,6 +31,7 @@ public class LocalDataTester {
     private static final String TAG = "LocalDataTester";
 
     static boolean lock = false;
+    double baseTime = System.currentTimeMillis();
     long maxTime = 100000;
 
     private TripRecorder recorder;
@@ -127,6 +128,8 @@ public class LocalDataTester {
 
                 if (reading.timestamp > maxTime)
                     break;
+
+                reading.timestamp += baseTime;
 
                 //exclude duplicates
                 if (lastReading != null && reading.timestamp != lastReading.timestamp)

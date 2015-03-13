@@ -60,7 +60,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     public static final String TRIPS_UPDATE = "edu.wisc.drivesense.trips_update";
     public static final String STATE_UPDATE = "edu.wisc.drivesense.state_update";
     private static BackgroundRecordingService instance = null; //singleton ivar
-    public static final boolean DEBUG = false;
+    public static final boolean DEBUG = true;
 
     public SensorMonitor monitor;
     public BackgroundState stateManager;
@@ -213,6 +213,9 @@ public class BackgroundRecordingService extends Service implements Observer {
 
         //pass off straight to the other method for processing, do no more here
         newReading(new Reading(location));
+
+        monitor.readCounts();
+        monitor.clearCounts();
     }
 
     public void newReading(Reading reading) {

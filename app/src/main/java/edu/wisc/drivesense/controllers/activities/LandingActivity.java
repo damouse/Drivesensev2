@@ -20,6 +20,7 @@ import edu.wisc.drivesense.controllers.fragments.MenuFragment;
 import edu.wisc.drivesense.controllers.fragments.SettingsFragment;
 import edu.wisc.drivesense.controllers.fragments.StatsFragment;
 import edu.wisc.drivesense.controllers.fragments.TripsListViewFragment;
+import edu.wisc.drivesense.model.SugarDatabse;
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
@@ -51,6 +52,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
+
+        SugarDatabse.clearDatabase();
 
         //creates the drawer menu
         resideMenu = new ResideMenu(this);
@@ -210,6 +213,13 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 BackgroundRecordingService.getInstance().stateManager.adviseTripStart();
+                                sweetAlertDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
                             }
                         })
                         .show();
@@ -225,6 +235,12 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
                             @Override
                             public void onClick(SweetAlertDialog sweetAlertDialog) {
                                 BackgroundRecordingService.getInstance().stateManager.adviseTripEnd();
+                            }
+                        })
+                        .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismissWithAnimation();
                             }
                         })
                         .show();

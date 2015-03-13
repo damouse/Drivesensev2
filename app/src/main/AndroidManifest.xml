@@ -114,12 +114,11 @@
         <!-- You will not be able to access the map on the app unless you use this key to create a Google Maps API key in the -->
         <!-- console. Ask Mickey for access to the dev account. -->
 
-
         <!-- Debug key: make active for local testing ON MAC -->
         <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />-->
 
         <!-- Debug key: make active for local testing ON WINDOWS -->
-         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyBbItB5PPXvT6HLAbLuvdqlFoKDWViIyqQ"/>
+         <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDNLj-p7RCUHXR8IzJOOVZaaZlxF_fHnHk"/>
     </application>
 
 </manifest>

@@ -8,6 +8,12 @@ import android.view.MenuItem;
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
 import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
+import edu.wisc.drivesense.model.MappableEvent;
+import edu.wisc.drivesense.model.Trip;
+
+import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 /**
  * Shows recording trips on the PinMapFregment. Adds patterns as they are recognized.
@@ -15,9 +21,9 @@ import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
  * Should show a loading indicator as trips are loaded or as this activity waits for the
  * background service to load/settle.
  */
-public class RecordingTripActivity extends Activity {
+public class RecordingTripActivity extends Activity implements Observer {
     private static final String TAG = "RecordingActivity";
-
+    private Trip trip;
     private PinMapFragment fragmentMap;
 
 
@@ -26,20 +32,26 @@ public class RecordingTripActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_trip);
-
         fragmentMap = (PinMapFragment) getFragmentManager().findFragmentById(R.id.map);
-        synchronizeBackground();
     }
 
     @Override
-    protected void onStop() {
+    protected void onResume() {
+        super.onResume();
+        trip = BackgroundRecordingService.getInstance().recorder.getTrip();
+        fragmentMap.showRecordingTrip(trip);
+        BackgroundRecordingService.getInstance().recorder.addObserver(this);
+    }
+
+    @Override
+    protected void onPause() {
         super.onStop();
+        BackgroundRecordingService.getInstance().recorder.deleteObserver(this);
         BackgroundRecordingService.checkAndDestroy(this);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_recording_trip, menu);
         return true;
     }
@@ -59,14 +71,9 @@ public class RecordingTripActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Synchronize our state with the background state-- register for state callbacks,
-     * load the currently recording trip, and map the results.
-     */
-    private void synchronizeBackground() {
-
+    @Override
+    public void update(Observable observable, Object data) {
+        List<MappableEvent> events = (List<MappableEvent>) data;
+        fragmentMap.updateRecordingTrip(events);
     }
-
-
-    /* Background State Changes */
 }

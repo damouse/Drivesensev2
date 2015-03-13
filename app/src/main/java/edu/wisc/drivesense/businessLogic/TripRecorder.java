@@ -33,7 +33,7 @@ public class TripRecorder extends Observable {
     private static final boolean useNeuralNetork = false;
 
     //How long to wait between scoring attempts and how much data to hold
-    public int period = 30000; //in milliseconds
+    public int period = 15000; //in milliseconds
     private int memorySize = 10;
     private Context context;
 
@@ -66,6 +66,7 @@ public class TripRecorder extends Observable {
 
         Log.d(TAG, "Recording trip: " + trip.getId());
 
+        timerHandler = new Handler();
         timerRunnable = new Runnable() {
             @Override
             public void run() {
@@ -76,14 +77,22 @@ public class TripRecorder extends Observable {
             }
         };
 
-        //comment this out when operating on local data
-        //timerHandler.postDelayed(timerRunnable, period);
+        if (BackgroundRecordingService.DEBUG)
+            timerHandler.postDelayed(timerRunnable, period);
     }
 
 
     /* Public Interface */
     public void endTrip() {
         recording = false;
+
+        //TODO: check for a minuimum duration or number of patterns
+        if (lastEvent == null) {
+            Log.e(TAG, "Insufficient trip data to score. Deleting trip");
+            MappableEvent.deleteAll(MappableEvent.class, "trip = ?", "" + trip.getId());
+            trip.delete();
+            return;
+        }
 
         trip.scoreAccels = trip.scoreAccels / trip.numAccels;
         trip.scoreBrakes = trip.scoreBrakes / trip.numBrakes;
@@ -193,6 +202,9 @@ public class TripRecorder extends Observable {
             Log.e(TAG, "Receiver is unexpectedly null.");
             return;
         }
+
+        if (!recording)
+            return;
 
         DataSetInput period = receiver.getProcessedPeriod();
         TimestampQueue<DrivingPattern> patterns;
