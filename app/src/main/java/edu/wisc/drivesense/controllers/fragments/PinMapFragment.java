@@ -122,7 +122,7 @@ public class PinMapFragment extends Fragment implements LocationListener {
 	public void onResume() {
 		super.onResume();
 
-        if (BackgroundRecordingService.DEBUG)
+        if (BackgroundRecordingService.DEBUG && BackgroundRecordingService.getInstance() != null)
             BackgroundRecordingService.getInstance().monitor.simulator.startSendingLocations(this);
         else
 		    client.connect();
@@ -132,7 +132,7 @@ public class PinMapFragment extends Fragment implements LocationListener {
 	public void onPause() {
 		super.onPause();
 
-        if (BackgroundRecordingService.DEBUG)
+        if (BackgroundRecordingService.DEBUG && BackgroundRecordingService.getInstance() != null)
             BackgroundRecordingService.getInstance().monitor.simulator.stopSendingLocations(this);
         else
             client.disconnect();

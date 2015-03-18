@@ -41,7 +41,6 @@ public class TripRecorder extends Observable {
     DataReceiver receiver;
 
     private Trip trip;
-
     private MappableEvent lastEvent;
 
     //handles Receiver polling based on the period time
@@ -94,13 +93,7 @@ public class TripRecorder extends Observable {
             return;
         }
 
-        trip.scoreAccels = trip.scoreAccels / trip.numAccels;
-        trip.scoreBrakes = trip.scoreBrakes / trip.numBrakes;
-        trip.scoreTurns = trip.scoreTurns / trip.numTurns;
-        trip.scoreLaneChanges = trip.scoreLaneChanges / trip.numLaneChanges;
-
-        trip.duration = Utils.convertToSeconds(lastEvent.timestamp - trip.timestamp);
-        trip.scored = true;
+        setTripScore();
 
         Log.d(TAG, "Ended trip: " + trip.getId());
         trip.save();
@@ -227,5 +220,27 @@ public class TripRecorder extends Observable {
         List<MappableEvent> events = GpsThief.getSparseCoordinates(period.gps, patterns);
         Log.i(TAG, "New Period- gps coordinates-  " + period.gps.size() + " Patterns: " + patterns.size());
         newPatterns(events);
+    }
+
+
+    /* Private Convenience Methods */
+    /**
+     * Fill the trip's fields with appropriate values based on the score. This is where score weighting occurs,
+     * if relevant. If no weights are set, then each individual event's score is averaged together
+     */
+    private void setTripScore() {
+        trip.scoreAccels = trip.scoreAccels / trip.numAccels;
+        trip.scoreBrakes = trip.scoreBrakes / trip.numBrakes;
+        trip.scoreTurns = trip.scoreTurns / trip.numTurns;
+        trip.scoreLaneChanges = trip.scoreLaneChanges / trip.numLaneChanges;
+
+        trip.duration = Utils.convertToSeconds(lastEvent.timestamp - trip.timestamp);
+
+        //weight the overall score based on the number of events
+        int totalEvents = trip.numAccels + trip.numBrakes + trip.numLaneChanges + trip.numTurns;
+        float weightedTotal = trip.scoreBrakes + trip.scoreAccels + trip.scoreLaneChanges + trip.scoreTurns;
+
+        trip.score = (int) weightedTotal / totalEvents;
+        trip.scored = true;
     }
 }

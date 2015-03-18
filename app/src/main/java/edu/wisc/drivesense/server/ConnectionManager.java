@@ -123,17 +123,17 @@ public class ConnectionManager {
     public void convertUploadTrip(final Trip trip, User user, final ConnectionManagerCallback callback) {
         new ConvertTripToJson() {
             protected void onPostExecute(String json) {
-//                createAndPostRequest("upload", json, new AsyncHTTPResponseCallback(callback) {
-//                    @Override
-//                    public void onSuccess(int statusCode, Header[] headers, byte[] rawResponse) {
-//                        super.onSuccess(statusCode, headers, rawResponse);
-//                        trip.setUploaded(true);
-//                        trip.save();
-//
-//                        if (callback != null)
-//                            callback.onConnectionCompleted(true);
-//                    }
-//                });
+                createAndPostRequest("upload", json, new AsyncHTTPResponseCallback(callback) {
+                    @Override
+                    public void onSuccess(int statusCode, Header[] headers, byte[] rawResponse) {
+                        super.onSuccess(statusCode, headers, rawResponse);
+                        trip.setUploaded(true);
+                        trip.save();
+
+                        if (callback != null)
+                            callback.onConnectionCompleted(true);
+                    }
+                });
             }
         }.execute(trip, user);
     }

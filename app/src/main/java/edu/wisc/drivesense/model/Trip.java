@@ -37,7 +37,7 @@ public class Trip extends SugarRecord<Trip> {
     public float scoreTurns;
 
     @Expose
-    @SerializedName("scoreBrakes")
+    @SerializedName("scoreBreaks") //Yes, I know its misspelled. I don't know how I live with myself either.
     public float scoreBrakes;
 
     @Expose

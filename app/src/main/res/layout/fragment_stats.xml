@@ -55,7 +55,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="center|left"
                 android:text="One"/>
 
             <TextView
@@ -73,7 +73,7 @@
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:gravity="center"
+                android:gravity="center|right"
                 android:text="Three"/>
 
         </LinearLayout>

@@ -53,7 +53,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
-        SugarDatabse.clearDatabase();
+//        SugarDatabse.clearDatabase();
 
         //creates the drawer menu
         resideMenu = new ResideMenu(this);
@@ -69,7 +69,6 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
 
         //initialize table with trips
         loadUser();
-        displayLastTrip();
     }
 
     @Override
@@ -84,6 +83,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     protected void onResume() {
         super.onResume();
         BackgroundRecordingService.checkAndStart(this);
+        displayLastTrip();
         setButtonStates();
 
         //notify us of changes in trips (when new trips are added, for example)
@@ -133,6 +133,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      */
     public void userStateChanged() {
         User user = Concierge.getCurrentUser();
+        displayLastTrip();
 
         //update BackgroundState with any change in state
         if (BackgroundRecordingService.getInstance() != null) {
@@ -357,6 +358,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             return;
         }
 
+        user.backendId = 1;
         ConnectionManager api = new ConnectionManager(this);
         api.convertUploadTrip(trips.get(0), user, null);
     }

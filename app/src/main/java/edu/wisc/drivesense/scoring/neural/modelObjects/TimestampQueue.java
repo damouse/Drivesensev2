@@ -360,7 +360,7 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      * If these two assumptions hold, lookup operations are either in constant time
      * or very, very close to constant time.
      *
-     * Worst case scenario, lookups are N complex.
+     * Worst case scenario, lookups are O(N).
      */
     private int efficientTimeSearch(long time) {
         if (contents.size() == 0)
@@ -390,6 +390,10 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
         if (contents.size() == 0)
             return -1;
 
+        //one element can only have one closest timestamp
+        if (contents.size() == 1)
+            return 0;
+
         if (time < peek().getTime())
             return 0;
 
@@ -408,6 +412,12 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
         //time per index is the relative difference in time between elements
         long timePerIndex = totalTime / elementsToQuery;
+
+//        for (int i = 1; i < elementsToQuery; i++)
+//            totalTime += (contents.get(i).getTime() - contents.get(i - 1).getTime());
+//
+//        //time per index is the relative difference in time between elements
+//        long timePerIndex = totalTime / (elementsToQuery - 1);
 
         //time between target time and first element / time per index
         int currentIndex = (int) ((time - peek().getTime()) / timePerIndex);
