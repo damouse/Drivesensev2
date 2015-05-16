@@ -54,6 +54,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     public SensorMonitor(BackgroundRecordingService manager) {
         Log.d(TAG, "Sensor Monitor Init");
         sensorManager = (SensorManager) manager.getSystemService(Context.SENSOR_SERVICE);
+        locationManager = (LocationManager) manager.getSystemService(Context.LOCATION_SERVICE);
 
         sensors = new ArrayList<>();
         sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER));
@@ -61,11 +62,10 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
         sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
         sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY));
 
-        if (BackgroundRecordingService.DEBUG) simulator = new SensorSimulator();
-        else {
-            locationManager = (LocationManager) manager.getSystemService(Context.LOCATION_SERVICE);
+        if (BackgroundRecordingService.DEBUG)
+            simulator = new SensorSimulator();
+        else
             locationManager.addGpsStatusListener(this);
-        }
     }
 
 
@@ -193,10 +193,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     }
 
     public boolean gpsEnabled() {
-        if (BackgroundRecordingService.DEBUG)
-            return true;
 
-        //LocationManager manager = (LocationManager) BackgroundRecordingService.getInstance().getSystemService(BackgroundRecordingService.getInstance().LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 

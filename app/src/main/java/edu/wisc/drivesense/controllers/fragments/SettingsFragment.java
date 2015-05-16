@@ -38,9 +38,9 @@ public class SettingsFragment extends Fragment {
         View result = inflater.inflate(R.layout.fragment_settings, container, false);
         user = Concierge.getCurrentUser();
 
-        optionUnpoweredRecording = (MenuOption) getFragmentManager().findFragmentById(R.id.optionUnpoweredRecording);
-        optionWifiOffUploading = (MenuOption) getFragmentManager().findFragmentById(R.id.optionWifiOff);
-        optionDelete = (MenuOption) getFragmentManager().findFragmentById(R.id.optionDelete);
+        optionUnpoweredRecording = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionUnpoweredRecording);
+        optionWifiOffUploading = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionWifiOff);
+        optionDelete = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionDelete);
 
         setOptions(user);
 

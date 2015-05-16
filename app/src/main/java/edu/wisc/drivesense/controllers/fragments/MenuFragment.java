@@ -49,8 +49,8 @@ public class MenuFragment extends Fragment {
         View result = inflater.inflate(R.layout.fragment_menu, container, false);
         user = Concierge.getCurrentUser();
 
-        optionAutomaticRecording = (MenuOption) getFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
-        optionUploading = (MenuOption) getFragmentManager().findFragmentById(R.id.optionUploading);
+        optionAutomaticRecording = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
+        optionUploading = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionUploading);
 
         buttonLogin = (Button) result.findViewById(R.id.login);
         buttonLogin.setOnClickListener(new ButtonListner());
@@ -60,6 +60,13 @@ public class MenuFragment extends Fragment {
         setLogin(user);
 
         return result;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+
     }
 
     /**
