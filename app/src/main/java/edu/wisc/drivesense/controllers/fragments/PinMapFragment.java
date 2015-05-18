@@ -74,12 +74,22 @@ public class PinMapFragment extends Fragment implements LocationListener {
 
 	
     /* Boilerplate */
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 		View myFragmentView = inflater.inflate(R.layout.map_fragment, container, false);
 
         tripsCache = new ArrayList<TripMapInformation>();
         processing = new ArrayList<AsyncTask>();
+
+        //grab a ref to the map for later manipulation
+        MapFragment fm = (MapFragment) getChildFragmentManager().findFragmentById(R.id.googleMap);
+        Log.v(TAG, "FM IS NULL: " + fm.toString());
+        map = fm.getMap();
 
 		initMap();
 
@@ -90,10 +100,6 @@ public class PinMapFragment extends Fragment implements LocationListener {
 	 * Init the map and location client
 	 */
 	private void initMap() {
-		//grab a ref to the map for later manipulation
-		MapFragment fm = (MapFragment) getFragmentManager().findFragmentById(R.id.googleMap);
-        map = fm.getMap();
-
         bitmapLoader = new BitmapLoader(getActivity().getApplicationContext());
 
         //default to showing the user's location
@@ -239,6 +245,9 @@ public class PinMapFragment extends Fragment implements LocationListener {
                     if (info != null) {
                         tripsCache.add(info);
                     }
+                    else {
+                        Log.e(TAG, "Trip info is null! Don't know how to proceed!");
+                    }
 
                     //TODO: careful- what does "this" refer to?
                     processing.remove(this);
@@ -261,6 +270,10 @@ public class PinMapFragment extends Fragment implements LocationListener {
     * @param trip trip to be added to the map
     */
     private void addTripToMap(TripMapInformation trip, boolean showPatterns) {
+        if (trip == null) {
+            Log.e(TAG, "Trip is null when returning from the calculate async call!");
+            return;
+        }
         if (trip.line == null || trip.marker1 == null)
             return;
 

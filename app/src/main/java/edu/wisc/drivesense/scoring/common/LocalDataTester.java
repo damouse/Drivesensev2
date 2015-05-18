@@ -32,7 +32,7 @@ public class LocalDataTester {
 
     static boolean lock = false;
     double baseTime = System.currentTimeMillis();
-    long maxTime = 100000;
+    long maxTime = 200000;
 
     private TripRecorder recorder;
     private Context context;
@@ -69,10 +69,13 @@ public class LocalDataTester {
         long timestampRange[] = completeTimestampRangeInDataSet(allQueus);
 
         for (TimestampQueue<Reading> queue: allQueus)
-            allData.addQueue(queue);
+                allData.addQueue(queue);
+
+        Log.v(TAG, "Timestamp range for loaded data: " + timestampRange[0] + ":" + timestampRange[1]);
 
         Log.d(TAG, "Sorting all data...");
         allData.sort();
+        Log.v(TAG, "Size of queue after sort: " + allData.size());
         allData.trimInPlace(timestampRange[0], timestampRange[1]);
         Log.d(TAG, "Feeding data...");
 
@@ -118,6 +121,8 @@ public class LocalDataTester {
         String line;
         TimestampQueue<Reading> result = new TimestampQueue<Reading>();
 
+        int counter = 0;
+
         try {
             BufferedReader reader = new BufferedReader(new InputStreamReader(context.getAssets().open(name)));
             Reading lastReading = null;
@@ -125,6 +130,7 @@ public class LocalDataTester {
             line = reader.readLine();
             while (line != null) {
                 Reading reading = new Reading(line, type);
+                counter++;
 
                 if (reading.timestamp > maxTime)
                     break;
@@ -144,7 +150,7 @@ public class LocalDataTester {
             System.out.println("Error reading file\n");
             e.printStackTrace();
         }
-
+        Log.v(TAG, "Loaded " + counter + " lines");
         return result;
     }
 

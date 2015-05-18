@@ -158,7 +158,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * @param view
      */
     public void onRightButtonClick(View view) {
-        if (false) {
+        if (true) {
             onLoadLocal();
             return;
         }
@@ -304,6 +304,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         }
     }
 
+
     /* TESTING and DEBUG */
     /**
      * Debug method used for whatever is needed-- most likely loading local sensor traces as trips.
@@ -334,6 +335,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     private void stopServiceTEST() {
         stopService(new Intent(this, BackgroundRecordingService.class));
     }
+
 
     /**
      * Miscellanious testing method

@@ -83,8 +83,6 @@ public class BitmapLoader {
 
 
     /* Color Changing */
-
-
     private Bitmap changeColor(Bitmap src, int color) {
         int width = src.getWidth();
         int height = src.getHeight();
@@ -133,6 +131,36 @@ public class BitmapLoader {
     }
 
     int getTrafficlightColor(double value){
-        return android.graphics.Color.HSVToColor(new float[]{(float)value*120f,1f,1f});
+        return android.graphics.Color.HSVToColor(new float[]{(float) value * 120f, 1f, 1f});
+    }
+
+
+    /* Custom Drawing */
+    private Bitmap drawSquare(double score) {
+        // draw circle
+        int d = 500; // diameter
+        Bitmap bm = Bitmap.createBitmap(d, d, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bm);
+        Paint p = new Paint();
+        p.setColor(colorForScore(score));
+        c.drawCircle(d/2, d/2, d/2, p);
+
+        return bm;
+//        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
+//        Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
+//        Canvas canvas = new Canvas(bmp);
+
+//        canvas.drawOval(
+//                mShadowBounds,
+//                mShadowPaint
+//        );
+
+// paint defines the text color,
+// stroke width, size
+//        Paint color = new Paint();
+//        color.setTextSize(35);
+//        color.setColor(Color.BLACK);
+//
+//        return bmp;
     }
 }

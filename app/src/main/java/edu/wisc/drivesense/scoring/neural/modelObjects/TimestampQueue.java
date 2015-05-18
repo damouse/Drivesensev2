@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import android.util.Log;
 import edu.wisc.drivesense.model.Reading;
 
 import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
@@ -19,6 +20,7 @@ import static edu.wisc.drivesense.scoring.neural.offline.OfflineWrapper.log;
  * iterators over the queue will move forward in time with respect to the elements' timestamps
  */
 public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> {
+    private static final String TAG = "TimestampQueue";
     private ArrayList<T> contents;
 
     public static void main(String[] args) {
@@ -252,9 +254,10 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
      */
     public void trimInPlace(long start, long end) {
         ArrayList<T> remove = new ArrayList<T>();
+        //Log.v(TAG, "Start and end [" + start + ", " +  end + "], contents [" + startTime() + ", " + endTime() + "]");
 
         if (end < startTime() || start > endTime()) {
-            log("Trimmed a queue to nothing.");
+            log("Trimmed a queue to nothing-- time bound overlap");
             contents = new ArrayList<T>();
             return;
         }
@@ -263,7 +266,7 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
         int endIndex = efficientTimeBound(end);
 
         if (startIndex == endIndex){
-            log("Trimmed a queue to nothing.");
+            log("Trimmed a queue to nothing-- resolved same index");
             contents = new ArrayList<T>();
             return;
         }
@@ -407,8 +410,8 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
         if (contents.size() < elementsToQuery)
             elementsToQuery = contents.size();
 
-        for (int i = 0; i < elementsToQuery; i++)
-            totalTime += contents.get(i).getTime();
+        for (int i = 1; i < elementsToQuery + 1; i++)
+            totalTime += (contents.get(i).getTime() - contents.get(i - 1).getTime());
 
         //time per index is the relative difference in time between elements
         long timePerIndex = totalTime / elementsToQuery;
@@ -421,6 +424,12 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
         //time between target time and first element / time per index
         int currentIndex = (int) ((time - peek().getTime()) / timePerIndex);
+
+        //sometimes this happens. Wish I knew why. It appears to only happen when doing the local loading,
+        // but its a bad idea to leave this in here-- will damage performance
+        if (currentIndex > contents.size())
+            currentIndex = 0;
+
         T probableElement = contents.get(currentIndex);
 
         //if current element time is later than target time, must move down the array, else up
