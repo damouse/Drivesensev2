@@ -427,7 +427,7 @@ public class TimestampQueue<T extends TimestampSortable> implements Iterable<T> 
 
         //sometimes this happens. Wish I knew why. It appears to only happen when doing the local loading,
         // but its a bad idea to leave this in here-- will damage performance
-        if (currentIndex > contents.size())
+        if (currentIndex >= contents.size())
             currentIndex = 0;
 
         T probableElement = contents.get(currentIndex);

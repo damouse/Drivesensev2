@@ -53,7 +53,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_landing);
 
-//        SugarDatabse.clearDatabase();
+        //SugarDatabse.clearDatabase();
 
         //creates the drawer menu
         resideMenu = new ResideMenu(this);

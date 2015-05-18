@@ -32,7 +32,7 @@ public class LocalDataTester {
 
     static boolean lock = false;
     double baseTime = System.currentTimeMillis();
-    long maxTime = 200000;
+    long maxTime = 500000;
 
     private TripRecorder recorder;
     private Context context;

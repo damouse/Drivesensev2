@@ -6,11 +6,7 @@ import java.util.List;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.android.gms.maps.model.*;
 
 import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.model.MappableEvent;
@@ -33,6 +29,8 @@ public class TripMapInformation {
 
     public List<LatLng> coordinates;
     public List<GroundOverlayOptions> patterns;
+
+    public LatLngBounds bounds;
 
 //    List<MarkerOptions> accelerations;
 //    List<MarkerOptions> brakes;

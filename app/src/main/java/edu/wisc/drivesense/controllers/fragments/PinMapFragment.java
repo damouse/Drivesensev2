@@ -289,22 +289,20 @@ public class PinMapFragment extends Fragment implements LocationListener {
             for (GroundOverlayOptions marker: trip.patterns)
                 map.addGroundOverlay(marker);
         }
+
+        //zoom to the map
+        zoomToBounds(trip);
     }
 
     private void zoomToBounds(TripMapInformation trip) {
-        LatLngBounds.Builder builder = new LatLngBounds.Builder();
-        builder.include(trip.marker1.getPosition());
-        builder.include(trip.marker2.getPosition());
-        LatLngBounds bounds = builder.build();
 
         try {
-            map.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, 200));
+            map.animateCamera(CameraUpdateFactory.newLatLngBounds(trip.bounds, 200));
         }
         catch (IllegalStateException ex) {
             Log.e(TAG, "Map view error!");
             ex.printStackTrace();
         }
-
     }
 
 

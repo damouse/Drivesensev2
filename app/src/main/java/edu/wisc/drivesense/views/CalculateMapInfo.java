@@ -2,10 +2,7 @@ package edu.wisc.drivesense.views;
 
 import android.os.AsyncTask;
 
-import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.GroundOverlayOptions;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.*;
 
 import java.util.List;
 
@@ -29,7 +26,7 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
 
         List<MappableEvent> readings = trip.getEvents();
         TripMapInformation info = new TripMapInformation();
-
+        LatLngBounds.Builder builder = new LatLngBounds.Builder();
         info.trip = trip;
 
         if(readings.size() < 1)
@@ -38,6 +35,7 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
         for(MappableEvent reading : readings) {
             LatLng coord = new LatLng(reading.latitude, reading.longitude);
             info.addCoordinate(coord);
+            builder.include(coord);
 
             if (reading.type != MappableEvent.Type.gps) {
                 info.patterns.add(createOverlay(reading, coord, loader));
@@ -63,6 +61,7 @@ public class CalculateMapInfo extends AsyncTask<Trip, Integer, TripMapInformatio
 
         info.marker1 = marker1;
         info.marker2 = marker2;
+        info.bounds = builder.build();
 
         return info;
     }

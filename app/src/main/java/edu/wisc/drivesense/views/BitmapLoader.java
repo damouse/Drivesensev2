@@ -18,105 +18,89 @@ public class BitmapLoader {
     private Bitmap turn = null;
     private Bitmap laneChange = null;
 
+    private int size = 700;
+    private int strokeBuffer;
+
+    private Path triangle;
+    private Path diamond;
+
     private Context context;
 
 
     public BitmapLoader(Context context) {
         this.context = context;
-    }
 
+        //The triangles should be a little bigger than "size" in order to look proportional with the
+        //circles. This does change the size of the resulting bitmap,
+        int strokeBuffer = 0;
+        size += 2 * strokeBuffer;
+
+        int triSize = size;//(int) (((double)size) * 1.1);
+        int height = (int) Math.sqrt(Math.pow(triSize, 2) - Math.pow((triSize / 2), 2));
+        int halfSize = (int) triSize / 2;
+
+
+        triangle = new Path();
+        triangle.setFillType(Path.FillType.EVEN_ODD);
+        triangle.lineTo(halfSize + strokeBuffer, strokeBuffer);
+        triangle.lineTo(triSize + strokeBuffer, height + strokeBuffer);
+        triangle.lineTo(strokeBuffer, height + strokeBuffer);
+        triangle.lineTo(halfSize + strokeBuffer,  strokeBuffer);
+        triangle.close();
+
+        diamond = new Path();
+        diamond.setFillType(Path.FillType.EVEN_ODD);
+        diamond.lineTo(halfSize + strokeBuffer, 0 + strokeBuffer);
+        diamond.lineTo(triSize + strokeBuffer, halfSize + strokeBuffer);
+        diamond.lineTo(halfSize + strokeBuffer, triSize + strokeBuffer);
+        diamond.lineTo(0 + strokeBuffer, halfSize + strokeBuffer);
+        diamond.lineTo(halfSize + strokeBuffer, 0 + strokeBuffer);
+        diamond.close();
+
+        //stroking the canvas makes the image clip. Stroke on a smaller region.
+
+    }
 
     /* Bitmap getters */
     public Bitmap getBitmap(MappableEvent event) {
-        Bitmap result = null;
 
-        if (event.type == MappableEvent.Type.acceleration)
-            result = getAccelerationBitmap();
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
 
-        else if (event.type == MappableEvent.Type.brake)
-            result = getBrakeBitmap();
+        Paint paint = new Paint();
+        paint.setColor(colorForScore(event.score));
 
-        else if (event.type == MappableEvent.Type.turn)
-            result = getTurnnBitmap();
+        Paint outline = new Paint();
+        outline.setStyle(Paint.Style.STROKE);
+        outline.setColor(Color.BLACK);
+        outline.setStrokeWidth(5);
 
-        else if (event.type == MappableEvent.Type.lanechange)
-            result = getLaneChangeBitmap();
-
-
-        result = changeColor(result, colorForScore(event.score));
-        //color based on score
-        return result;
-    }
-
-
-    private Bitmap getAccelerationBitmap() {
-        if (acceleration == null) {
-            acceleration = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker_acceleration);
+        if (event.type == MappableEvent.Type.acceleration) {
+            canvas.drawCircle(size / 2 + strokeBuffer, size / 2 + strokeBuffer, size / 2 + strokeBuffer, paint);
+            canvas.drawCircle(size / 2 + strokeBuffer, size / 2 + strokeBuffer, size / 2 + strokeBuffer, outline);
         }
 
-        return acceleration;
-    }
-
-    private Bitmap getBrakeBitmap() {
-        if (brake == null) {
-            brake = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker_brake);
+        else if (event.type == MappableEvent.Type.brake) {
+            canvas.drawRect(0, 0, size, size, paint);
+            canvas.drawRect(0, 0, size, size, outline);
         }
 
-        return brake;
-    }
-
-    private Bitmap getTurnnBitmap() {
-        if (turn == null) {
-            turn = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker_turn);
+        else if (event.type == MappableEvent.Type.turn) {
+            canvas.drawPath(triangle, paint);
+            canvas.drawPath(triangle, outline);
         }
 
-        return turn;
-    }
-
-    private Bitmap getLaneChangeBitmap() {
-        if (laneChange == null) {
-            laneChange = BitmapFactory.decodeResource(context.getResources(), R.drawable.marker_stop);
+        else if (event.type == MappableEvent.Type.lanechange) {
+            canvas.drawPath(diamond, paint);
+            canvas.drawPath(diamond, outline);
         }
-
-        return laneChange;
+        return bitmap;
     }
 
-
-    /* Color Changing */
-    private Bitmap changeColor(Bitmap src, int color) {
-        int width = src.getWidth();
-        int height = src.getHeight();
-        int[] pixels = new int[width * height];
-        int replace = Color.rgb(0, 0, 0);
-
-        // get pixel array from source
-        src.getPixels(pixels, 0, width, 0, 0, width, height);
-
-        Bitmap bmOut = Bitmap.createBitmap(width, height, src.getConfig());
-
-        int pixel;
-
-        // iteration through pixels
-        for (int y = 0; y < height; ++y) {
-            for (int x = 0; x < width; ++x) {
-                // get current index in 2D-matrix
-                int index = y * width + x;
-                pixel = pixels[index];
-
-                if(pixel == replace){
-                    pixels[index] = color;
-                }
-            }
-        }
-        bmOut.setPixels(pixels, 0, width, 0, 0, width, height);
-        return bmOut;
-    }
-//
 
     /**
-     * TODO: return a pastel that ranges between red and green, proportionally moving based on the
-      input Score: 0 is red and 100 is green.
-
+     * Return a pastel that ranges between red and green, proportionally moving based on the
+     * input Score: 0 is red and 100 is green.
      * @param score score value from 0 to 100
      * @return a Color that ranged from red to green based on Score-- faded to be light, drawn from pastel palette
      */
@@ -134,33 +118,4 @@ public class BitmapLoader {
         return android.graphics.Color.HSVToColor(new float[]{(float) value * 120f, 1f, 1f});
     }
 
-
-    /* Custom Drawing */
-    private Bitmap drawSquare(double score) {
-        // draw circle
-        int d = 500; // diameter
-        Bitmap bm = Bitmap.createBitmap(d, d, Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(bm);
-        Paint p = new Paint();
-        p.setColor(colorForScore(score));
-        c.drawCircle(d/2, d/2, d/2, p);
-
-        return bm;
-//        Bitmap.Config conf = Bitmap.Config.ARGB_8888;
-//        Bitmap bmp = Bitmap.createBitmap(80, 80, conf);
-//        Canvas canvas = new Canvas(bmp);
-
-//        canvas.drawOval(
-//                mShadowBounds,
-//                mShadowPaint
-//        );
-
-// paint defines the text color,
-// stroke width, size
-//        Paint color = new Paint();
-//        color.setTextSize(35);
-//        color.setColor(Color.BLACK);
-//
-//        return bmp;
-    }
 }
