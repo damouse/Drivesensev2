@@ -17,8 +17,10 @@ public class PowerListener extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+
         if (BackgroundRecordingService.getInstance() != null)
             BackgroundRecordingService.getInstance().stateManager.setPowered(isPluggedIn(context));
+//            BackgroundRecordingService.getInstance().stateManager.setPowered(false);
     }
 
     /* Static Methods */
@@ -52,6 +54,7 @@ public class PowerListener extends BroadcastReceiver {
         boolean isCharging = status == BatteryManager.BATTERY_STATUS_CHARGING || status == BatteryManager.BATTERY_STATUS_FULL;
 
        return isCharging;
+//        return false;
     }
 
     public static float batteryLevel(Context context) {

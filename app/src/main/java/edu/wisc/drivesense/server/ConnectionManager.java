@@ -19,6 +19,7 @@ import com.loopj.android.http.AsyncHttpResponseHandler;
 
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
+import java.util.List;
 
 import edu.wisc.drivesense.model.Trip;
 import edu.wisc.drivesense.model.User;
@@ -37,14 +38,18 @@ import edu.wisc.drivesense.model.User;
 public class ConnectionManager {
 	private static final String TAG = "ConnectionManager";
 	private static final String SERVER_URL = "https://knowmydrive.com/";
+
+    public static boolean uploading;
+    private int uploadCount;
     //private static final String SERVER_URL = "128.105.32.102:3000";
 
 	private Context context;
 
     public ConnectionManager(Context context) {
         this.context = context;
+        uploading = false;
+        uploadCount = 0;
 	}
-
 
     /**
      * Issue login api call. Does not perform the logging in (as it pertains to the models)
@@ -116,6 +121,23 @@ public class ConnectionManager {
         });
     }
 
+    public void uploadTrips(List<Trip> trips, User user) {
+        uploading = true;
+        uploadCount = trips.size();
+
+        for (Trip trip: trips)
+            convertUploadTrip(trip, user, null);
+    }
+
+    public void finishUpload() {
+        uploadCount--;
+
+        if (uploadCount <= 0) {
+            uploadCount = 0;
+            uploading = false;
+        }
+    }
+
 	/**
 	 * Convert and upload the trip. The conversion is done in a parallel async task
 	 * @param trip
@@ -129,9 +151,16 @@ public class ConnectionManager {
                         super.onSuccess(statusCode, headers, rawResponse);
                         trip.setUploaded(true);
                         trip.save();
+                        finishUpload();
 
                         if (callback != null)
                             callback.onConnectionCompleted(true);
+                    }
+
+                    @Override
+                    public void onFailure(int statusCode, Header[] headers, byte[] errorResponse, Throwable e) {
+                        super.onFailure(statusCode, headers, errorResponse, e);
+                        finishUpload();
                     }
                 });
             }

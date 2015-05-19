@@ -73,7 +73,7 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        optionWifiOffUploading.initialize("Don't Use Wifi", "Upload over cellular", user.isAutomaticUploadOffWifi(), new MenuOption.MenuOptionDelegate() {
+        optionWifiOffUploading.initialize("Upload over Cellular", "Dont wait for WiFi", user.isAutomaticUploadOffWifi(), new MenuOption.MenuOptionDelegate() {
             @Override
             public void onMenuOptionClick(String title, boolean newValue) {
                 user.setAutomaticUploadOffWifi(newValue);

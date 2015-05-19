@@ -60,7 +60,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     public static final String TRIPS_UPDATE = "edu.wisc.drivesense.trips_update";
     public static final String STATE_UPDATE = "edu.wisc.drivesense.state_update";
     private static BackgroundRecordingService instance = null; //singleton ivar
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     public SensorMonitor monitor;
     public BackgroundState stateManager;
@@ -113,6 +113,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     @Override
     public void onDestroy() {
         Log.d(TAG, "ModelManager destroyed");
+        monitor.cleanup();
         instance = null;
         monitor = null;
         taskbar = null;
@@ -214,13 +215,14 @@ public class BackgroundRecordingService extends Service implements Observer {
         //pass off straight to the other method for processing, do no more here
         newReading(new Reading(location));
 
-        monitor.readCounts();
-        monitor.clearCounts();
+        //monitor.readCounts();
+        //monitor.clearCounts();
     }
 
     public void newReading(Reading reading) {
         if (recorder == null) {
-            Log.e(TAG, "Recorder is null as readings come in!");
+            if (!listening)
+                Log.e(TAG, "Recorder is null as readings come in!");
             return;
         }
 
@@ -262,20 +264,23 @@ public class BackgroundRecordingService extends Service implements Observer {
         User user = Concierge.getCurrentUser();
 
         //TODO: optionally load over cellular with a user preference
-        if (user.demoUser() || !WifiListener.isConnected(this))
+        if (user.demoUser() || (!WifiListener.isConnected(this) && !user.isAutomaticUploadOffWifi()))
             return;
 
-        List<Trip> trips =  Trip.find(Trip.class, "scored = true and uploaded = false and user = ?", "" + user.getId());
+        if (ConnectionManager.uploading) {
+            Log.d(TAG, "API is already attempting to upload trips, ignoring upload attempt");
+            return;
+        }
+
+        List<Trip> trips =  Trip.find(Trip.class, "scored = '1' and uploaded = '1' and user = ?", "" + user.getId());
 
         if (trips.size() == 0)
             return;
 
-        Log.d(TAG, "Attempting to upload " + trips.size() + "trips");
+        Log.d(TAG, "Attempting to upload " + trips.size() + " trips");
         ConnectionManager api = new ConnectionManager(this);
 
-        for (Trip trip: trips)
-            api.convertUploadTrip(trip, user, null);
-
+        api.uploadTrips(trips, user);
     }
 
     /**

@@ -61,7 +61,7 @@ public class ProjectedScoreKeeper {
         TimestampQueue<DrivingPattern> patterns = extractPatterns(period);
         getScores(patterns.getContents(), accelerometer_projected);
 
-        Log.i(TAG, "Done");
+        //Log.i(TAG, "Done");
         return patterns;
     }
 
@@ -78,7 +78,7 @@ public class ProjectedScoreKeeper {
      * Note that the context param is not needed here.
      */
     public TimestampQueue<DrivingPattern> extractPatterns(DataSetInput period) {
-        Log.i(TAG, "Extracting patterns...");
+        //Log.i(TAG, "Extracting patterns...");
 
         TimestampQueue<DrivingPattern> patterns = new TimestampQueue<DrivingPattern>();
 
@@ -120,7 +120,7 @@ public class ProjectedScoreKeeper {
 
     /* Scoring */
     private static void getScores(ArrayList<DrivingPattern> patterns, List<Reading> accelerometer) {
-        Log.i(TAG, "Scoring...");
+        //Log.i(TAG, "Scoring...");
         for (DrivingPattern pattern : patterns) {
             if (pattern.type == MappableEvent.Type.brake) {
                 double temp = PatternEvaluation.evaluate_brake(pattern, accelerometer);
@@ -144,7 +144,7 @@ public class ProjectedScoreKeeper {
 
     /* Move this somewhere else, please */
     private void projectSensors(TimestampQueue<Reading> accelerometer, TimestampQueue<Reading> gyroscope) {
-        Log.i(TAG, "Projecting sensors...");
+        //Log.i(TAG, "Projecting sensors...");
         //Preprocess, smooth and interpolate first
 
         TimestampQueue<Reading> accelerometer_smoothed = PreProcess.exponentialMovingAverage(accelerometer);

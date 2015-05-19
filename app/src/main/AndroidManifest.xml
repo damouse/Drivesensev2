@@ -100,7 +100,7 @@
         <meta-data android:name="QUERY_LOG" android:value="false" />
         <meta-data android:name="DOMAIN_PACKAGE_NAME" android:value="edu.wisc.drivesense.model" />
 
-        <meta-data android:name="ubertesters_project_id" android:value="3380798e-d65b-11e3-a44d-22000ac44c54" />
+        <!--<meta-data android:name="ubertesters_project_id" android:value="3380798e-d65b-11e3-a44d-22000ac44c54" />-->
 
         <service android:name=".businessLogic.BackgroundRecordingService" />
 

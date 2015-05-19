@@ -13,6 +13,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import edu.wisc.drivesense.R;
+import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
+import edu.wisc.drivesense.businessLogic.BackgroundState;
 import edu.wisc.drivesense.businessLogic.Concierge;
 import edu.wisc.drivesense.model.User;
 import edu.wisc.drivesense.server.ConnectionManager;
@@ -44,7 +46,6 @@ public class MenuFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View result = inflater.inflate(R.layout.fragment_menu, container, false);
-        user = Concierge.getCurrentUser();
 
         optionAutomaticRecording = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
         optionUploading = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionUploading);
@@ -53,9 +54,6 @@ public class MenuFragment extends Fragment {
         buttonLogin.setOnClickListener(new ButtonListner());
         textviewName = (TextView) result.findViewById(R.id.textviewName);
 
-        setOptions(user);
-        setLogin(user);
-
         return result;
     }
 
@@ -63,7 +61,9 @@ public class MenuFragment extends Fragment {
     public void onResume() {
         super.onResume();
 
-
+        user = Concierge.getCurrentUser();
+        setOptions(user);
+        setLogin(user);
     }
 
     /**
@@ -123,6 +123,8 @@ public class MenuFragment extends Fragment {
             textviewName.setText(user.email);
             buttonLogin.setText("log out");
         }
+
+        delegate.userStateChanged();
     }
 
 
@@ -156,7 +158,7 @@ public class MenuFragment extends Fragment {
             .setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
                 @Override
                 public void onClick(SweetAlertDialog sweetAlertDialog) {
-                    //do nothing on cancel
+                    sweetAlertDialog.dismissWithAnimation();
                 }
             })
             .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
@@ -184,6 +186,14 @@ public class MenuFragment extends Fragment {
     }
 
     private void login(final SweetAlertDialog dialog) {
+        User current = Concierge.getCurrentUser();
+        if (!current.demoUser()) {
+            Concierge.logOut();
+            current = Concierge.getCurrentUser();
+            setLogin(current);
+            return;
+        }
+
         String email = dialog.getEmail();
         String password = dialog.getPassword();
 

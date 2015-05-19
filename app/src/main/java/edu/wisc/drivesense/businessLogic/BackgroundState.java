@@ -54,6 +54,7 @@ public class BackgroundState extends Observable {
     public void setGpsAvailable(boolean state) {
         gpsAvailable = state;
         establishState(false, false, false);
+        Log.d(TAG, "GPS State changed to : " + state);
     }
 
     public void setAutomaticRecording(boolean state) {
@@ -118,9 +119,6 @@ public class BackgroundState extends Observable {
         else if (state == State.UNINITIALIZED)
             transitionUninitialized();
 
- //        if (oldState == State.MANUAL_RECORDING && state == State.MANUAL_LISTEN) {
-//            Log.d(TAG, "Hay brah");
-//        }
         //done establishing state, notify observers only if the state changed
         if (oldState != state) {
             Log.i(TAG, "Changed state from " + oldState + " to " + state);

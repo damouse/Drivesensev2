@@ -2,8 +2,6 @@ package edu.wisc.drivesense.views;
 
 import android.content.Context;
 import android.graphics.*;
-
-import edu.wisc.drivesense.R;
 import edu.wisc.drivesense.model.MappableEvent;
 
 /**
@@ -13,10 +11,6 @@ import edu.wisc.drivesense.model.MappableEvent;
  * bitmaps on demand. Colors each returned bitmap using a spectrum based on
  */
 public class BitmapLoader {
-    private Bitmap acceleration = null;
-    private Bitmap brake = null;
-    private Bitmap turn = null;
-    private Bitmap laneChange = null;
 
     private int size = 700;
     private int strokeBuffer;
@@ -117,5 +111,4 @@ public class BitmapLoader {
     int getTrafficlightColor(double value){
         return android.graphics.Color.HSVToColor(new float[]{(float) value * 120f, 1f, 1f});
     }
-
 }

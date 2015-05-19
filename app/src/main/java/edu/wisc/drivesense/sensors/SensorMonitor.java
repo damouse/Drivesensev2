@@ -12,6 +12,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 
+import android.widget.Toast;
 import edu.wisc.drivesense.model.Reading;
 import edu.wisc.drivesense.utilities.SensorSimulator;
 import edu.wisc.drivesense.businessLogic.BackgroundRecordingService;
@@ -62,12 +63,17 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
         sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD));
         sensors.add(sensorManager.getDefaultSensor(Sensor.TYPE_GRAVITY));
 
+        //This occasionally does not fire. It looks like the update fires not when the GPS
+        // is enabled or disabled, but rather when a location is actually resolved
+        locationManager.addGpsStatusListener(this);
+
         if (BackgroundRecordingService.DEBUG)
             simulator = new SensorSimulator();
-        else
-            locationManager.addGpsStatusListener(this);
     }
 
+    public void cleanup() {
+        locationManager.removeGpsStatusListener(this);
+    }
 
     /* Public Methods*/
     // Begin collecting data from sensors.
@@ -92,7 +98,6 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     public void stopCollecting() {
         stopCollectingGPS();
         sensorManager.unregisterListener(this);
-
     }
 
     public void stopCollectingGPS() {
@@ -104,7 +109,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     }
 
 
-/* Sensor Callbacks */
+    /* Sensor Callbacks */
 
     /**
      * Reports gps position
@@ -174,36 +179,39 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     /* Stock Callbacks */
     @Override
     public void onProviderDisabled(String provider) {
-        Log.i(TAG, "Provider disabled:  " + provider);
+//        Log.i(TAG, "Provider disabled:  " + provider);
     }
 
     @Override
     public void onProviderEnabled(String provider) {
-        Log.i(TAG, "Provider enabled:  " + provider);
+//        Log.i(TAG, "Provider enabled:  " + provider);
     }
 
     @Override
     public void onStatusChanged(String provider, int status, Bundle extras) {
-        Log.i(TAG, "status changed for  " + provider);
+//        Log.i(TAG, "status changed for  " + provider);
     }
 
     @Override
     public void onAccuracyChanged(Sensor arg0, int arg1) {
-        Log.i(TAG, "accuracy changed for " + arg0);
+//        Log.i(TAG, "accuracy changed for " + arg0);
     }
 
     public boolean gpsEnabled() {
-
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 
     @Override
     public void onGpsStatusChanged(int event) {
-        BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(event == GpsStatus.GPS_EVENT_STARTED);
+        if (event == GpsStatus.GPS_EVENT_STARTED)
+            BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(gpsEnabled());
+
+        if (event == GpsStatus.GPS_EVENT_STOPPED)
+            BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(gpsEnabled());
     }
 
 
-    //TESTING
+    /* Sensor Rate Limiting */
     public void readCounts() {
         Log.w(TAG, "Accel: " + a + " Gyro: " + gy + " Magnetic: " + m + " Gravity: " + gr);
     }

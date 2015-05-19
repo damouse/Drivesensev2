@@ -42,6 +42,31 @@ public class Utils {
         return "" + hours + " hours, " + minutes + " minutes, " + seconds + " seconds";
     }
 
+    /**
+     * Same as the method above, but omits the smaller labels.
+     *
+     * Ex: 'Y minutes' instead of 'Y minutes, Z seconds'
+     * @param duration
+     * @return
+     */
+    public static String formatSignificantDuration(int duration) {
+        int seconds = duration;
+        int minutes = 0;
+        int hours = 0;
+
+        minutes = seconds / 60;
+
+        if (minutes == 0)
+            return "" + seconds + " seconds";
+
+        hours = minutes / 60;
+
+        if (hours == 0)
+            return "" + minutes + " minutes";
+
+        return "" + hours + " hours";
+    }
+
     public static int convertToSeconds(long miliseconds) {
         return (int) miliseconds / 1000;
     }
@@ -66,5 +91,12 @@ public class Utils {
         String end = new SimpleDateFormat(dateFormat).format(date);
 
         return start + "-" + end;
+    }
+
+    public static String startTime(long timestamp) {
+        String dateFormat = "hh:mma";
+        Date date = new Date(timestamp);
+        String start = new SimpleDateFormat(dateFormat).format(date);
+        return start;
     }
 }

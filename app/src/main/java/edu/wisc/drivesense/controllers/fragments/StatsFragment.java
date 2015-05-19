@@ -77,10 +77,10 @@ public class StatsFragment extends Fragment {
         else {
             layoutRoot.setBackgroundColor(BitmapLoader.colorForScore(trip.score));
 
-            textviewScore.setText("");
-            textviewLeft.setText(Utils.startEndTime(trip.timestamp, trip.duration));
+            textviewScore.setText("" + trip.score);
+            textviewLeft.setText(Utils.startTime(trip.timestamp));
             textviewCenter.setText(Utils.formatDistance(trip.distance));
-            textviewRight.setText("NA");
+            textviewRight.setText(Utils.formatSignificantDuration(trip.duration));
         }
     }
 }

@@ -53,6 +53,7 @@ public class TripRecorder extends Observable {
      * Begins a new trip with the assigned analyst providing data.
      */
     public TripRecorder(User user, Context context) {
+        Log.i(TAG, "Starting up");
         this.context = context;
 
         receiver = new DataReceiver(memorySize);
@@ -76,15 +77,16 @@ public class TripRecorder extends Observable {
             }
         };
 
-        if (BackgroundRecordingService.DEBUG)
-            timerHandler.postDelayed(timerRunnable, period);
+        timerHandler.postDelayed(timerRunnable, period);
     }
 
 
     /* Public Interface */
     public void endTrip() {
         recording = false;
+        setTripScore();
 
+        //TODO: final parse: run the whole trip through theif
         //TODO: check for a minuimum duration or number of patterns
         if (lastEvent == null) {
             Log.e(TAG, "Insufficient trip data to score. Deleting trip");
@@ -93,7 +95,8 @@ public class TripRecorder extends Observable {
             return;
         }
 
-        setTripScore();
+
+        trip.scored = true;
 
         Log.d(TAG, "Ended trip: " + trip.getId());
         trip.save();
@@ -169,17 +172,17 @@ public class TripRecorder extends Observable {
         if (trip.timestamp == 0)
             trip.timestamp = events.get(0).timestamp;
 
+        setTripScore();
         MappableEvent.saveInTx(events);
         trip.save();
 
         //update listening observers
         setChanged();
         notifyObservers(events);
-
-        Log.d(TAG, "Done");
     }
 
     public void newReading(Reading reading) {
+//        Log.d(TAG, "New Reading " + reading);
         receiver.newReading(reading);
     }
 
@@ -240,7 +243,6 @@ public class TripRecorder extends Observable {
         int totalEvents = trip.numAccels + trip.numBrakes + trip.numLaneChanges + trip.numTurns;
         float weightedTotal = trip.scoreBrakes + trip.scoreAccels + trip.scoreLaneChanges + trip.scoreTurns;
 
-        trip.score = (int) weightedTotal / totalEvents;
-        trip.scored = true;
+        trip.score = (int) weightedTotal / 4;
     }
 }

@@ -12,14 +12,13 @@ import edu.wisc.drivesense.controllers.fragments.PinMapFragment;
  *
  * debug locations: (43.073214, -89.400558) to (43.059508, -89.400687)
  * @author Damouse
- *
  */
 public class SensorSimulator {
     private final static String TAG = "SensorSimulator";
 
     //the counter variables for figuring out time
     int counter = 0;
-    private int maxCounter = 360;
+    private int maxCounter = 300;
     private int iteration = 0;
 
     //the location coordinates
@@ -63,7 +62,7 @@ public class SensorSimulator {
             if (pinMap != null)
                 pinMap.onLocationChanged(getLocation());
 
-            if(counter > 360) {
+            if(counter > maxCounter) {
                 shouldUpdateLocation = false;
                 Log.d(TAG, "Stopped updating location");
             }

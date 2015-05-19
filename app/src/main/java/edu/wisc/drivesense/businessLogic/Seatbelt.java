@@ -64,6 +64,20 @@ public class Seatbelt {
         return null;
     }
 
+    public static String cantRecordMessageShort(Context context, User user) {
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+            return "GPS OFF";
+        }
+
+        boolean isPowered = PowerListener.isPluggedIn(context);
+        if (user.isAutomaticRecording() && !isPowered && !user.isAutomaticUnpoweredRecording()) {
+            return "NOT PLUGGED IN";
+        }
+
+        return null;
+    }
+
     /**
      * Same as the above method, but for automatic recording.
      */

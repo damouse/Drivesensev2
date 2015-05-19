@@ -56,7 +56,6 @@ public class Trip extends SugarRecord<Trip> {
 
     public User user;
 
-
     public boolean scored;
     public int numAccels;
     public int numBrakes;
@@ -71,10 +70,15 @@ public class Trip extends SugarRecord<Trip> {
         uploaded = false;
         timestamp = new Date().getTime();
 
-        numAccels = 0;
-        numBrakes = 0;
-        numTurns = 0;
-        numLaneChanges = 0;
+        numAccels = 1;
+        numBrakes = 1;
+        numTurns = 1;
+        numLaneChanges = 1;
+
+        scoreAccels = 100;
+        scoreBrakes = 100;
+        scoreTurns = 100;
+        scoreLaneChanges = 100;
     }
 
 
