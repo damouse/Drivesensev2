@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import edu.wisc.drivesense.model.User;
 
 
 public class SettingsFragment extends Fragment {
+    private static final String TAG = "Settings Fragment";
     private MenuFragment.MenuDelegate delegate;
     private User user;
 
@@ -41,6 +43,13 @@ public class SettingsFragment extends Fragment {
         optionUnpoweredRecording = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionUnpoweredRecording);
         optionWifiOffUploading = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionWifiOff);
         optionDelete = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionDelete);
+
+        //Ready for a hacky fix?
+        if (optionDelete == null) {
+            optionDelete = (MenuOption) getFragmentManager().findFragmentById(R.id.optionDelete);
+            optionUnpoweredRecording = (MenuOption) getFragmentManager().findFragmentById(R.id.optionUnpoweredRecording);
+            optionWifiOffUploading = (MenuOption) getFragmentManager().findFragmentById(R.id.optionWifiOff);
+        }
 
         setOptions(user);
 

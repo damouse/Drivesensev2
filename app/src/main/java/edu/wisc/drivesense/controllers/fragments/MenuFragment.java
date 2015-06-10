@@ -50,6 +50,12 @@ public class MenuFragment extends Fragment {
         optionAutomaticRecording = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
         optionUploading = (MenuOption) getChildFragmentManager().findFragmentById(R.id.optionUploading);
 
+        //Issues with the fragments in android 5 vs 4
+        if (optionUploading == null) {
+            optionAutomaticRecording = (MenuOption) getFragmentManager().findFragmentById(R.id.optionAutomaticRecording);
+            optionUploading = (MenuOption) getFragmentManager().findFragmentById(R.id.optionUploading);
+        }
+
         buttonLogin = (Button) result.findViewById(R.id.login);
         buttonLogin.setOnClickListener(new ButtonListner());
         textviewName = (TextView) result.findViewById(R.id.textviewName);
