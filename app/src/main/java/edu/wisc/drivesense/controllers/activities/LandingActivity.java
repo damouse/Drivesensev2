@@ -73,6 +73,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
         buttonStatsLeft = (Button) findViewById(R.id.buttonStatsLeft);
         buttonStatsRight = (Button) findViewById(R.id.buttonStatsRight);
 
+        showTutorial();
+
         //initialize table with trips
         loadUser();
     }
