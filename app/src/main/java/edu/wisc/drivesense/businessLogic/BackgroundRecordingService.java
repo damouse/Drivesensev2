@@ -148,6 +148,7 @@ public class BackgroundRecordingService extends Service implements Observer {
         stateManager.setServiceOn(true);
         User user = Concierge.getCurrentUser();
 
+        Log.d(TAG, "initState:" + String.valueOf(monitor.gpsEnabled()));
         stateManager.setGpsAvailable(monitor.gpsEnabled());
         stateManager.setPowered(PowerListener.isPluggedIn(this));
         stateManager.setAutomaticRecording(user.isAutomaticRecording());
@@ -187,6 +188,9 @@ public class BackgroundRecordingService extends Service implements Observer {
 
     private void setRecordingAndListenening(boolean rec, boolean listen) {
         //turn check if gps needs to be turned on or off
+
+        //by Lei
+        Log.d(TAG, "setRecordingAndListening:" + String.valueOf(rec) + ", " + String.valueOf(listen));
         if (rec) {
             monitor.startCollecting();
         } else {
@@ -239,6 +243,7 @@ public class BackgroundRecordingService extends Service implements Observer {
     public void update(Observable observable, Object o) {
         if (observable instanceof BackgroundState) {
             BackgroundState.State newState = (BackgroundState.State) o;
+
 
             if (newState == BackgroundState.State.AUTOMATIC_RECORDING || newState == BackgroundState.State.MANUAL_RECORDING)
                 setRecordingAndListenening(true, true);

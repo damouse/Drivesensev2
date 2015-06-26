@@ -4,4 +4,4 @@
     <stroke android:color="@color/warning_stroke_color" android:width="@dimen/common_circle_width" />
 </shape>
 
-<!-- From: file:/home/damouse/development/android/drivesense/drivesense/library/src/main/res/drawable/warning_circle.xml -->
+<!-- From: file:/home/lkang/AndroidStudioProjects/Drivesensev2/library/src/main/res/drawable/warning_circle.xml -->

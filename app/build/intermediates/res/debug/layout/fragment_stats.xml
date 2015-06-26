@@ -1,0 +1,83 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/linearBackground"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/orange"
+    android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                style="@style/MenuButton"
+                android:id="@+id/buttonStatsLeft"
+                android:text="@string/menu_button_two"
+                android:gravity="center|left"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onButtonLeftClick"/>
+
+            <Button
+                style="@style/MenuButton"
+                android:id="@+id/buttonStatsRight"
+                android:text="@string/menu_button_three"
+                android:gravity="center|right"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:onClick="onRightButtonClick"/>
+
+        </LinearLayout>
+
+        <TextView
+            style="@style/StockTextview"
+            android:id="@+id/textviewScore"
+            android:layout_width="wrap_content"
+            android:layout_height="0px"
+            android:layout_weight="3"
+            android:text="20"
+            android:layout_gravity="center"
+            android:textSize="100dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0px"
+            android:layout_weight="1"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/StockTextview"
+                android:id="@+id/textviewLeft"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|left"
+                android:text="One"/>
+
+            <TextView
+                style="@style/StockTextview"
+                android:id="@+id/textviewCenter"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Two"/>
+
+            <TextView
+                style="@style/StockTextview"
+                android:id="@+id/textviewRight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center|right"
+                android:text="Three"/>
+
+        </LinearLayout>
+
+
+</LinearLayout>
+<!-- From: file:/home/lkang/AndroidStudioProjects/Drivesensev2/app/src/main/res/layout/fragment_stats.xml -->

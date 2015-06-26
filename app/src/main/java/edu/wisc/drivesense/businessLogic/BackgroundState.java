@@ -47,36 +47,50 @@ public class BackgroundState extends Observable {
 
     /* State Input Setters */
     public void setPowered(boolean state) {
+        //by Lei
+        Log.d(TAG, "setPowered()");
         powered = state;
         establishState(false, false, false);
     }
 
     public void setGpsAvailable(boolean state) {
+        //by Lei
+        //Log.d(TAG, "setGpsAvailable(): state: " + String.valueOf(state));
         gpsAvailable = state;
         establishState(false, false, false);
     }
 
     public void setAutomaticRecording(boolean state) {
+        //by Lei
+        Log.d(TAG, "setAutomaticRecording()");
         automaticRecording = state;
         establishState(false, false, false);
     }
 
     public void setAutomaticUnpoweredRecording(boolean state) {
+        //by Lei
+        Log.d(TAG, "setAutomaticUnpoweredRecording()");
         automaticUnpoweredRecording = state;
         establishState(false, false, false);
     }
 
     /** Called when the user touches a button while not in automatic mode */
     public void manualRecordingTrigger() {
+        //by Lei
+        Log.d(TAG, "manualRecordingTrigger()");
         establishState(true, false, false);
     }
 
     /** Called when listeners think a trip started or stopped */
     public void adviseTripStart() {
+        //by Lei
+        Log.d(TAG, "adviseTripStart()");
         establishState(false, true, false);
     }
 
     public void adviseTripEnd() {
+        //by Lei
+        Log.d(TAG, "adviseTripEnd()");
         establishState(false, false, true);
     }
 

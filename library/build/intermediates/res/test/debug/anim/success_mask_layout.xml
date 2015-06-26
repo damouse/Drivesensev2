@@ -17,4 +17,4 @@
         android:duration="0"
         android:fillAfter="true">
     </rotate>
-</set><!-- From: file:/Users/Damouse/Documents/projects/android/Drivesensev2/library/src/main/res/anim/success_mask_layout.xml --><!-- From: file:/Users/Damouse/Documents/projects/android/Drivesensev2/library/build/intermediates/bundles/debug/res/anim/success_mask_layout.xml -->
+</set><!-- From: file:/home/lkang/AndroidStudioProjects/Drivesensev2/library/src/main/res/anim/success_mask_layout.xml --><!-- From: file:/home/lkang/AndroidStudioProjects/Drivesensev2/library/build/intermediates/bundles/debug/res/anim/success_mask_layout.xml -->

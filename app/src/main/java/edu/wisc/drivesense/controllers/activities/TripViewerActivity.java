@@ -46,7 +46,10 @@ public class TripViewerActivity extends Activity {
     @Override
     protected void onStop() {
         super.onStop();
-        BackgroundRecordingService.checkAndDestroy(this);
+        Log.d(TAG, "TripViewActivity onStop()");
+
+        //fixed by Lei, why stop background recording when stop viewing the trip?
+        //BackgroundRecordingService.checkAndDestroy(this);
     }
 
 

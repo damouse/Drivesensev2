@@ -112,7 +112,9 @@ public class PinMapFragment extends Fragment implements LocationListener {
 		//listeners. Unimportant, so class does not implement them
 		OnConnectionFailedListener failed =  new OnConnectionFailedListener() {
 			@Override
-			public void onConnectionFailed(ConnectionResult arg0) { }
+			public void onConnectionFailed(ConnectionResult arg0) {
+                Log.d(TAG, "onConnectionFailed()");
+            }
 		};
 		
 		client = new GoogleApiClient.Builder(context).addApi(LocationServices.API).build();
@@ -261,7 +263,12 @@ public class PinMapFragment extends Fragment implements LocationListener {
     * @param trip trip to be added to the map
     */
     private void addTripToMap(TripMapInformation trip, boolean showPatterns) {
+        //by Lei  trip can be null
+        /*
         if (trip.line == null || trip.marker1 == null)
+            return;
+            */
+        if (null == trip || trip.line == null || trip.marker1 == null)
             return;
 
         Log.d(TAG, "Adding trip: " + trip.toString());

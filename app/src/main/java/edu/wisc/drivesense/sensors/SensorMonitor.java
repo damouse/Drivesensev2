@@ -124,7 +124,7 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
     public void onSensorChanged(SensorEvent event) {
         Reading.Type type;
 
-//        Log.d(TAG, "Reported Timestamp: " + event.timestamp + " Real Time: " + System.currentTimeMillis());
+       // Log.d(TAG, "Reported Timestamp: " + event.timestamp + " Real Time: " + System.currentTimeMillis());
 //        return;
 
         switch (event.sensor.getType()) {
@@ -202,7 +202,11 @@ public class SensorMonitor implements LocationListener, SensorEventListener, Gps
 
     @Override
     public void onGpsStatusChanged(int event) {
-        BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(event == GpsStatus.GPS_EVENT_STARTED);
+        //by Lei
+        //Log.d(TAG, "onGpsStatusChanged(), event: " + event + ", gps status" + GpsStatus.GPS_EVENT_STARTED);
+        //fixed by Lei
+        BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(event != GpsStatus.GPS_EVENT_STOPPED);
+       // BackgroundRecordingService.getInstance().stateManager.setGpsAvailable(event == GpsStatus.GPS_EVENT_STARTED);
     }
 
 

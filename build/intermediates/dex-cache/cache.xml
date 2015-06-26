@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appinvite/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="bb36004beb02b69562cbec9aa7d6a3cf16bf5d1b">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-f52f274938df3329292ca02834f59757ef302499.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-location/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="b2c07cdb814fe988ad05f7b4d767a841514a5991">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-48205f679f3f806c9a0caba0effc458b16d8fe6d.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.github.satyan/sugar/1.3/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="07e07903922250dabf50c7d131d6fa069a050305">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-c6761b04d957c9cc82a237c9edfd0f1d382f1bbd.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-identity/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="b48d5c51a9a9e329005106b4667f54948de4d4d8">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-6aac7b1e7425bab252cd9234d0b92d6f258540f9.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-nearby/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="5ea948d825957be6c4358c48422bee60eef2d487">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-fc3e3891bd8116aee6daef40f2a4c8d74b989039.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="4e86306289ace4aa0cfec44a05ed2b410d36989d">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-2ce8faa53aa846de61b6ccc09b419b71f2cd62ea.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/org.apache.commons/commons-math3/3.0/5f8d1d720333aa9a7dee1c949ea70d9ed7da6106/commons-math3-3.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="5f8d1d720333aa9a7dee1c949ea70d9ed7da6106">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/commons-math3-3.0-f731095d1384e28022e36d02533bea3e9789b3ad.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.pnikosis/materialish-progress/1.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="57487745ce450899f9f250d5ae5c092a682cd041">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-479c1597182d3d6f1a0c0400bc632ea9d470a642.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/junit/junit/4.12/2973d150c0dc1fefe998f834810d68f278ea58ec/junit-4.12.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="2973d150c0dc1fefe998f834810d68f278ea58ec">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/junit-4.12-cae46feb3c298b566193ca67d10790c367528a40.jar" />
+    </item>
+    <item
+        jar="/home/lkang/Android/Sdk/extras/android/m2repository/com/android/support/support-annotations/22.0.0/support-annotations-22.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="685d0b2c590447e85284ed84712cb363ba04eff8">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/support-annotations-22.0.0-c4256f7aa652dab0b3a65e0ed678e3ad1e179f07.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-cast/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e5b9f5b0aa8dee788beb63d23832cb29ce771343">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-8b20df913e3feda11ba55f859187ded95500d9a4.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-safetynet/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="0708ef60917bf94913fe9ef972a655b99462dca7">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-00755c0e01a6d95fadaf9f6e3faa3b77835fd6f2.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.pkmmte.view/circularimageview/1.1/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="c341a7ad32bc2eef9dcfab239262b77ac60788cc">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-74658c0fd493ed5976659a07728cf58d770e94f5.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.github.castorflex.smoothprogressbar/library/0.5.2/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="00c945daa09c5775dcb0c61f19cee94b7916a28d">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-3944d49a67973d295446ff66c5ba3174c24fbee0.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-plus/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="59652857a825fff0de62166fca1bc9553cc01abb">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-ef38643c0e25f0b52f3ebd2d6f1a103a6aaf84e4.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/org.hamcrest/hamcrest-core/1.3/42a25dc3219429f0e5d060061f71acb49bf010a0/hamcrest-core-1.3.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="42a25dc3219429f0e5d060061f71acb49bf010a0">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/hamcrest-core-1.3-20b8f38589420a7041aba98ef93d6d01fdfb154d.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-games/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="3b4ff5c39dace8f3b4ab4cab8191785547a0815f">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-1a9b812a6d9f0dc0fd5ee1307a262577180f9ac9.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wallet/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="6046e5cdaf799120b7c56a5a061d80e8854c4d34">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-65f8f146f48bcdb34f05879b22a00a421637afcb.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="f2f7ec211ce4d244ee97a57523eeb4526dc3cf8a">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-ea1fba9a95ee8c79ce65d4888ccbf3af772efded.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/cn.pedant.sweetalert/library/1.3/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="80b8ecf3c7246fefd0d5b8381c1d7b2e5194fafc">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-02e981b14058ee387710d7a279306317585c4f6c.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-ads/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="3988694bf9d8186ff97ad5cdfa4ed88b5010fe08">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-4e99f4ed345b88fa9715885f87ce22f65c8b2016.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/com.nineoldandroids/library/2.4.0/e9b63380f3a242dbdbf103a2355ad7e43bad17cb/library-2.4.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e9b63380f3a242dbdbf103a2355ad7e43bad17cb">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/library-2.4.0-1babf24c7a81fe3d2e4cf450ec12ba2333449d64.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-drive/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="a0ce76dfaccbfbd6c551ed2174280aaabe60fe47">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-24d05e7f10e60d028779d21eb140556449b19757.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/com.loopj.android/android-async-http/1.4.5/77bf7cacf9cefe19dc105e5425d2eb1bb5285881/android-async-http-1.4.5.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="77bf7cacf9cefe19dc105e5425d2eb1bb5285881">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/android-async-http-1.4.5-02f41e281b5d48855a63dca4e82d63f527675654.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-gcm/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="7215ac1f2fca947b9415a6ee2a1bf991364aab24">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-f7e83bed2794fd2b41d8a58ea06d85673fad696a.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/org.encog/encog-core/3.3.0/180762c3c63129a63514a641d05c4243128a0f9b/encog-core-3.3.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="180762c3c63129a63514a641d05c4243128a0f9b">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/encog-core-3.3.0-c4f4067ab8609b875b30ffaa0ba369298a55b179.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.makeramen/roundedimageview/1.5.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="b2f7dddedcdb3facde33de103dcc32b10c43b92e">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-a459fc6e1cfd785eeeb7de1c83eacd366e4252bc.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e5bf453b070c1e39297986144960e45afa0fdfad">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-22efcde06e8dc05a5405d54de3024f409355d115.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-analytics/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="9c9dea9e85aceb09d95df5e6f7bc8a43fc286068">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-0220795e080e327ec78bb3132aed6488001527b9.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/libs/com.ubertesters.sdk.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="919c3e4c2f205e0af22f90642568f0e30af1f618">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/com.ubertesters.sdk-62fbd48c15a2cac60211f561ea82973a4138fbe1.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-fitness/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="4f4fe3c23776540625f3c2844152a7510fddf9f1">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-bac0e7e9a81233b22c9ec7753d725615770300b5.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.android.support/support-v4/22.0.0/libs/internal_impl-22.0.0.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="b5b92f469d515a13d778900f6d50c03d12f35504">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/internal_impl-22.0.0-705e41ab6147a4e9bd6e8d09f1332d6be9724532.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appindexing/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="e35fae1b377c23aa5fd2d309a190c2d0f73d54ec">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-9a3edf1847511d59da14904c48b394c38c527b79.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-e979c78adb03dad710d69e51e949225c8be5a0e7.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-maps/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="fe3e0c6de7cceed888b277487238b6af9a1cc299">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-fe396fa38105cd603a9a4164d055ac6f5b5ebdc4.jar" />
+    </item>
+    <item
+        jar="/home/lkang/.gradle/caches/modules-2/files-2.1/com.google.code.gson/gson/2.3.1/ecb6e1f8e4b0e84c4b886c2f14a1500caf309757/gson-2.3.1.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="ecb6e1f8e4b0e84c4b886c2f14a1500caf309757">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/gson-2.3.1-787c88d25831319cc75a5dbe3f3ed7ad1bad7714.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-panorama/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="565a01f90f1529f73362707c4c185d0623a68782">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-b9439addf4b74fe84d88ac6ce1d23a4533570221.jar" />
+    </item>
+    <item
+        jar="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-appstate/7.3.0/classes.jar"
+        jumboMode="false"
+        revision="20.0.0"
+        sha1="0180d031a7b54dabb93b4af3869468b55dc938bd">
+        <dex dex="/home/lkang/AndroidStudioProjects/Drivesensev2/app/build/intermediates/pre-dexed/debug/classes-3bb515be9f897faae2d478bcafe09b8b501941e5.jar" />
+    </item>
+
+</items>

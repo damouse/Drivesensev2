@@ -74,6 +74,7 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d(TAG, "LandingActivity onPause()");
         BackgroundRecordingService.checkAndDestroy(this);
         BroadcastHelper.unregisterReceiver(tripsUpdatedReceiver, this);
         BroadcastHelper.unregisterReceiver(stateUpdateReceiver, this);
@@ -132,6 +133,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
      * The background is started or stopped here.
      */
     public void userStateChanged() {
+        //by Lei
+        Log.d(TAG, "userStateChanged");
         User user = Concierge.getCurrentUser();
         displayLastTrip();
 
@@ -195,10 +198,16 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             return;
         }
 
+        //by Lei
+        Log.d(TAG, "left bottun clicked");
+
         User user = Concierge.getCurrentUser();
+        //fixed by Lei
         boolean recording = BackgroundRecordingService.getInstance().recording();
 
         if (user.isAutomaticRecording()) {
+            //by Lei
+            Log.d(TAG, "user set automatic recording");
             SweetAlertDialog dialog = new SweetAlertDialog(this, SweetAlertDialog.WARNING_TYPE)
                     .setTitleText("Automatic Recording is on!")
                     .showCancelButton(true);
@@ -248,6 +257,8 @@ public class LandingActivity extends FragmentActivity implements View.OnClickLis
             }
         }
         else {
+            //by Lei
+            Log.d(TAG, "user set mannual recording");
             BackgroundRecordingService.getInstance().stateManager.manualRecordingTrigger();
         }
 

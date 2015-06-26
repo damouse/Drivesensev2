@@ -118,7 +118,13 @@
         <!--<meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyCPvc4FCD8OWefkB4QpvMzcRDAItR9SPUQ" />-->
 
         <!-- Debug key: make active for local testing ON WINDOWS -->
+        <!--
          <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDNLj-p7RCUHXR8IzJOOVZaaZlxF_fHnHk"/>
+        -->
+
+       <!-- by Lei-->
+        <meta-data android:name="com.google.android.maps.v2.API_KEY" android:value="AIzaSyDgTK3COV2AUg897Lx8qkFCyjBHNjJ-sFI"/>
+
     </application>
 
 </manifest>

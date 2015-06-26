@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/background"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <fragment
+        android:id="@+id/stats"
+        android:name="edu.wisc.drivesense.controllers.fragments.StatsFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight=".4"/>
+
+    <fragment
+        android:id="@+id/trips"
+        android:name="edu.wisc.drivesense.controllers.fragments.TripsListViewFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0px"
+        android:layout_weight=".6"/>
+
+</LinearLayout>
+
+<!-- From: file:/home/lkang/AndroidStudioProjects/Drivesensev2/app/src/main/res/layout/activity_landing.xml -->

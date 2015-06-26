@@ -2,6 +2,7 @@ package edu.wisc.drivesense.controllers.activities;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -33,6 +34,7 @@ public class RecordingTripActivity extends Activity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_recording_trip);
         fragmentMap = (PinMapFragment) getFragmentManager().findFragmentById(R.id.map);
+
     }
 
     @Override
@@ -46,6 +48,7 @@ public class RecordingTripActivity extends Activity implements Observer {
     @Override
     protected void onPause() {
         super.onStop();
+        Log.d(TAG, "RecordingTripActivity.java onPause");
         BackgroundRecordingService.getInstance().recorder.deleteObserver(this);
         BackgroundRecordingService.checkAndDestroy(this);
     }
